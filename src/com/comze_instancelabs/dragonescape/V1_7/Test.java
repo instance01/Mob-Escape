@@ -1,4 +1,4 @@
-package com.comze_instancelabs.dragonescape;
+package com.comze_instancelabs.dragonescape.V1_7;
 
 import java.util.ArrayList;
 
@@ -15,6 +15,8 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+
+import com.comze_instancelabs.dragonescape.Main;
 
 public class Test extends EntityEnderDragon {
 

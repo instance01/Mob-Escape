@@ -1150,8 +1150,11 @@ public class Main extends JavaPlugin implements Listener {
 		
 		//TODO kits
 		if (event.hasItem()) {
+			final Player p = event.getPlayer();
+			if(!arenap.containsKey(p)){
+				return;
+			}
 			if(event.getItem().getTypeId() == 258){
-				Player p = event.getPlayer();
 				p.getInventory().removeItem(new ItemStack(Material.IRON_AXE, 1));
 				p.updateInventory();
 				p.setVelocity(p.getVelocity().multiply(5D));
@@ -1159,7 +1162,6 @@ public class Main extends JavaPlugin implements Listener {
 				direction.setY(direction.getY() + 1.5);
 				p.setVelocity(direction);
 			}else if(event.getItem().getTypeId() == 368){
-				final Player p = event.getPlayer();
 				p.getInventory().removeItem(new ItemStack(Material.ENDER_PEARL, 1));
 				p.updateInventory();
 				for(final Entity t : p.getNearbyEntities(40, 40, 40)){
@@ -1173,7 +1175,6 @@ public class Main extends JavaPlugin implements Listener {
 				}
 				event.setCancelled(true);
 			}else if(event.getItem().getTypeId() == 46){
-				Player p = event.getPlayer();
 				p.getInventory().removeItem(new ItemStack(Material.TNT, 1));
 				p.updateInventory();
 				p.getLocation().getWorld().dropItemNaturally(p.getLocation().add(1, 3, 1), new ItemStack(Material.TNT));

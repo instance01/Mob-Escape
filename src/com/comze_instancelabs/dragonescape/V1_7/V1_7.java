@@ -24,7 +24,6 @@ import org.bukkit.util.Vector;
 import com.comze_instancelabs.dragonescape.Kits;
 import com.comze_instancelabs.dragonescape.Main;
 import com.comze_instancelabs.dragonescape.Slimey;
-import com.comze_instancelabs.dragonescape.Test;
 
 import net.minecraft.server.v1_7_R1.EntityTypes;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
