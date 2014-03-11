@@ -4,21 +4,15 @@ import java.util.ArrayList;
 
 import net.minecraft.server.v1_7_R1.DamageSource;
 import net.minecraft.server.v1_7_R1.EntityComplexPart;
-import net.minecraft.server.v1_7_R1.EntityEnderDragon;
-import net.minecraft.server.v1_7_R1.ItemStack;
-import net.minecraft.server.v1_7_R1.MathHelper;
+import net.minecraft.server.v1_7_R1.EntityWither;
 import net.minecraft.server.v1_7_R1.World;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import com.comze_instancelabs.dragonescape.Main;
 
-public class Test extends EntityEnderDragon {
+public class MEWither extends EntityWither {
 
 	private boolean onGround = false;
 	private ArrayList<Vector> points = new ArrayList();
@@ -29,7 +23,7 @@ public class Test extends EntityEnderDragon {
 	private Main m;
 	private String arena;
 	
-	public Test(Main m, String arena, Location loc, World world, ArrayList<Vector> p) {
+	public MEWither(Main m, String arena, Location loc, World world, ArrayList<Vector> p) {
 		super(world);
 		this.m = m;
 		this.arena = arena;
@@ -128,15 +122,15 @@ public class Test extends EntityEnderDragon {
 			
 			if (this.locX < points.get(currentid).getX()) {
 				if (this.locZ > points.get(currentid).getZ()) {
-					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 180F;
+					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
 				} else {
-					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
+					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 270F;
 				}
 			} else { // (this.locX > points.get(currentid).getX())
 				if (this.locZ > points.get(currentid).getZ()) {
-					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 90F;
+					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
 				} else {
-					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
+					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 180F;
 				}
 			}
 
@@ -144,15 +138,15 @@ public class Test extends EntityEnderDragon {
 
 		if (this.locX < points.get(currentid).getX()) {
 			if (this.locZ > points.get(currentid).getZ()) {
-				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 180F;
+				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
 			} else {
-				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
+				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 90F;
 			}
 		} else { // (this.locX > points.get(currentid).getX())
 			if (this.locZ > points.get(currentid).getZ()) {
-				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 90F;
+				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
 			} else {
-				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
+				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 180F;
 			}
 		}
 		

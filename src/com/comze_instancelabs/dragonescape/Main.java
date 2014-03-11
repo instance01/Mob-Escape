@@ -66,7 +66,7 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
 import com.comze_instancelabs.dragonescape.V1_6.V1_6;
-import com.comze_instancelabs.dragonescape.V1_7.V1_7;
+import com.comze_instancelabs.dragonescape.V1_7.V1_7Dragon;
 /*import net.minecraft.server.v1_7_R1.AttributeInstance;
  import net.minecraft.server.v1_7_R1.EntityInsentient;
  import net.minecraft.server.v1_7_R1.EntityTypes;
@@ -74,6 +74,7 @@ import com.comze_instancelabs.dragonescape.V1_7.V1_7;
 /*import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
  import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
  import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;*/
+import com.comze_instancelabs.dragonescape.V1_7.V1_7Wither;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -178,6 +179,9 @@ public class Main extends JavaPlugin implements Listener {
 	public String starting = "";
 	public String started = "";
 
+	public String type = "wither"; 
+	//TODO change
+	
 	@Override
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -348,7 +352,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("dragonescape")) {
+		if (cmd.getName().equalsIgnoreCase("dragonescape") || cmd.getName().equalsIgnoreCase("escapethemob")) {
 			if (args.length > 0) {
 				String action = args[0];
 				if (action.equalsIgnoreCase("createarena")) {
@@ -670,6 +674,21 @@ public class Main extends JavaPlugin implements Listener {
 							sender.sendMessage("" + ChatColor.RED + "Usage: /de setdifficulty [arena] [difficulty]. Difficulty can be 0, 1 or 2.");
 						}
 					}
+				}else if (action.equalsIgnoreCase("setmobtype")) {
+					if (sender.hasPermission("dragonescape.setup")) {
+						if (args.length > 1) {
+							String mobtype = args[1];
+							if(mobtype.equalsIgnoreCase("wither") || mobtype.equalsIgnoreCase("dragon")){
+								type = mobtype;
+								sender.sendMessage("" + ChatColor.YELLOW + "Successfully set!");
+							}else{
+								sender.sendMessage("" + ChatColor.RED + "Unknown mob. Possible ones: dragon, wither");
+							}
+							//TODO save mobtype to config
+						} else {
+							sender.sendMessage("" + ChatColor.RED + "Usage: /de setmobtype [mobtype].");
+						}
+					}
 				} else if (action.equalsIgnoreCase("join")) {
 					if (args.length > 1) {
 						if (isValidArena(args[1])) {
@@ -852,7 +871,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (mode1_6) {
 			return V1_6.registerEntities();
 		}
-		return V1_7.registerEntities();
+		return V1_7Dragon.registerEntities();
 	}
 
 	/*
@@ -1148,7 +1167,6 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 		
-		//TODO kits
 		if (event.hasItem()) {
 			final Player p = event.getPlayer();
 			if(!arenap.containsKey(p)){
@@ -1537,8 +1555,17 @@ public class Main extends JavaPlugin implements Listener {
 			V1_6 v = new V1_6();
 			return v.start(this, arena);
 		}
-		V1_7 v_ = new V1_7();
-		return v_.start(this, arena);
+		if(type.equalsIgnoreCase("dragon")){
+			V1_7Dragon v_ = new V1_7Dragon();
+			return v_.start(this, arena);
+		}else if(type.equalsIgnoreCase("wither")){
+			V1_7Wither v_ = new V1_7Wither();
+			return v_.start(this, arena);
+		}else{
+			V1_7Dragon v_ = new V1_7Dragon();
+			return v_.start(this, arena);
+		}
+		
 	}
 
 	public void reset(final String arena) {
@@ -1555,8 +1582,16 @@ public class Main extends JavaPlugin implements Listener {
 			V1_6 v = new V1_6();
 			v.stop(this, t, arena);
 		} else {
-			V1_7 v = new V1_7();
-			v.stop(this, t, arena);
+			if(type.equalsIgnoreCase("dragon")){
+				V1_7Dragon v = new V1_7Dragon();
+				v.stop(this, t, arena);
+			}else if(type.equalsIgnoreCase("wither")){
+				V1_7Wither v = new V1_7Wither();
+				v.stop(this, t, arena);
+			}else{
+				V1_7Dragon v = new V1_7Dragon();
+				v.stop(this, t, arena);
+			}
 		}
 	}
 
@@ -1892,7 +1927,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (mode1_6) {
 			V1_6.playBlockBreakParticles(loc, m, players);
 		}
-		V1_7.playBlockBreakParticles(loc, m, players);
+		V1_7Dragon.playBlockBreakParticles(loc, m, players);
 	}
 
 	Scoreboard board;

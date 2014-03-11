@@ -28,9 +28,9 @@ import com.comze_instancelabs.dragonescape.Slimey;
 import net.minecraft.server.v1_7_R1.EntityTypes;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
 
-public class V1_7 {
+public class V1_7Dragon {
 
-	public static HashMap<String, Test> dragons = new HashMap<String, Test>();
+	public static HashMap<String, MEDragon> dragons = new HashMap<String, MEDragon>();
 
 	
 	public static boolean registerEntities(){
@@ -40,30 +40,30 @@ public class V1_7 {
 			Field c = entityTypeClass.getDeclaredField("c");
 			c.setAccessible(true);
 			HashMap c_map = (HashMap) c.get(null);
-			c_map.put("Slimey", Slimey.class);
+			c_map.put("MEWither", MEWither.class);
 
 			Field d = entityTypeClass.getDeclaredField("d");
 			d.setAccessible(true);
 			HashMap d_map = (HashMap) d.get(null);
-			d_map.put(Slimey.class, "Slimey");
+			d_map.put(MEWither.class, "MEWither");
 
 			Field e = entityTypeClass.getDeclaredField("e");
 			e.setAccessible(true);
 			HashMap e_map = (HashMap) e.get(null);
-			e_map.put(Integer.valueOf(55), Slimey.class);
+			e_map.put(Integer.valueOf(64), MEWither.class);
 
 			Field f = entityTypeClass.getDeclaredField("f");
 			f.setAccessible(true);
 			HashMap f_map = (HashMap) f.get(null);
-			f_map.put(Slimey.class, Integer.valueOf(55));
+			f_map.put(MEWither.class, Integer.valueOf(64));
 
 			Field g = entityTypeClass.getDeclaredField("g");
 			g.setAccessible(true);
 			HashMap g_map = (HashMap) g.get(null);
-			g_map.put("Slimey", Integer.valueOf(55));
-
+			g_map.put("MEWither", Integer.valueOf(64));
 		} catch (Exception ex) {
-			
+			ex.printStackTrace();
+			return false;
 		}
 		
 		
@@ -73,27 +73,27 @@ public class V1_7 {
 			Field c = entityTypeClass.getDeclaredField("c");
 			c.setAccessible(true);
 			HashMap c_map = (HashMap) c.get(null);
-			c_map.put("Test", Test.class);
+			c_map.put("MEDragon", MEDragon.class);
 
 			Field d = entityTypeClass.getDeclaredField("d");
 			d.setAccessible(true);
 			HashMap d_map = (HashMap) d.get(null);
-			d_map.put(Test.class, "Test");
+			d_map.put(MEDragon.class, "MEDragon");
 
 			Field e = entityTypeClass.getDeclaredField("e");
 			e.setAccessible(true);
 			HashMap e_map = (HashMap) e.get(null);
-			e_map.put(Integer.valueOf(63), Test.class);
+			e_map.put(Integer.valueOf(63), MEDragon.class);
 
 			Field f = entityTypeClass.getDeclaredField("f");
 			f.setAccessible(true);
 			HashMap f_map = (HashMap) f.get(null);
-			f_map.put(Test.class, Integer.valueOf(63));
+			f_map.put(MEDragon.class, Integer.valueOf(63));
 
 			Field g = entityTypeClass.getDeclaredField("g");
 			g.setAccessible(true);
 			HashMap g_map = (HashMap) g.get(null);
-			g_map.put("Test", Integer.valueOf(63));
+			g_map.put("MEDragon", Integer.valueOf(63));
 
 			return true;
 		} catch (Exception ex) {
@@ -111,7 +111,7 @@ public class V1_7 {
 	}
 	
 	
-	public Test spawnEnderdragon(Main m, String arena, Location t) {
+	public MEDragon spawnEnderdragon(Main m, String arena, Location t) {
 		/*if(dragons.containsKey(arena)){
 			return dragons.get(arena);
 		}*/
@@ -121,7 +121,7 @@ public class V1_7 {
 			m.getLogger().severe("You forgot to set any FlyPoints! You need to have min. 2 and one of them has to be at finish.");
 			return null;
 		}
-		Test t_ = new Test(m, arena, t, (net.minecraft.server.v1_7_R1.World) ((CraftWorld) t.getWorld()).getHandle(), m.getDragonWayPoints(arena));
+		MEDragon t_ = new MEDragon(m, arena, t, (net.minecraft.server.v1_7_R1.World) ((CraftWorld) t.getWorld()).getHandle(), m.getDragonWayPoints(arena));
 		((net.minecraft.server.v1_7_R1.World) w).addEntity(t_, CreatureSpawnEvent.SpawnReason.CUSTOM);
 		t_.setCustomName(m.dragon_name);
 
@@ -414,7 +414,7 @@ public class V1_7 {
 								});
 							}
 						}*/
-						V1_7.destroy(m, l1, l2, arena, length2);
+						V1_7Dragon.destroy(m, l1, l2, arena, length2);
 					} else if (dir_.equalsIgnoreCase("north")) {
 						//dragons.get(arena).setPosition(l.getX(), l.getY(), l.getZ() - m.dragon_move_increment.get(arena));
 
@@ -443,7 +443,7 @@ public class V1_7 {
 								});
 							}
 						}*/
-						V1_7.destroy(m, l1, l2, arena, length2);
+						V1_7Dragon.destroy(m, l1, l2, arena, length2);
 					} else if (dir_.equalsIgnoreCase("east")) {
 						//dragons.get(arena).setPosition(l.getX() + m.dragon_move_increment.get(arena), l.getY(), l.getZ());
 
@@ -472,7 +472,7 @@ public class V1_7 {
 								});
 							}
 						}*/
-						V1_7.destroy(m, l1, l2, arena, length2);
+						V1_7Dragon.destroy(m, l1, l2, arena, length2);
 					} else if (dir_.equalsIgnoreCase("west")) {
 						//dragons.get(arena).setPosition(l.getX() - m.dragon_move_increment.get(arena), l.getY(), l.getZ());
 
@@ -501,7 +501,7 @@ public class V1_7 {
 								});
 							}
 						}*/
-						V1_7.destroy(m, l1, l2, arena, length2);
+						V1_7Dragon.destroy(m, l1, l2, arena, length2);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -593,7 +593,7 @@ public class V1_7 {
 	}
 	
 	
-	public void removeEnderdragon(Test t) {
+	public void removeEnderdragon(MEDragon t) {
 		if (t != null) {
 			t.getBukkitEntity().remove();
 		}

@@ -8,3 +8,7 @@ commands:
       description: Main command
       usage: /dragonescape <action>
       aliases: [de]
+   escapethemob:
+      description: Main command
+      usage: /escapethemob <action>
+      aliases: [etm]

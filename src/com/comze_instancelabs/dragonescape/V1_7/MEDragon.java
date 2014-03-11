@@ -1,24 +1,24 @@
-package com.comze_instancelabs.dragonescape.V1_6;
+package com.comze_instancelabs.dragonescape.V1_7;
 
 import java.util.ArrayList;
 
-import net.minecraft.server.v1_6_R3.DamageSource;
-import net.minecraft.server.v1_6_R3.EntityComplexPart;
-import net.minecraft.server.v1_6_R3.EntityEnderDragon;
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.MathHelper;
-import net.minecraft.server.v1_6_R3.World;
+import net.minecraft.server.v1_7_R1.DamageSource;
+import net.minecraft.server.v1_7_R1.EntityComplexPart;
+import net.minecraft.server.v1_7_R1.EntityEnderDragon;
+import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R1.MathHelper;
+import net.minecraft.server.v1_7_R1.World;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import com.comze_instancelabs.dragonescape.Main;
 
-public class Test1_6 extends EntityEnderDragon {
+public class MEDragon extends EntityEnderDragon {
 
 	private boolean onGround = false;
 	private ArrayList<Vector> points = new ArrayList();
@@ -29,7 +29,7 @@ public class Test1_6 extends EntityEnderDragon {
 	private Main m;
 	private String arena;
 	
-	public Test1_6(Main m, String arena, Location loc, World world, ArrayList<Vector> p) {
+	public MEDragon(Main m, String arena, Location loc, World world, ArrayList<Vector> p) {
 		super(world);
 		this.m = m;
 		this.arena = arena;
@@ -65,7 +65,7 @@ public class Test1_6 extends EntityEnderDragon {
 	}
 
 	@Override
-	public void c() {
+	public void e() {
 		return;
 	}
 
