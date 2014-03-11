@@ -211,7 +211,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.spawn_winnerfirework", true);
 		getConfig().addDefault("config.mob_type", "dragon");
 		
-		getConfig().addDefault("config.sign_top_line", "&6DragonEscape");
+		getConfig().addDefault("config.sign_top_line", "&6MobEscape");
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
 		getConfig().addDefault("config.sign_second_line_ingame", "&c[Ingame]");
 		getConfig().addDefault("config.sign_second_line_restarting", "&6[Restarting]");
