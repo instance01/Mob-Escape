@@ -1,6 +1,6 @@
-name: DragonEscape
+name: MobEscape
 main: com.comze_instancelabs.dragonescape.Main
-version: 1.3
+version: 1.0
 author: instancelabs
 softdepend: [Vault]
 commands:

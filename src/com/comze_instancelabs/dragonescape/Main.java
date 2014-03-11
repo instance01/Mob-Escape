@@ -179,8 +179,7 @@ public class Main extends JavaPlugin implements Listener {
 	public String starting = "";
 	public String started = "";
 
-	public String type = "wither"; 
-	//TODO change
+	public String type = "dragon"; 
 	
 	@Override
 	public void onEnable() {
@@ -210,7 +209,8 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.destroy_radius", 10);
 		getConfig().addDefault("config.last_man_standing", true);
 		getConfig().addDefault("config.spawn_winnerfirework", true);
-
+		getConfig().addDefault("config.mob_type", "dragon");
+		
 		getConfig().addDefault("config.sign_top_line", "&6DragonEscape");
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
 		getConfig().addDefault("config.sign_second_line_ingame", "&c[Ingame]");
@@ -234,7 +234,6 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.kits.tnt.requires_permission", false);
 		getConfig().addDefault("config.kits.tnt.money_amount", 300);
 		getConfig().addDefault("config.kits.tnt.permission_node", "dragonescape.kits.tnt");
-		
 
 		getConfig().addDefault("strings.saved.arena", "&aSuccessfully saved arena.");
 		getConfig().addDefault("strings.saved.lobby", "&aSuccessfully saved lobby.");
@@ -320,6 +319,11 @@ public class Main extends JavaPlugin implements Listener {
 		dragon_name = getConfig().getString("config.dragon_healthbar_name").replaceAll("&", "§");
 		last_man_standing = getConfig().getBoolean("config.last_man_standing");
 		spawn_winnerfirework = getConfig().getBoolean("config.spawn_winnerfirework");
+		
+		type = getConfig().getString("config.mob_type");
+		if(!type.equalsIgnoreCase("dragon") || !type.equalsIgnoreCase("wither")){
+			type = "dragon";
+		}
 		
 		saved_arena = getConfig().getString("strings.saved.arena").replaceAll("&", "§");
 		removed_arena = getConfig().getString("strings.removed_arena").replaceAll("&", "§");
@@ -680,11 +684,12 @@ public class Main extends JavaPlugin implements Listener {
 							String mobtype = args[1];
 							if(mobtype.equalsIgnoreCase("wither") || mobtype.equalsIgnoreCase("dragon")){
 								type = mobtype;
+								getConfig().set("config.mob_type", mobtype);
+								this.saveConfig();
 								sender.sendMessage("" + ChatColor.YELLOW + "Successfully set!");
 							}else{
 								sender.sendMessage("" + ChatColor.RED + "Unknown mob. Possible ones: dragon, wither");
 							}
-							//TODO save mobtype to config
 						} else {
 							sender.sendMessage("" + ChatColor.RED + "Usage: /de setmobtype [mobtype].");
 						}
