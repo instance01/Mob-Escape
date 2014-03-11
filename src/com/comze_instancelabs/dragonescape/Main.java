@@ -1035,8 +1035,8 @@ public class Main extends JavaPlugin implements Listener {
 			}
 
 			final String arena_ = arenap_.get(event.getPlayer().getName());
-
 			String dir = m.getDirection(getSpawn(arena_).getYaw());
+
 			if (dir.equalsIgnoreCase("south")) {
 				if (event.getPlayer().getLocation().getBlockZ() > getFinish(arenap_.get(event.getPlayer().getName())).getBlockZ()) {
 					if (ingame.get(arena_)) {
@@ -1100,10 +1100,12 @@ public class Main extends JavaPlugin implements Listener {
 				if (last_man_standing) {
 					if (count < 2) {
 						stop(h.get(arena), arena);
+						System.out.println("test2");
 					}
 				} else {
 					if (count < 1) {
 						stop(h.get(arena), arena);
+						System.out.println("test3");
 					}
 				}
 
@@ -1219,7 +1221,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onSignChange(SignChangeEvent event) {
 		Player p = event.getPlayer();
-		if (event.getLine(0).toLowerCase().equalsIgnoreCase("dragonescape")) {
+		if (event.getLine(0).toLowerCase().equalsIgnoreCase("dragonescape") || event.getLine(0).toLowerCase().equalsIgnoreCase("mobescape")) {
 			if (event.getPlayer().hasPermission("dragonescape.sign") || event.getPlayer().isOp()) {
 				event.setLine(0, sign_top);
 				if (!event.getLine(2).equalsIgnoreCase("")) {

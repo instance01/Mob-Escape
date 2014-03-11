@@ -189,18 +189,20 @@ public class V1_7Dragon {
 					});
 					
 					for (final Player p : m.arenap.keySet()) {
-						if (p.isOnline()) {
-							if(m.pkit.containsKey(p)){
-								String kit = m.pkit.get(p);
-								
-								if(kit.equalsIgnoreCase("jumper")){
-									Kits.giveJumperKit(m, p);
-								}else if(kit.equalsIgnoreCase("warper")){
-									Kits.giveWarperKit(m, p);
-								}else if(kit.equalsIgnoreCase("tnt")){
-									Kits.giveTNTKit(m, p);
+						if(m.arenap.get(p).equalsIgnoreCase(arena)){
+							if (p.isOnline()) {
+								if(m.pkit.containsKey(p)){
+									String kit = m.pkit.get(p);
+									
+									if(kit.equalsIgnoreCase("jumper")){
+										Kits.giveJumperKit(m, p);
+									}else if(kit.equalsIgnoreCase("warper")){
+										Kits.giveWarperKit(m, p);
+									}else if(kit.equalsIgnoreCase("tnt")){
+										Kits.giveTNTKit(m, p);
+									}
+									m.pkit.remove(p);
 								}
-								m.pkit.remove(p);
 							}
 						}
 					}
@@ -210,7 +212,7 @@ public class V1_7Dragon {
 			}
 		}, 0, 20).getTaskId();
 		m.countdown_id.put(arena, t);
-
+		
 		final String dir = m.getDirection(m.getSpawn(arena).getYaw());
 		
 		// spawn enderdragon
@@ -219,9 +221,11 @@ public class V1_7Dragon {
 				public void run() {
 					try{
 						boolean cont = true;
-						for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-							if(e.getType() == EntityType.ENDER_DRAGON){
-								cont = false;
+						if(m.getDragonSpawn(arena) != null){
+							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
+								if(e.getType() == EntityType.ENDER_DRAGON){
+									cont = false;
+								}
 							}
 						}
 						if(cont){
@@ -244,9 +248,11 @@ public class V1_7Dragon {
 				public void run() {
 					try{
 						boolean cont = true;
-						for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-							if(e.getType() == EntityType.ENDER_DRAGON){
-								cont = false;
+						if(m.getDragonSpawn(arena) != null){
+							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
+								if(e.getType() == EntityType.ENDER_DRAGON){
+									cont = false;
+								}
 							}
 						}
 						if(cont){
@@ -269,9 +275,11 @@ public class V1_7Dragon {
 				public void run() {
 					try{
 						boolean cont = true;
-						for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-							if(e.getType() == EntityType.ENDER_DRAGON){
-								cont = false;
+						if(m.getDragonSpawn(arena) != null){
+							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
+								if(e.getType() == EntityType.ENDER_DRAGON){
+									cont = false;
+								}
 							}
 						}
 						if(cont){
@@ -294,9 +302,11 @@ public class V1_7Dragon {
 				public void run() {
 					try{
 						boolean cont = true;
-						for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-							if(e.getType() == EntityType.ENDER_DRAGON){
-								cont = false;
+						if(m.getDragonSpawn(arena) != null){
+							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
+								if(e.getType() == EntityType.ENDER_DRAGON){
+									cont = false;
+								}
 							}
 						}
 						if(cont){
