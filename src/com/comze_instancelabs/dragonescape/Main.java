@@ -65,7 +65,7 @@ import org.bukkit.util.Vector;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
-import com.comze_instancelabs.dragonescape.V1_6.V1_6;
+import com.comze_instancelabs.dragonescape.V1_6.V1_6Dragon;
 import com.comze_instancelabs.dragonescape.V1_7.V1_7Dragon;
 /*import net.minecraft.server.v1_7_R1.AttributeInstance;
  import net.minecraft.server.v1_7_R1.EntityInsentient;
@@ -869,7 +869,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	private boolean registerEntities() {
 		if (mode1_6) {
-			return V1_6.registerEntities();
+			return V1_6Dragon.registerEntities();
 		}
 		return V1_7Dragon.registerEntities();
 	}
@@ -1552,7 +1552,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	public BukkitTask start(final String arena) {
 		if (mode1_6) {
-			V1_6 v = new V1_6();
+			V1_6Dragon v = new V1_6Dragon();
 			return v.start(this, arena);
 		}
 		if(type.equalsIgnoreCase("dragon")){
@@ -1579,7 +1579,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void stop(BukkitTask t, final String arena) {
 		if (mode1_6) {
-			V1_6 v = new V1_6();
+			V1_6Dragon v = new V1_6Dragon();
 			v.stop(this, t, arena);
 		} else {
 			if(type.equalsIgnoreCase("dragon")){
@@ -1925,7 +1925,7 @@ public class Main extends JavaPlugin implements Listener {
 
 	public static final void playBlockBreakParticles(final Location loc, final Material m, final Player... players) {
 		if (mode1_6) {
-			V1_6.playBlockBreakParticles(loc, m, players);
+			V1_6Dragon.playBlockBreakParticles(loc, m, players);
 		}
 		V1_7Dragon.playBlockBreakParticles(loc, m, players);
 	}
