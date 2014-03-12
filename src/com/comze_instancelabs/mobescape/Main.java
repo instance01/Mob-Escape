@@ -271,12 +271,10 @@ public class Main extends JavaPlugin implements Listener {
 		} catch (IOException e) {
 		}
 
-		// TODO ADD UPDATER
-		/*
-		 * if (getConfig().getBoolean("config.auto_updating")) { Updater updater
-		 * = new Updater(this, 71774, this.getFile(),
-		 * Updater.UpdateType.DEFAULT, false); }
-		 */
+		if (getConfig().getBoolean("config.auto_updating")) {
+			Updater updater = new Updater(this, 75590, this.getFile(), Updater.UpdateType.DEFAULT, false);
+		}
+
 
 		if (economy) {
 			if (!setupEconomy()) {
@@ -321,7 +319,7 @@ public class Main extends JavaPlugin implements Listener {
 		spawn_winnerfirework = getConfig().getBoolean("config.spawn_winnerfirework");
 		
 		type = getConfig().getString("config.mob_type");
-		if(!type.equalsIgnoreCase("dragon") || !type.equalsIgnoreCase("wither")){
+		if(!type.equalsIgnoreCase("dragon") && !type.equalsIgnoreCase("wither")){
 			type = "dragon";
 		}
 		
@@ -570,7 +568,7 @@ public class Main extends JavaPlugin implements Listener {
 							sender.sendMessage(noperm);
 						}
 					}
-				} else if (action.equalsIgnoreCase("setdragonspawn")) {
+				} else if (action.equalsIgnoreCase("setdragonspawn") || action.equalsIgnoreCase("setmobspawn")) {
 					if (args.length > 1) {
 						if (sender.hasPermission("mobescape.setup")) {
 							Player p = (Player) sender;
@@ -616,7 +614,7 @@ public class Main extends JavaPlugin implements Listener {
 							}
 						}
 						ingame.clear();
-						Bukkit.getScheduler().cancelAllTasks();
+						Bukkit.getScheduler().cancelTasks(this);
 					} else {
 						sender.sendMessage(noperm);
 					}
@@ -679,7 +677,7 @@ public class Main extends JavaPlugin implements Listener {
 						}
 					}
 				}else if (action.equalsIgnoreCase("setmobtype")) {
-					if (sender.hasPermission("mobescape.setup")) {
+					if (sender.hasPermission("mobescape.setmobtype")) {
 						if (args.length > 1) {
 							String mobtype = args[1];
 							if(mobtype.equalsIgnoreCase("wither") || mobtype.equalsIgnoreCase("dragon")){
