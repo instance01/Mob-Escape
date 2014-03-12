@@ -150,9 +150,11 @@ public class V1_7Wither {
 				public void run() {
 					try{
 						boolean cont = true;
-						for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-							if(e.getType() == EntityType.ENDER_DRAGON){
-								cont = false;
+						if(m.getDragonSpawn(arena) != null){
+							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
+								if(e.getType() == EntityType.WITHER){
+									cont = false;
+								}
 							}
 						}
 						if(cont){
@@ -175,9 +177,11 @@ public class V1_7Wither {
 				public void run() {
 					try{
 						boolean cont = true;
-						for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-							if(e.getType() == EntityType.ENDER_DRAGON){
-								cont = false;
+						if(m.getDragonSpawn(arena) != null){
+							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
+								if(e.getType() == EntityType.WITHER){
+									cont = false;
+								}
 							}
 						}
 						if(cont){
@@ -200,9 +204,11 @@ public class V1_7Wither {
 				public void run() {
 					try{
 						boolean cont = true;
-						for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-							if(e.getType() == EntityType.ENDER_DRAGON){
-								cont = false;
+						if(m.getDragonSpawn(arena) != null){
+							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
+								if(e.getType() == EntityType.WITHER){
+									cont = false;
+								}
 							}
 						}
 						if(cont){
@@ -225,9 +231,11 @@ public class V1_7Wither {
 				public void run() {
 					try{
 						boolean cont = true;
-						for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-							if(e.getType() == EntityType.ENDER_DRAGON){
-								cont = false;
+						if(m.getDragonSpawn(arena) != null){
+							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
+								if(e.getType() == EntityType.WITHER){
+									cont = false;
+								}
 							}
 						}
 						if(cont){
