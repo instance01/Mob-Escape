@@ -1,5 +1,5 @@
 name: MobEscape
-main: com.comze_instancelabs.dragonescape.Main
+main: com.comze_instancelabs.mobescape.Main
 version: 1.0
 author: instancelabs
 softdepend: [Vault]

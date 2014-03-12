@@ -1,4 +1,4 @@
-package com.comze_instancelabs.dragonescape;
+package com.comze_instancelabs.mobescape;
 
 import java.io.Serializable;
 

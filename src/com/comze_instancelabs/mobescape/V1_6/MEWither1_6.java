@@ -1,24 +1,18 @@
-package com.comze_instancelabs.dragonescape.V1_6;
+package com.comze_instancelabs.mobescape.V1_6;
 
 import java.util.ArrayList;
 
 import net.minecraft.server.v1_6_R3.DamageSource;
 import net.minecraft.server.v1_6_R3.EntityComplexPart;
-import net.minecraft.server.v1_6_R3.EntityEnderDragon;
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.MathHelper;
+import net.minecraft.server.v1_6_R3.EntityWither;
 import net.minecraft.server.v1_6_R3.World;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import com.comze_instancelabs.dragonescape.Main;
+import com.comze_instancelabs.mobescape.Main;
 
-public class MEDragon1_6 extends EntityEnderDragon {
+public class MEWither1_6 extends EntityWither {
 
 	private boolean onGround = false;
 	private ArrayList<Vector> points = new ArrayList();
@@ -29,7 +23,7 @@ public class MEDragon1_6 extends EntityEnderDragon {
 	private Main m;
 	private String arena;
 	
-	public MEDragon1_6(Main m, String arena, Location loc, World world, ArrayList<Vector> p) {
+	public MEWither1_6(Main m, String arena, Location loc, World world, ArrayList<Vector> p) {
 		super(world);
 		this.m = m;
 		this.arena = arena;
@@ -57,7 +51,7 @@ public class MEDragon1_6 extends EntityEnderDragon {
 		double disY = (this.locY - points.get(currentid).getY());
 		double disZ = (this.locZ - points.get(currentid).getZ());
 
-		double tick = Math.sqrt(disX * disX + disY * disY + disZ * disZ) * 2 / m.dragon_speed * Math.pow(0.98, currentid);
+		double tick = Math.sqrt(disX * disX + disY * disY + disZ * disZ) * 2 / m.mob_speed * Math.pow(0.98, currentid);
 
 		this.X = (Math.abs(disX) / tick);
 		this.Y = (Math.abs(disY) / tick);
@@ -120,7 +114,7 @@ public class MEDragon1_6 extends EntityEnderDragon {
 			double disY = (this.locY - points.get(currentid).getY());
 			double disZ = (this.locZ - points.get(currentid).getZ());
 			
-			double tick_ = Math.sqrt(disX * disX + disY * disY + disZ * disZ) * 2 / m.dragon_speed * Math.pow(0.98, currentid);
+			double tick_ = Math.sqrt(disX * disX + disY * disY + disZ * disZ) * 2 / m.mob_speed * Math.pow(0.98, currentid);
 
 			this.X = (Math.abs(disX) / tick_);
 			this.Y = (Math.abs(disY) / tick_);
@@ -128,15 +122,15 @@ public class MEDragon1_6 extends EntityEnderDragon {
 			
 			if (this.locX < points.get(currentid).getX()) {
 				if (this.locZ > points.get(currentid).getZ()) {
-					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 180F;
+					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
 				} else {
-					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
+					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 270F;
 				}
 			} else { // (this.locX > points.get(currentid).getX())
 				if (this.locZ > points.get(currentid).getZ()) {
-					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 90F;
+					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
 				} else {
-					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
+					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 180F;
 				}
 			}
 
@@ -144,15 +138,15 @@ public class MEDragon1_6 extends EntityEnderDragon {
 
 		if (this.locX < points.get(currentid).getX()) {
 			if (this.locZ > points.get(currentid).getZ()) {
-				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 180F;
+				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
 			} else {
-				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
+				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 90F;
 			}
 		} else { // (this.locX > points.get(currentid).getX())
 			if (this.locZ > points.get(currentid).getZ()) {
-				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 90F;
+				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
 			} else {
-				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
+				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 180F;
 			}
 		}
 		

@@ -1,4 +1,4 @@
-package com.comze_instancelabs.dragonescape.V1_7;
+package com.comze_instancelabs.mobescape.V1_7;
 
 import java.util.ArrayList;
 
@@ -16,7 +16,7 @@ import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import com.comze_instancelabs.dragonescape.Main;
+import com.comze_instancelabs.mobescape.Main;
 
 public class MEDragon extends EntityEnderDragon {
 
@@ -57,7 +57,7 @@ public class MEDragon extends EntityEnderDragon {
 		double disY = (this.locY - points.get(currentid).getY());
 		double disZ = (this.locZ - points.get(currentid).getZ());
 
-		double tick = Math.sqrt(disX * disX + disY * disY + disZ * disZ) * 2 / m.dragon_speed * Math.pow(0.98, currentid);
+		double tick = Math.sqrt(disX * disX + disY * disY + disZ * disZ) * 2 / m.mob_speed * Math.pow(0.98, currentid);
 
 		this.X = (Math.abs(disX) / tick);
 		this.Y = (Math.abs(disY) / tick);
@@ -120,7 +120,7 @@ public class MEDragon extends EntityEnderDragon {
 			double disY = (this.locY - points.get(currentid).getY());
 			double disZ = (this.locZ - points.get(currentid).getZ());
 			
-			double tick_ = Math.sqrt(disX * disX + disY * disY + disZ * disZ) * 2 / m.dragon_speed * Math.pow(0.98, currentid);
+			double tick_ = Math.sqrt(disX * disX + disY * disY + disZ * disZ) * 2 / m.mob_speed * Math.pow(0.98, currentid);
 
 			this.X = (Math.abs(disX) / tick_);
 			this.Y = (Math.abs(disY) / tick_);

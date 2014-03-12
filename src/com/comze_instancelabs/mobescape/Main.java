@@ -1,4 +1,4 @@
-package com.comze_instancelabs.dragonescape;
+package com.comze_instancelabs.mobescape;
 
 import java.io.EOFException;
 import java.io.File;
@@ -65,8 +65,7 @@ import org.bukkit.util.Vector;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
-import com.comze_instancelabs.dragonescape.V1_6.V1_6Dragon;
-import com.comze_instancelabs.dragonescape.V1_7.V1_7Dragon;
+import com.comze_instancelabs.mobescape.V1_6.V1_6Dragon;
 /*import net.minecraft.server.v1_7_R1.AttributeInstance;
  import net.minecraft.server.v1_7_R1.EntityInsentient;
  import net.minecraft.server.v1_7_R1.EntityTypes;
@@ -74,7 +73,8 @@ import com.comze_instancelabs.dragonescape.V1_7.V1_7Dragon;
 /*import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
  import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
  import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;*/
-import com.comze_instancelabs.dragonescape.V1_7.V1_7Wither;
+import com.comze_instancelabs.mobescape.V1_7.V1_7Dragon;
+import com.comze_instancelabs.mobescape.V1_7.V1_7Wither;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -141,7 +141,7 @@ public class Main extends JavaPlugin implements Listener {
 	public boolean start_announcement = false;
 	boolean winner_announcement = false;
 	public String dragon_name = "Ender Dragon";
-	public double dragon_speed = 1.0;
+	public double mob_speed = 1.0;
 	public static boolean mode1_6 = false;
 	public int destroy_radius = 10;
 	public boolean last_man_standing = true;
@@ -204,8 +204,8 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.command_reward", "pex user <player> group set DragonPro");
 		getConfig().addDefault("config.start_announcement", false);
 		getConfig().addDefault("config.winner_announcement", false);
-		getConfig().addDefault("config.dragon_speed", 1.0D);
-		getConfig().addDefault("config.dragon_healthbar_name", "Ender Dragon");
+		getConfig().addDefault("config.mob_speed", 1.0D);
+		getConfig().addDefault("config.mob_healthbar_name", "Ender Dragon");
 		getConfig().addDefault("config.destroy_radius", 10);
 		getConfig().addDefault("config.last_man_standing", true);
 		getConfig().addDefault("config.spawn_winnerfirework", true);
@@ -246,7 +246,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("strings.arena_invalid", "&cThe arena appears to be invalid.");
 		getConfig().addDefault("strings.arena_invalid_sign", "&cThe arena appears to be invalid, because a join sign is missing.");
 		getConfig().addDefault("strings.arena_invalid_component", "&2The arena appears to be invalid (missing components or misstyped arena)!");
-		getConfig().addDefault("strings.you_fell", "&3You fell! Type &6/de leave &3to leave.");
+		getConfig().addDefault("strings.you_fell", "&3You fell! Type &6/etm leave &3to leave.");
 		getConfig().addDefault("strings.you_won", "&aYou won this round, awesome man! Here, enjoy your reward.");
 		getConfig().addDefault("strings.starting_in", "&aStarting in &6");
 		getConfig().addDefault("strings.starting_in2", "&a seconds.");
@@ -311,12 +311,12 @@ public class Main extends JavaPlugin implements Listener {
 		start_countdown = getConfig().getInt("config.start_countdown");
 		start_announcement = getConfig().getBoolean("config.start_announcement");
 		winner_announcement = getConfig().getBoolean("config.winner_announcement");
-		dragon_speed = getConfig().getDouble("config.dragon_speed");
+		mob_speed = getConfig().getDouble("config.mob_speed");
 		destroy_radius = getConfig().getInt("config.destroy_radius");
-		if (dragon_speed < 0.05 || dragon_speed > 10) {
-			dragon_speed = 1.0;
+		if (mob_speed < 0.05 || mob_speed > 10) {
+			mob_speed = 1.0;
 		}
-		dragon_name = getConfig().getString("config.dragon_healthbar_name").replaceAll("&", "§");
+		dragon_name = getConfig().getString("config.mob_healthbar_name").replaceAll("&", "§");
 		last_man_standing = getConfig().getBoolean("config.last_man_standing");
 		spawn_winnerfirework = getConfig().getBoolean("config.spawn_winnerfirework");
 		
@@ -362,7 +362,7 @@ public class Main extends JavaPlugin implements Listener {
 				if (action.equalsIgnoreCase("createarena")) {
 					// create arena
 					if (args.length > 1) {
-						if (sender.hasPermission("dragonescape.setup")) {
+						if (sender.hasPermission("mobescape.setup")) {
 							String arenaname = args[1];
 							getConfig().set(arenaname + ".name", arenaname);
 							this.saveConfig();
@@ -371,11 +371,11 @@ public class Main extends JavaPlugin implements Listener {
 							sender.sendMessage(noperm);
 						}
 					} else {
-						sender.sendMessage("" + ChatColor.RED + "No arena submitted. Usage: /de createarena [name]");
+						sender.sendMessage("" + ChatColor.RED + "No arena submitted. Usage: /etm createarena [name]");
 					}
 				} else if (action.equalsIgnoreCase("removearena")) {
 					if (args.length > 1) {
-						if (sender.hasPermission("dragonescape.setup")) {
+						if (sender.hasPermission("mobescape.setup")) {
 							String arenaname = args[1];
 							if (getConfig().isSet(arenaname)) {
 								getConfig().set(arenaname, null);
@@ -390,7 +390,7 @@ public class Main extends JavaPlugin implements Listener {
 							sender.sendMessage(noperm);
 						}
 					} else {
-						sender.sendMessage("" + ChatColor.RED + "No arena submitted. Usage: /de createarena [name]");
+						sender.sendMessage("" + ChatColor.RED + "No arena submitted. Usage: /etm createarena [name]");
 					}
 				} else if (action.equalsIgnoreCase("savearena")) {
 					if (args.length > 1) {
@@ -410,15 +410,15 @@ public class Main extends JavaPlugin implements Listener {
 							sender.sendMessage("" + ChatColor.RED + "The arena appears to be invalid (missing components)!");
 						}
 					} else {
-						sender.sendMessage("" + ChatColor.RED + "Usage: " + ChatColor.DARK_GREEN + "/de savearena [name]");
+						sender.sendMessage("" + ChatColor.RED + "Usage: " + ChatColor.DARK_GREEN + "/etm savearena [name]");
 					}
 				} else if (action.equalsIgnoreCase("setbounds")) {
-					if (sender.hasPermission("dragonescape.setup")) {
+					if (sender.hasPermission("mobescape.setup")) {
 						if (args.length > 2) {
 							String arena = args[1];
 							String count = args[2];
 							if (!count.equalsIgnoreCase("low") && !count.equalsIgnoreCase("high")) {
-								sender.sendMessage("" + ChatColor.RED + "Second parameter invalid. Usage: /de setbounds [arena] [low/high]");
+								sender.sendMessage("" + ChatColor.RED + "Second parameter invalid. Usage: /etm setbounds [arena] [low/high]");
 								return true;
 							}
 							if (!getConfig().isSet(arena)) {
@@ -444,14 +444,14 @@ public class Main extends JavaPlugin implements Listener {
 
 							sender.sendMessage("" + ChatColor.YELLOW + "Successfully saved " + count + " boundary!");
 						} else {
-							sender.sendMessage("" + ChatColor.RED + "Usage: /de setbounds [arena] [count].");
+							sender.sendMessage("" + ChatColor.RED + "Usage: /etm setbounds [arena] [count].");
 						}
 					} else {
 						sender.sendMessage(noperm);
 					}
 				} else if (action.equalsIgnoreCase("boundstool")) {
 					if (args.length > 1) {
-						if (sender.hasPermission("dragonescape.setup")) {
+						if (sender.hasPermission("mobescape.setup")) {
 							Player p = (Player) sender;
 							String arenaname = args[1];
 							if (!getConfig().isSet(arenaname)) {
@@ -469,11 +469,11 @@ public class Main extends JavaPlugin implements Listener {
 							sender.sendMessage(noperm);
 						}
 					} else {
-						sender.sendMessage("" + ChatColor.RED + "Usage: /de boundstool [arena].");
+						sender.sendMessage("" + ChatColor.RED + "Usage: /etm boundstool [arena].");
 					}
 				} else if (action.equalsIgnoreCase("setflypoint")) {
 					if (args.length > 1) {
-						if (sender.hasPermission("dragonescape.setup")) {
+						if (sender.hasPermission("mobescape.setup")) {
 							Player p = (Player) sender;
 							String arenaname = args[1];
 
@@ -500,11 +500,11 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				} else if (action.equalsIgnoreCase("removeflypoint")) {
 					if (args.length > 2) {
-						if (sender.hasPermission("dragonescape.setup")) {
+						if (sender.hasPermission("mobescape.setup")) {
 							Player p = (Player) sender;
 							String arenaname = args[1];
 							if (!isNumeric(args[2])) {
-								sender.sendMessage(ChatColor.RED + "Usage: /de removeflypoint [arena] [count]");
+								sender.sendMessage(ChatColor.RED + "Usage: /etm removeflypoint [arena] [count]");
 								return true;
 							}
 							if (!getConfig().isSet(arenaname + ".flypoint")) {
@@ -525,7 +525,7 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				} else if (action.equalsIgnoreCase("setlobby")) {
 					if (args.length > 1) {
-						if (sender.hasPermission("dragonescape.setup")) {
+						if (sender.hasPermission("mobescape.setup")) {
 							Player p = (Player) sender;
 							String arenaname = args[1];
 							getConfig().set(arenaname + ".lobby.world", p.getWorld().getName());
@@ -540,7 +540,7 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				} else if (action.equalsIgnoreCase("setfinish")) {
 					if (args.length > 1) {
-						if (sender.hasPermission("dragonescape.setup")) {
+						if (sender.hasPermission("mobescape.setup")) {
 							Player p = (Player) sender;
 							String arenaname = args[1];
 							getConfig().set(arenaname + ".finish.world", p.getWorld().getName());
@@ -555,7 +555,7 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				} else if (action.equalsIgnoreCase("setspawn")) {
 					if (args.length > 1) {
-						if (sender.hasPermission("dragonescape.setup")) {
+						if (sender.hasPermission("mobescape.setup")) {
 							Player p = (Player) sender;
 							String arenaname = args[1];
 							getConfig().set(arenaname + ".spawn.world", p.getWorld().getName());
@@ -572,7 +572,7 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				} else if (action.equalsIgnoreCase("setdragonspawn")) {
 					if (args.length > 1) {
-						if (sender.hasPermission("dragonescape.setup")) {
+						if (sender.hasPermission("mobescape.setup")) {
 							Player p = (Player) sender;
 							String arenaname = args[1];
 							getConfig().set(arenaname + ".dragonspawn.world", p.getWorld().getName());
@@ -588,7 +588,7 @@ public class Main extends JavaPlugin implements Listener {
 						}
 					}
 				} else if (action.equalsIgnoreCase("setmainlobby")) {
-					if (sender.hasPermission("dragonescape.setup")) {
+					if (sender.hasPermission("mobescape.setup")) {
 						Player p = (Player) sender;
 						getConfig().set("mainlobby.world", p.getWorld().getName());
 						getConfig().set("mainlobby.loc.x", p.getLocation().getBlockX());
@@ -607,7 +607,7 @@ public class Main extends JavaPlugin implements Listener {
 						p.sendMessage(not_in_arena);
 					}
 				} else if (action.equalsIgnoreCase("endall")) {
-					if (sender.hasPermission("dragonescape.end")) {
+					if (sender.hasPermission("mobescape.end")) {
 						for (String arena : tasks.keySet()) {
 							try {
 								tasks.get(arena).cancel();
@@ -621,7 +621,7 @@ public class Main extends JavaPlugin implements Listener {
 						sender.sendMessage(noperm);
 					}
 				} else if (action.equalsIgnoreCase("setmaxplayers")) {
-					if (sender.hasPermission("dragonescape.setup")) {
+					if (sender.hasPermission("mobescape.setup")) {
 						if (args.length > 2) {
 							String arena = args[1];
 							String playercount = args[2];
@@ -636,11 +636,11 @@ public class Main extends JavaPlugin implements Listener {
 							this.setArenaMaxPlayers(arena, Integer.parseInt(playercount));
 							sender.sendMessage("" + ChatColor.YELLOW + "Successfully set!");
 						} else {
-							sender.sendMessage("" + ChatColor.RED + "Usage: /de setmaxplayers [arena] [count].");
+							sender.sendMessage("" + ChatColor.RED + "Usage: /etm setmaxplayers [arena] [count].");
 						}
 					}
 				} else if (action.equalsIgnoreCase("setminplayers")) {
-					if (sender.hasPermission("dragonescape.setup")) {
+					if (sender.hasPermission("mobescape.setup")) {
 						if (args.length > 2) {
 							String arena = args[1];
 							String playercount = args[2];
@@ -655,13 +655,13 @@ public class Main extends JavaPlugin implements Listener {
 							this.setArenaMinPlayers(arena, Integer.parseInt(playercount));
 							sender.sendMessage("" + ChatColor.YELLOW + "Successfully set!");
 						} else {
-							sender.sendMessage("" + ChatColor.RED + "Usage: /de setminplayers [arena] [count].");
+							sender.sendMessage("" + ChatColor.RED + "Usage: /etm setminplayers [arena] [count].");
 						}
 					} else {
 						sender.sendMessage(noperm);
 					}
 				} else if (action.equalsIgnoreCase("setdifficulty")) {
-					if (sender.hasPermission("dragonescape.setup")) {
+					if (sender.hasPermission("mobescape.setup")) {
 						if (args.length > 2) {
 							String arena = args[1];
 							String difficulty = args[2];
@@ -675,11 +675,11 @@ public class Main extends JavaPlugin implements Listener {
 							}
 							sender.sendMessage("" + ChatColor.YELLOW + "Successfully set!");
 						} else {
-							sender.sendMessage("" + ChatColor.RED + "Usage: /de setdifficulty [arena] [difficulty]. Difficulty can be 0, 1 or 2.");
+							sender.sendMessage("" + ChatColor.RED + "Usage: /etm setdifficulty [arena] [difficulty]. Difficulty can be 0, 1 or 2.");
 						}
 					}
 				}else if (action.equalsIgnoreCase("setmobtype")) {
-					if (sender.hasPermission("dragonescape.setup")) {
+					if (sender.hasPermission("mobescape.setup")) {
 						if (args.length > 1) {
 							String mobtype = args[1];
 							if(mobtype.equalsIgnoreCase("wither") || mobtype.equalsIgnoreCase("dragon")){
@@ -691,7 +691,7 @@ public class Main extends JavaPlugin implements Listener {
 								sender.sendMessage("" + ChatColor.RED + "Unknown mob. Possible ones: dragon, wither");
 							}
 						} else {
-							sender.sendMessage("" + ChatColor.RED + "Usage: /de setmobtype [mobtype].");
+							sender.sendMessage("" + ChatColor.RED + "Usage: /etm setmobtype [mobtype].");
 						}
 					}
 				} else if (action.equalsIgnoreCase("join")) {
@@ -752,7 +752,7 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				} else if (action.equalsIgnoreCase("stop") || action.equalsIgnoreCase("end")) {
 					if (args.length > 1) {
-						if (sender.hasPermission("dragonescape.stop")) {
+						if (sender.hasPermission("mobescape.stop")) {
 							final String arena = args[1];
 							if (!ingame.containsKey(arena)) {
 								sender.sendMessage(ChatColor.RED + "The arena appears to be not ingame.");
@@ -781,7 +781,7 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				} else if (action.equalsIgnoreCase("start")) {
 					if (args.length > 1) {
-						if (sender.hasPermission("dragonescape.start")) {
+						if (sender.hasPermission("mobescape.start")) {
 							final String arena = args[1];
 							if (!ingame.containsKey(arena)) {
 								ingame.put(arena, false);
@@ -819,7 +819,7 @@ public class Main extends JavaPlugin implements Listener {
 						}
 					}
 				} else if (action.equalsIgnoreCase("reload")) {
-					if (sender.hasPermission("dragonescape.reload")) {
+					if (sender.hasPermission("mobescape.reload")) {
 						this.reloadConfig();
 						getConfigVars();
 						sender.sendMessage(reloaded);
@@ -827,7 +827,7 @@ public class Main extends JavaPlugin implements Listener {
 						sender.sendMessage(noperm);
 					}
 				} else if (action.equalsIgnoreCase("list")) {
-					if (sender.hasPermission("dragonescape.list")) {
+					if (sender.hasPermission("mobescape.list")) {
 						sender.sendMessage("" + ChatColor.GOLD + "-= Arenas =-");
 						for (String arena : getConfig().getKeys(false)) {
 							if (!arena.equalsIgnoreCase("mainlobby") && !arena.equalsIgnoreCase("strings") && !arena.equalsIgnoreCase("config")) {
@@ -839,33 +839,33 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				} else {
 					sender.sendMessage("" + ChatColor.GOLD + "-= DragonEscape " + ChatColor.DARK_GREEN + "help: " + ChatColor.GOLD + "=-");
-					sender.sendMessage("" + ChatColor.DARK_GREEN + "To " + ChatColor.GOLD + "setup the main lobby " + ChatColor.DARK_GREEN + ", type in " + ChatColor.RED + "/de setmainlobby");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "To " + ChatColor.GOLD + "setup the main lobby " + ChatColor.DARK_GREEN + ", type in " + ChatColor.RED + "/etm setmainlobby");
 					sender.sendMessage("" + ChatColor.DARK_GREEN + "To " + ChatColor.GOLD + "setup " + ChatColor.DARK_GREEN + "a new arena, type in the following commands:");
-					sender.sendMessage("" + ChatColor.DARK_GREEN + "/de createarena [name]");
-					sender.sendMessage("" + ChatColor.DARK_GREEN + "/de setlobby [name] " + ChatColor.GOLD + " - for the waiting lobby");
-					sender.sendMessage("" + ChatColor.DARK_GREEN + "/de setspawn [name] " + ChatColor.GOLD + " - players spawn here");
-					sender.sendMessage("" + ChatColor.DARK_GREEN + "/de setfinish [name] " + ChatColor.GOLD + " - the finish line");
-					sender.sendMessage("" + ChatColor.DARK_GREEN + "/de setflypoint [name] " + ChatColor.GOLD + " - set at least two flypoints for the dragon!");
-					sender.sendMessage("" + ChatColor.DARK_GREEN + "/de setbounds [name] " + ChatColor.GOLD + " - don't forget to set both high and low boundaries.");
-					sender.sendMessage("" + ChatColor.DARK_GREEN + "/de savearena [name] " + ChatColor.GOLD + " - save the arena");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm createarena [name]");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm setlobby [name] " + ChatColor.GOLD + " - for the waiting lobby");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm setspawn [name] " + ChatColor.GOLD + " - players spawn here");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm setfinish [name] " + ChatColor.GOLD + " - the finish line");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm setflypoint [name] " + ChatColor.GOLD + " - set at least two flypoints for the dragon!");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm setbounds [name] " + ChatColor.GOLD + " - don't forget to set both high and low boundaries.");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm savearena [name] " + ChatColor.GOLD + " - save the arena");
 					sender.sendMessage("");
-					sender.sendMessage("" + ChatColor.DARK_GREEN + "You can join with " + ChatColor.RED + "/de join [name] " + ChatColor.DARK_GREEN + "and leave with " + ChatColor.RED + "/de leave" + ChatColor.DARK_GREEN + ".");
-					sender.sendMessage("" + ChatColor.DARK_GREEN + "You can force an arena to start with " + ChatColor.RED + "/de start [name]" + ChatColor.DARK_GREEN + ".");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "You can join with " + ChatColor.RED + "/etm join [name] " + ChatColor.DARK_GREEN + "and leave with " + ChatColor.RED + "/etm leave" + ChatColor.DARK_GREEN + ".");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "You can force an arena to start with " + ChatColor.RED + "/etm start [name]" + ChatColor.DARK_GREEN + ".");
 				}
 			} else {
 				sender.sendMessage("" + ChatColor.GOLD + "-= DragonEscape " + ChatColor.DARK_GREEN + "help: " + ChatColor.GOLD + "=-");
-				sender.sendMessage("" + ChatColor.DARK_GREEN + "To " + ChatColor.GOLD + "setup the main lobby " + ChatColor.DARK_GREEN + ", type in " + ChatColor.RED + "/de setmainlobby");
+				sender.sendMessage("" + ChatColor.DARK_GREEN + "To " + ChatColor.GOLD + "setup the main lobby " + ChatColor.DARK_GREEN + ", type in " + ChatColor.RED + "/etm setmainlobby");
 				sender.sendMessage("" + ChatColor.DARK_GREEN + "To " + ChatColor.GOLD + "setup " + ChatColor.DARK_GREEN + "a new arena, type in the following commands:");
-				sender.sendMessage("" + ChatColor.DARK_GREEN + "/de createarena [name]");
-				sender.sendMessage("" + ChatColor.DARK_GREEN + "/de setlobby [name] " + ChatColor.GOLD + " - for the waiting lobby");
-				sender.sendMessage("" + ChatColor.DARK_GREEN + "/de setspawn [name] " + ChatColor.GOLD + " - players spawn here");
-				sender.sendMessage("" + ChatColor.DARK_GREEN + "/de setfinish [name] " + ChatColor.GOLD + " - the finish line");
-				sender.sendMessage("" + ChatColor.DARK_GREEN + "/de setflypoint [name] " + ChatColor.GOLD + " - set at least two flypoints for the dragon!");
-				sender.sendMessage("" + ChatColor.DARK_GREEN + "/de setbounds [name] " + ChatColor.GOLD + " - don't forget to set both high and low boundaries.");
-				sender.sendMessage("" + ChatColor.DARK_GREEN + "/de savearena [name] " + ChatColor.GOLD + " - save the arena");
+				sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm createarena [name]");
+				sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm setlobby [name] " + ChatColor.GOLD + " - for the waiting lobby");
+				sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm setspawn [name] " + ChatColor.GOLD + " - players spawn here");
+				sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm setfinish [name] " + ChatColor.GOLD + " - the finish line");
+				sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm setflypoint [name] " + ChatColor.GOLD + " - set at least two flypoints for the dragon!");
+				sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm setbounds [name] " + ChatColor.GOLD + " - don't forget to set both high and low boundaries.");
+				sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm savearena [name] " + ChatColor.GOLD + " - save the arena");
 				sender.sendMessage("");
-				sender.sendMessage("" + ChatColor.DARK_GREEN + "You can join with " + ChatColor.RED + "/de join [name] " + ChatColor.DARK_GREEN + "and leave with " + ChatColor.RED + "/de leave" + ChatColor.DARK_GREEN + ".");
-				sender.sendMessage("" + ChatColor.DARK_GREEN + "You can force an arena to start with " + ChatColor.RED + "/de start [name]" + ChatColor.DARK_GREEN + ".");
+				sender.sendMessage("" + ChatColor.DARK_GREEN + "You can join with " + ChatColor.RED + "/etm join [name] " + ChatColor.DARK_GREEN + "and leave with " + ChatColor.RED + "/etm leave" + ChatColor.DARK_GREEN + ".");
+				sender.sendMessage("" + ChatColor.DARK_GREEN + "You can force an arena to start with " + ChatColor.RED + "/etm start [name]" + ChatColor.DARK_GREEN + ".");
 			}
 			return true;
 		}
@@ -1100,12 +1100,10 @@ public class Main extends JavaPlugin implements Listener {
 				if (last_man_standing) {
 					if (count < 2) {
 						stop(h.get(arena), arena);
-						System.out.println("test2");
 					}
 				} else {
 					if (count < 1) {
 						stop(h.get(arena), arena);
-						System.out.println("test3");
 					}
 				}
 
@@ -1137,7 +1135,7 @@ public class Main extends JavaPlugin implements Listener {
 						String itemname = im.getDisplayName();
 						String arenaname = itemname.split("" + ChatColor.YELLOW + "")[1];
 						if (getConfig().isSet(arenaname)) {
-							if (event.getPlayer().hasPermission("dragonescape.setup")) {
+							if (event.getPlayer().hasPermission("mobescape.setup")) {
 								try {
 									Block b = event.getClickedBlock();
 									Location l = b.getLocation();
@@ -1222,7 +1220,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onSignChange(SignChangeEvent event) {
 		Player p = event.getPlayer();
 		if (event.getLine(0).toLowerCase().equalsIgnoreCase("dragonescape") || event.getLine(0).toLowerCase().equalsIgnoreCase("mobescape")) {
-			if (event.getPlayer().hasPermission("dragonescape.sign") || event.getPlayer().isOp()) {
+			if (event.getPlayer().hasPermission("mobescape.sign") || event.getPlayer().isOp()) {
 				event.setLine(0, sign_top);
 				if (!event.getLine(2).equalsIgnoreCase("")) {
 					String arena = event.getLine(2);
@@ -1250,8 +1248,8 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
 		if (arenap.containsKey(event.getPlayer()) && !event.getPlayer().isOp()) {
-			if (!event.getMessage().startsWith("/de") && !event.getMessage().startsWith("/dragonescape")) {
-				event.getPlayer().sendMessage("" + ChatColor.RED + "Please use " + ChatColor.GOLD + "/de leave " + ChatColor.RED + "to leave this minigame.");
+			if (!event.getMessage().startsWith("/etm") && !event.getMessage().startsWith("/dragonescape")) {
+				event.getPlayer().sendMessage("" + ChatColor.RED + "Please use " + ChatColor.GOLD + "/etm leave " + ChatColor.RED + "to leave this minigame.");
 				event.setCancelled(true);
 				return;
 			}
@@ -1310,7 +1308,7 @@ public class Main extends JavaPlugin implements Listener {
 			ret = new Location(Bukkit.getWorld(getConfig().getString("mainlobby.world")), getConfig().getInt("mainlobby.loc.x"), getConfig().getInt("mainlobby.loc.y"), getConfig().getInt("mainlobby.loc.z"));
 		} else {
 			ret = null;
-			getLogger().warning("A Mainlobby could not be found. This will lead to errors, please fix this with /de setmainlobby.");
+			getLogger().warning("A Mainlobby could not be found. This will lead to errors, please fix this with /etm setmainlobby.");
 		}
 		return ret;
 	}

@@ -1,4 +1,4 @@
-package com.comze_instancelabs.dragonescape.V1_7;
+package com.comze_instancelabs.mobescape.V1_7;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -21,9 +21,9 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import com.comze_instancelabs.dragonescape.Kits;
-import com.comze_instancelabs.dragonescape.Main;
-import com.comze_instancelabs.dragonescape.Slimey;
+import com.comze_instancelabs.mobescape.Kits;
+import com.comze_instancelabs.mobescape.Main;
+import com.comze_instancelabs.mobescape.Slimey;
 
 import net.minecraft.server.v1_7_R1.EntityTypes;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
