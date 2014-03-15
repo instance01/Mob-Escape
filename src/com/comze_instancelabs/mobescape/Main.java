@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -214,6 +215,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.last_man_standing", true);
 		getConfig().addDefault("config.spawn_winnerfirework", true);
 		getConfig().addDefault("config.mob_type", "dragon");
+		getConfig().addDefault("config.game_on_join", false);
 		
 		getConfig().addDefault("config.sign_top_line", "&6MobEscape");
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
@@ -259,7 +261,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("strings.starting_announcement", "&aStarting a new DragonEscape Game in &6");
 		getConfig().addDefault("strings.started_announcement", "&aA new DragonEscape Round has started!");
 		getConfig().addDefault("strings.winner_announcement", "&6<player> &awon the game on arena &6<arena>!");
-		getConfig().addDefault("strings.join_announcement", "&6<player> &ajoined the game <count>!");
+		getConfig().addDefault("strings.join_announcement", "&6<player> &ajoined the game (<count>)!");
 		getConfig().addDefault("strings.noperm", "&cYou don't have permission.");
 		getConfig().addDefault("strings.nopermkit", "&cYou don't have permission to use this kit.");
 		
@@ -961,6 +963,23 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}, 5);
 			left_players.remove(event.getPlayer().getName());
+		}
+		
+		if(getConfig().getBoolean("game_on_join")){
+			int c = 0;
+			List<String> arenas = new ArrayList<String>();
+			for (String arena : getConfig().getKeys(false)) {
+				if (!arena.equalsIgnoreCase("mainlobby") && !arena.equalsIgnoreCase("strings") && !arena.equalsIgnoreCase("config")) {
+					c++;
+					arenas.add(arena);
+				}
+			}
+			if(c < 1){
+				getLogger().severe("Couldn't find any arena even though game_on_join was turned on. Please setup an arena to fix this!");
+				return;
+			}
+			
+			joinLobby(event.getPlayer(), arenas.get(0));
 		}
 	}
 
