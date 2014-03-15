@@ -1,6 +1,6 @@
 name: MobEscape
 main: com.comze_instancelabs.mobescape.Main
-version: 1.0
+version: 1.1
 author: instancelabs
 softdepend: [Vault]
 commands:
