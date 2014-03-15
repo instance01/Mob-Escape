@@ -847,7 +847,7 @@ public class Main extends JavaPlugin implements Listener {
 						sender.sendMessage(noperm);
 					}
 				} else {
-					sender.sendMessage("" + ChatColor.GOLD + "-= DragonEscape " + ChatColor.DARK_GREEN + "help: " + ChatColor.GOLD + "=-");
+					sender.sendMessage("" + ChatColor.GOLD + "-= MobEscape " + ChatColor.DARK_GREEN + "help: " + ChatColor.GOLD + "=-");
 					sender.sendMessage("" + ChatColor.DARK_GREEN + "To " + ChatColor.GOLD + "setup the main lobby " + ChatColor.DARK_GREEN + ", type in " + ChatColor.RED + "/etm setmainlobby");
 					sender.sendMessage("" + ChatColor.DARK_GREEN + "To " + ChatColor.GOLD + "setup " + ChatColor.DARK_GREEN + "a new arena, type in the following commands:");
 					sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm createarena [name]");
@@ -862,7 +862,7 @@ public class Main extends JavaPlugin implements Listener {
 					sender.sendMessage("" + ChatColor.DARK_GREEN + "You can force an arena to start with " + ChatColor.RED + "/etm start [name]" + ChatColor.DARK_GREEN + ".");
 				}
 			} else {
-				sender.sendMessage("" + ChatColor.GOLD + "-= DragonEscape " + ChatColor.DARK_GREEN + "help: " + ChatColor.GOLD + "=-");
+				sender.sendMessage("" + ChatColor.GOLD + "-= MobEscape " + ChatColor.DARK_GREEN + "help: " + ChatColor.GOLD + "=-");
 				sender.sendMessage("" + ChatColor.DARK_GREEN + "To " + ChatColor.GOLD + "setup the main lobby " + ChatColor.DARK_GREEN + ", type in " + ChatColor.RED + "/etm setmainlobby");
 				sender.sendMessage("" + ChatColor.DARK_GREEN + "To " + ChatColor.GOLD + "setup " + ChatColor.DARK_GREEN + "a new arena, type in the following commands:");
 				sender.sendMessage("" + ChatColor.DARK_GREEN + "/etm createarena [name]");
