@@ -139,7 +139,8 @@ public class Main extends JavaPlugin implements Listener {
 	boolean command_reward = false;
 	String cmd = "";
 	public boolean start_announcement = false;
-	boolean winner_announcement = false;
+	public boolean join_announcement = false;
+	public boolean winner_announcement = false;
 	public String dragon_name = "Ender Dragon";
 	public double mob_speed = 1.0;
 	public static boolean mode1_6 = false;
@@ -176,9 +177,10 @@ public class Main extends JavaPlugin implements Listener {
 	public String sign_second_ingame = "";
 	public String sign_second_restarting = "";
 
-	// anouncements
+	// announcements
 	public String starting = "";
 	public String started = "";
+	public String join_announcement_ = "";
 
 	public String type = "dragon"; 
 	
@@ -203,6 +205,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.itemamount", 1);
 		getConfig().addDefault("config.use_command_reward", false);
 		getConfig().addDefault("config.command_reward", "pex user <player> group set DragonPro");
+		getConfig().addDefault("config.join_announcement", false);
 		getConfig().addDefault("config.start_announcement", false);
 		getConfig().addDefault("config.winner_announcement", false);
 		getConfig().addDefault("config.mob_speed", 1.0D);
@@ -256,6 +259,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("strings.starting_announcement", "&aStarting a new DragonEscape Game in &6");
 		getConfig().addDefault("strings.started_announcement", "&aA new DragonEscape Round has started!");
 		getConfig().addDefault("strings.winner_announcement", "&6<player> &awon the game on arena &6<arena>!");
+		getConfig().addDefault("strings.join_announcement", "&6<player> &ajoined the game <count>!");
 		getConfig().addDefault("strings.noperm", "&cYou don't have permission.");
 		getConfig().addDefault("strings.nopermkit", "&cYou don't have permission to use this kit.");
 		
@@ -311,6 +315,7 @@ public class Main extends JavaPlugin implements Listener {
 		start_countdown = getConfig().getInt("config.start_countdown");
 		start_announcement = getConfig().getBoolean("config.start_announcement");
 		winner_announcement = getConfig().getBoolean("config.winner_announcement");
+		join_announcement = getConfig().getBoolean("config.join_announcement");
 		mob_speed = getConfig().getDouble("config.mob_speed");
 		destroy_radius = getConfig().getInt("config.destroy_radius");
 		if (mob_speed < 0.05 || mob_speed > 10) {
@@ -345,6 +350,7 @@ public class Main extends JavaPlugin implements Listener {
 		arena_full = getConfig().getString("strings.arena_full").replaceAll("&", "§");
 		starting = getConfig().getString("strings.starting_announcement").replaceAll("&", "§");
 		started = getConfig().getString("strings.started_announcement").replaceAll("&", "§");
+		join_announcement_ = getConfig().getString("strings.join_announcement").replaceAll("&", "§");
 		removed_arena = getConfig().getString("strings.removed_arena").replaceAll("&", "§");
 		winner_an = getConfig().getString("strings.winner_announcement").replaceAll("&", "§");
 		noperm = getConfig().getString("strings.noperm").replaceAll("&", "§");
@@ -1499,8 +1505,18 @@ public class Main extends JavaPlugin implements Listener {
 		for (Player p_ : arenap.keySet()) {
 			if (arenap.get(p_).equalsIgnoreCase(arena)) {
 				count++;
+				
 			}
 		}
+		
+		for (Player p_ : arenap.keySet()) {
+			if (arenap.get(p_).equalsIgnoreCase(arena)) {
+				if(join_announcement){
+					p_.sendMessage(join_announcement_.replace("<player>", p.getName()).replace("<count>", Integer.toString(count) + "/" + Integer.toString(getArenaMaxPlayers(arena))));
+				}
+			}
+		}
+		
 		if (count > getArenaMinPlayers(arena) - 1) {
 			for (Player p_ : arenap.keySet()) {
 				final Player p__ = p_;
