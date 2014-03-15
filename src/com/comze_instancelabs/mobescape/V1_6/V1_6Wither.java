@@ -496,7 +496,7 @@ public class V1_6Wither {
 					public void run() {
 						if (b.getType() != Material.AIR) {
 							playBlockBreakParticles(b.getLocation(), b.getType());
-							if(b.getType() != Material.WATER && b.getType() != Material.LAVA){
+							if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
 								l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));	
 							}
 							b.setType(Material.AIR);
@@ -516,7 +516,7 @@ public class V1_6Wither {
 					public void run() {
 						if (b.getType() != Material.AIR) {
 							playBlockBreakParticles(b.getLocation(), b.getType());
-							if(b.getType() != Material.WATER && b.getType() != Material.LAVA){
+							if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
 								l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));	
 							}
 							b.setType(Material.AIR);
@@ -536,7 +536,7 @@ public class V1_6Wither {
 					public void run() {
 						if (b.getType() != Material.AIR) {
 							playBlockBreakParticles(b.getLocation(), b.getType());
-							if(b.getType() != Material.WATER && b.getType() != Material.LAVA){
+							if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
 								l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));	
 							}
 							b.setType(Material.AIR);
@@ -556,7 +556,7 @@ public class V1_6Wither {
 					public void run() {
 						if (b.getType() != Material.AIR) {
 							playBlockBreakParticles(b.getLocation(), b.getType());
-							if(b.getType() != Material.WATER && b.getType() != Material.LAVA){
+							if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
 								l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));	
 							}
 							b.setType(Material.AIR);

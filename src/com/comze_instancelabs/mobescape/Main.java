@@ -146,7 +146,8 @@ public class Main extends JavaPlugin implements Listener {
 	public int destroy_radius = 10;
 	public boolean last_man_standing = true;
 	public boolean spawn_winnerfirework = true;
-
+	public boolean spawn_falling_blocks = true;
+	
 	public int start_countdown = 5;
 
 	public String saved_arena = "";
@@ -215,6 +216,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
 		getConfig().addDefault("config.sign_second_line_ingame", "&c[Ingame]");
 		getConfig().addDefault("config.sign_second_line_restarting", "&6[Restarting]");
+		getConfig().addDefault("config.spawn_falling_blocks", true);
 
 		getConfig().addDefault("config.kits.jumper.description", "&eRightclick the iron axe to jump.");
 		getConfig().addDefault("config.kits.jumper.uses", 4);
@@ -322,6 +324,7 @@ public class Main extends JavaPlugin implements Listener {
 		if(!type.equalsIgnoreCase("dragon") && !type.equalsIgnoreCase("wither")){
 			type = "dragon";
 		}
+		spawn_falling_blocks = getConfig().getBoolean("config.spawn_falling_blocks");
 		
 		saved_arena = getConfig().getString("strings.saved.arena").replaceAll("&", "§");
 		removed_arena = getConfig().getString("strings.removed_arena").replaceAll("&", "§");
