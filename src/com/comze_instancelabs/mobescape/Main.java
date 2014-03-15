@@ -954,8 +954,8 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		final Player p = event.getPlayer();
 		if (left_players.contains(event.getPlayer().getName())) {
-			final Player p = event.getPlayer();
 			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 				public void run() {
 					p.teleport(getMainLobby());
@@ -965,9 +965,9 @@ public class Main extends JavaPlugin implements Listener {
 			left_players.remove(event.getPlayer().getName());
 		}
 		
-		if(getConfig().getBoolean("game_on_join")){
+		if(getConfig().getBoolean("config.game_on_join")){
 			int c = 0;
-			List<String> arenas = new ArrayList<String>();
+			final List<String> arenas = new ArrayList<String>();
 			for (String arena : getConfig().getKeys(false)) {
 				if (!arena.equalsIgnoreCase("mainlobby") && !arena.equalsIgnoreCase("strings") && !arena.equalsIgnoreCase("config")) {
 					c++;
@@ -979,7 +979,11 @@ public class Main extends JavaPlugin implements Listener {
 				return;
 			}
 			
-			joinLobby(event.getPlayer(), arenas.get(0));
+			Bukkit.getScheduler().runTaskLater(this, new Runnable(){
+				public void run(){
+					joinLobby(p, arenas.get(0));
+				}
+			}, 30L);
 		}
 	}
 
