@@ -82,6 +82,10 @@ public class MEDragon extends EntityEnderDragon {
 		return false;
 	}
 
+	public Vector getCurrentPosition(){
+		return points.get(currentid);
+	}
+	
 	public Vector getNextPosition() {
 		
 		double tempx = this.locX;

@@ -24,6 +24,8 @@ import org.bukkit.util.Vector;
 import com.comze_instancelabs.mobescape.Kits;
 import com.comze_instancelabs.mobescape.Main;
 import com.comze_instancelabs.mobescape.Slimey;
+import com.comze_instancelabs.mobescape.V1_6.V1_6Dragon;
+import com.comze_instancelabs.mobescape.V1_6.V1_6Wither;
 
 import net.minecraft.server.v1_7_R1.EntityTypes;
 import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
@@ -288,6 +290,13 @@ public class V1_7Wither {
 						if (p.isOnline()) {
 							if (m.arenap.get(p).equalsIgnoreCase(arena)) {
 								m.arenap_.put(p.getName(), arena);
+								
+								Vector vv = wither.get(arena).getCurrentPosition();
+								Location dragon = new Location(p.getWorld(), wither.get(arena).locX, wither.get(arena).locY, wither.get(arena).locZ);
+								Location l = new Location(p.getWorld(), vv.getX(), vv.getY(), vv.getZ());
+								if(p.getLocation().distance(l) - dragon.distance(l) > 3){
+									m.simulatePlayerFall(p);
+								}
 							}
 						}
 					}
@@ -338,21 +347,6 @@ public class V1_7Wither {
 							return;
 						}
 						
-						/*for (int i = 0; i < m.destroy_radius; i++) { // length1
-							for (int j = 0; j < length2; j++) {
-								final Block b;
-								b = l.getWorld().getBlockAt(new Location(l.getWorld(), wither.get(arena).locX + (m.destroy_radius / 2) - i, l2.getBlockY() + j - 1, wither.get(arena).locZ + 3));
-								Bukkit.getScheduler().runTask(m, new Runnable() {
-									public void run() {
-										if (b.getType() != Material.AIR) {
-											playBlockBreakParticles(b.getLocation(), b.getType());
-											l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											b.setType(Material.AIR);
-										}
-									}
-								});
-							}
-						}*/
 						V1_7Wither.destroy(m, l1, l2, arena, length2);
 					} else if (dir_.equalsIgnoreCase("north")) {
 						//wither.get(arena).setPosition(l.getX(), l.getY(), l.getZ() - m.dragon_move_increment.get(arena));
@@ -365,23 +359,7 @@ public class V1_7Wither {
 						if(wither.get(arena) == null){
 							return;
 						}
-						
-						/*for (int i = 0; i < m.destroy_radius; i++) { // length1
-							for (int j = 0; j < length2; j++) {
-								final Block b;
-								b = l.getWorld().getBlockAt(new Location(l.getWorld(), wither.get(arena).locX + (m.destroy_radius / 2) - i, l2.getBlockY() + j - 1, wither.get(arena).locZ - 3));
 
-								Bukkit.getScheduler().runTask(m, new Runnable() {
-									public void run() {
-										if (b.getType() != Material.AIR) {
-											playBlockBreakParticles(b.getLocation(), b.getType());
-											l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											b.setType(Material.AIR);
-										}
-									}
-								});
-							}
-						}*/
 						V1_7Wither.destroy(m, l1, l2, arena, length2);
 					} else if (dir_.equalsIgnoreCase("east")) {
 						//wither.get(arena).setPosition(l.getX() + m.dragon_move_increment.get(arena), l.getY(), l.getZ());
@@ -394,23 +372,7 @@ public class V1_7Wither {
 						if(wither.get(arena) == null){
 							return;
 						}
-						
-						/*for (int i = 0; i < m.destroy_radius; i++) { // length1
-							for (int j = 0; j < length2; j++) {
-								final Block b;
-								b = l.getWorld().getBlockAt(new Location(l.getWorld(), wither.get(arena).locX + 3, l2.getBlockY() + j - 1, wither.get(arena).locZ + (m.destroy_radius / 2) - i));
 
-								Bukkit.getScheduler().runTask(m, new Runnable() {
-									public void run() {
-										if (b.getType() != Material.AIR) {
-											playBlockBreakParticles(b.getLocation(), b.getType());
-											l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											b.setType(Material.AIR);
-										}
-									}
-								});
-							}
-						}*/
 						V1_7Wither.destroy(m, l1, l2, arena, length2);
 					} else if (dir_.equalsIgnoreCase("west")) {
 						//wither.get(arena).setPosition(l.getX() - m.dragon_move_increment.get(arena), l.getY(), l.getZ());
@@ -423,23 +385,7 @@ public class V1_7Wither {
 						if(wither.get(arena) == null){
 							return;
 						}
-						
-						/*for (int i = 0; i < m.destroy_radius; i++) { // length1
-							for (int j = 0; j < length2; j++) {
-								final Block b;
-								b = l.getWorld().getBlockAt(new Location(l.getWorld(), wither.get(arena).locX - 3, l2.getBlockY() + j - 1, wither.get(arena).locZ + (m.destroy_radius / 2) - i));
 
-								Bukkit.getScheduler().runTask(m, new Runnable() {
-									public void run() {
-										if (b.getType() != Material.AIR) {
-											playBlockBreakParticles(b.getLocation(), b.getType());
-											l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											b.setType(Material.AIR);
-										}
-									}
-								});
-							}
-						}*/
 						V1_7Wither.destroy(m, l1, l2, arena, length2);
 					}
 				} catch (Exception e) {

@@ -67,6 +67,7 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
 import com.comze_instancelabs.mobescape.V1_6.V1_6Dragon;
+import com.comze_instancelabs.mobescape.V1_6.V1_6Wither;
 /*import net.minecraft.server.v1_7_R1.AttributeInstance;
  import net.minecraft.server.v1_7_R1.EntityInsentient;
  import net.minecraft.server.v1_7_R1.EntityTypes;
@@ -1064,8 +1065,11 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 
+			
+			
 			final String arena_ = arenap_.get(event.getPlayer().getName());
 			String dir = m.getDirection(getSpawn(arena_).getYaw());
+
 
 			if (dir.equalsIgnoreCase("south")) {
 				if (event.getPlayer().getLocation().getBlockZ() > getFinish(arenap_.get(event.getPlayer().getName())).getBlockZ()) {
@@ -1141,7 +1145,7 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 	}
-
+	
 	@EventHandler
 	public void onSignUse(PlayerInteractEvent event) {
 		if (event.hasBlock()) {
@@ -1597,8 +1601,16 @@ public class Main extends JavaPlugin implements Listener {
 
 	public BukkitTask start(final String arena) {
 		if (mode1_6) {
-			V1_6Dragon v = new V1_6Dragon();
-			return v.start(this, arena);
+			if(type.equalsIgnoreCase("dragon")){
+				V1_6Dragon v = new V1_6Dragon();
+				return v.start(this, arena);
+			}else if(type.equalsIgnoreCase("wither")){
+				V1_6Wither v = new V1_6Wither();
+				return v.start(this, arena);
+			}else{
+				V1_6Dragon v = new V1_6Dragon();
+				return v.start(this, arena);
+			}
 		}
 		if(type.equalsIgnoreCase("dragon")){
 			V1_7Dragon v_ = new V1_7Dragon();
@@ -2009,15 +2021,24 @@ public class Main extends JavaPlugin implements Listener {
 						currentscore.put(pl_.getName(), score);
 					}
 					try{
-						objective.getScore(Bukkit.getOfflinePlayer("§a" + p_.getName())).setScore(score);
+						if(p_.getName().length() < 15){
+							objective.getScore(Bukkit.getOfflinePlayer("§a" + p_.getName())).setScore(score);
+						}else{
+							objective.getScore(Bukkit.getOfflinePlayer("§a" + p_.getName().substring(0, p_.getName().length() - 3))).setScore(score);
+						}
 					}catch(Exception e){
 					}
 				} else if (lost.containsKey(pl_)){
 					if (currentscore.containsKey(pl_.getName())) {
 						int score = currentscore.get(pl_.getName());
 						try{
-							board.resetScores(Bukkit.getOfflinePlayer("§a" + p_.getName()));
-							objective.getScore(Bukkit.getOfflinePlayer("§c" + p_.getName())).setScore(score);
+							if(p_.getName().length() < 15){
+								board.resetScores(Bukkit.getOfflinePlayer("§a" + p_.getName()));
+								objective.getScore(Bukkit.getOfflinePlayer("§c" + p_.getName())).setScore(score);
+							}else{
+								board.resetScores(Bukkit.getOfflinePlayer("§a" + p_.getName().substring(0, p_.getName().length() - 3)));
+								objective.getScore(Bukkit.getOfflinePlayer("§c" + p_.getName().substring(0, p_.getName().length() - 3))).setScore(score);
+							}
 						}catch(Exception e){
 						}
 					}
@@ -2033,8 +2054,14 @@ public class Main extends JavaPlugin implements Listener {
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
 			Scoreboard sc = manager.getNewScoreboard();
 			try{
-				board.resetScores(Bukkit.getOfflinePlayer("§c" + p.getName()));
-				board.resetScores(Bukkit.getOfflinePlayer("§a" + p.getName()));
+				if(p.getName().length() < 15){
+					board.resetScores(Bukkit.getOfflinePlayer("§c" + p.getName()));
+					board.resetScores(Bukkit.getOfflinePlayer("§a" + p.getName()));
+				}else{
+					board.resetScores(Bukkit.getOfflinePlayer("§c" + p.getName().substring(0, p.getName().length() - 3)));
+					board.resetScores(Bukkit.getOfflinePlayer("§a" + p.getName().substring(0, p.getName().length() - 3)));
+				}
+				
 			}catch(Exception e){}
 
 			sc.clearSlot(DisplaySlot.SIDEBAR);
@@ -2103,6 +2130,44 @@ public class Main extends JavaPlugin implements Listener {
 				return true;
 			}else{
 				return false;
+			}
+		}
+	}
+
+	public void simulatePlayerFall(Player p){
+		lost.put(p, arenap.get(p));
+		final Player p__ = p;
+		final String arena = arenap.get(p);
+		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+			public void run() {
+				try {
+					Location l = getSpawn(arena);
+					p__.teleport(new Location(l.getWorld(), l.getBlockX(), l.getBlockY() + 30, l.getBlockZ()));
+					p__.setAllowFlight(true);
+					p__.setFlying(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}, 5);
+
+		int count = 0;
+
+		for (Player p_ : arenap.keySet()) {
+			if (arenap.get(p_).equalsIgnoreCase(arena)) {
+				if (!lost.containsKey(p_)) {
+					count++;
+				}
+			}
+		}
+
+		if (last_man_standing) {
+			if (count < 2) {
+				stop(h.get(arena), arena);
+			}
+		} else {
+			if (count < 1) {
+				stop(h.get(arena), arena);
 			}
 		}
 	}
