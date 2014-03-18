@@ -173,7 +173,8 @@ public class Main extends JavaPlugin implements Listener {
 	public String nopermkit = "";
 	public String saved_finish = "";
 	public String saved_spawn = "";
-
+	public String noperm_arena = "";
+	
 	public String sign_top = "";
 	public String sign_second_join = "";
 	public String sign_second_ingame = "";
@@ -265,7 +266,8 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("strings.join_announcement", "&6<player> &ajoined the game (<count>)!");
 		getConfig().addDefault("strings.noperm", "&cYou don't have permission.");
 		getConfig().addDefault("strings.nopermkit", "&cYou don't have permission to use this kit.");
-		
+		getConfig().addDefault("strings.noperm_arena", "&cYou don't have permission to join this arena.");
+	
 		getConfig().options().copyDefaults(true);
 		if (getConfig().isSet("config.min_players")) {
 			getConfig().set("config.min_players", null);
@@ -358,7 +360,8 @@ public class Main extends JavaPlugin implements Listener {
 		winner_an = getConfig().getString("strings.winner_announcement").replaceAll("&", "§");
 		noperm = getConfig().getString("strings.noperm").replaceAll("&", "§");
 		nopermkit = getConfig().getString("strings.nopermkit").replaceAll("&", "§");
-
+		noperm_arena = getConfig().getString("strings.noperm_arena").replaceAll("&", "§");
+		
 		sign_top = getConfig().getString("config.sign_top_line").replaceAll("&", "§");
 		sign_second_join = getConfig().getString("config.sign_second_line_join").replaceAll("&", "§");
 		sign_second_ingame = getConfig().getString("config.sign_second_line_ingame").replaceAll("&", "§");
@@ -688,7 +691,7 @@ public class Main extends JavaPlugin implements Listener {
 							sender.sendMessage("" + ChatColor.RED + "Usage: /etm setdifficulty [arena] [difficulty]. Difficulty can be 0, 1 or 2.");
 						}
 					}
-				}else if (action.equalsIgnoreCase("setmobtype")) {
+				} else if (action.equalsIgnoreCase("setmobtype")) {
 					if (sender.hasPermission("mobescape.setmobtype")) {
 						if (args.length > 1) {
 							String mobtype = args[1];
@@ -702,6 +705,19 @@ public class Main extends JavaPlugin implements Listener {
 							}
 						} else {
 							sender.sendMessage("" + ChatColor.RED + "Usage: /etm setmobtype [mobtype].");
+						}
+					}
+				} else if (action.equalsIgnoreCase("setarenavip")) {
+					if (sender.hasPermission("mobescape.setup")) {
+						if (args.length > 2) {
+							if(args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")){
+								this.setArenaNeedsPerm(args[1], Boolean.parseBoolean(args[2]));
+								sender.sendMessage(ChatColor.GREEN + "Successfully set.");
+							}else{
+								sender.sendMessage(ChatColor.RED + "Usage: /etm setarenavip [arena] [true/false]");
+							}
+						} else {
+							sender.sendMessage(ChatColor.RED + "Usage: /etm setarenavip [arena] [true/false]");
 						}
 					}
 				} else if (action.equalsIgnoreCase("join")) {
@@ -1282,7 +1298,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerCommandPreprocessEvent(PlayerCommandPreprocessEvent event) {
 		if (arenap.containsKey(event.getPlayer()) && !event.getPlayer().isOp()) {
-			if (!event.getMessage().startsWith("/etm") && !event.getMessage().startsWith("/dragonescape")) {
+			if (!event.getMessage().startsWith("/etm") && !event.getMessage().startsWith("/de") && !event.getMessage().startsWith("/dragonescape")) {
 				event.getPlayer().sendMessage("" + ChatColor.RED + "Please use " + ChatColor.GOLD + "/etm leave " + ChatColor.RED + "to leave this minigame.");
 				event.setCancelled(true);
 				return;
@@ -1503,6 +1519,16 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void joinLobby(final Player p, final String arena) {
+		
+		// very first check if arena needs perms and player has perm to join.
+		// TODO test
+		if(this.arenaNeedsPerm(arena)){
+			if(!p.hasPermission("mobescape.joinarena." + arena)){
+				p.sendMessage(noperm_arena);
+				return;
+			}
+		}
+		
 		// check first if max players are reached.
 		int count_ = 0;
 		for (Player p_ : arenap.keySet()) {
@@ -2171,4 +2197,19 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 	}
+	
+	
+	public boolean arenaNeedsPerm(String arena){
+		if(!(getConfig().isSet(arena + ".needs_perm"))){
+			setArenaNeedsPerm(arena, false);
+			return false;
+		}
+		return getConfig().getBoolean(arena + ".needs_perm");
+	}
+	
+	public void setArenaNeedsPerm(String arena, boolean val){
+		getConfig().set(arena + ".needs_perm", val);
+		this.saveConfig();
+	}
+	
 }

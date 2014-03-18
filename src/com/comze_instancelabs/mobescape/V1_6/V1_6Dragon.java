@@ -268,9 +268,11 @@ public class V1_6Dragon {
 								m.arenap_.put(p.getName(), arena);
 								
 								Vector vv = dragons1_6.get(arena).getCurrentPosition();
+								Vector vv_ = dragons1_6.get(arena).getCurrentPositionNext();
 								Location dragon = new Location(p.getWorld(), dragons1_6.get(arena).locX, dragons1_6.get(arena).locY, dragons1_6.get(arena).locZ);
 								Location l = new Location(p.getWorld(), vv.getX(), vv.getY(), vv.getZ());
-								if(p.getLocation().distance(l) - dragon.distance(l) > 3){
+								Location l_ = new Location(p.getWorld(), vv_.getX(), vv_.getY(), vv_.getZ());
+								if(p.getLocation().distance(l) - dragon.distance(l) > 10 && p.getLocation().distance(l_) - dragon.distance(l_) > 10){
 									m.simulatePlayerFall(p);
 								}
 							}

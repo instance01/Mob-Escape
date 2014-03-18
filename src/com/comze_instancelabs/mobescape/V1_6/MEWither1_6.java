@@ -80,6 +80,13 @@ public class MEWither1_6 extends EntityWither {
 		return points.get(currentid);
 	}
 	
+	public Vector getCurrentPositionNext(){
+		if(currentid + 1 < points.size() - 1){
+			return points.get(currentid + 1);
+		}
+		return points.get(currentid);
+	}
+	
 	public Vector getNextPosition() {
 		
 		double tempx = this.locX;
