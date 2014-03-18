@@ -219,6 +219,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.spawn_winnerfirework", true);
 		getConfig().addDefault("config.mob_type", "dragon");
 		getConfig().addDefault("config.game_on_join", false);
+		getConfig().addDefault("config.jumper_boost_factor", 1.2D);
 		
 		getConfig().addDefault("config.sign_top_line", "&6MobEscape");
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
@@ -1231,10 +1232,10 @@ public class Main extends JavaPlugin implements Listener {
 			if(event.getItem().getTypeId() == 258){
 				p.getInventory().removeItem(new ItemStack(Material.IRON_AXE, 1));
 				p.updateInventory();
-				p.setVelocity(p.getVelocity().multiply(5D));
-				Vector direction = p.getLocation().getDirection().multiply(2);
+				Vector direction = p.getLocation().getDirection().multiply(getConfig().getDouble("config.jumper_boost_factor"));
 				direction.setY(direction.getY() + 1.5);
 				p.setVelocity(direction);
+				//p.setVelocity(p.getVelocity().multiply(2D));
 			}else if(event.getItem().getTypeId() == 368){
 				p.getInventory().removeItem(new ItemStack(Material.ENDER_PEARL, 1));
 				p.updateInventory();
@@ -1571,7 +1572,6 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		if (count > getArenaMinPlayers(arena) - 1) {
-			//TODO lobbycountdown
 			final int lobby_c = getConfig().getInt("config.lobby_countdown");
 
 			int t = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(m, new Runnable() {
