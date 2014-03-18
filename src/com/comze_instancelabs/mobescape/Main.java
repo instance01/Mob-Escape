@@ -200,6 +200,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().options().header("I recommend you to set auto_updating to true for possible future bugfixes. If use_economy is set to false, the winner will get the item reward.");
 		getConfig().addDefault("config.auto_updating", true);
 		getConfig().addDefault("config.start_countdown", 5);
+		getConfig().addDefault("config.lobby_countdown", 5);
 		getConfig().addDefault("config.default_max_players", 4);
 		getConfig().addDefault("config.default_min_players", 3);
 		getConfig().addDefault("config.use_economy_reward", true);
@@ -1521,7 +1522,6 @@ public class Main extends JavaPlugin implements Listener {
 	public void joinLobby(final Player p, final String arena) {
 		
 		// very first check if arena needs perms and player has perm to join.
-		// TODO test
 		if(this.arenaNeedsPerm(arena)){
 			if(!p.hasPermission("mobescape.joinarena." + arena)){
 				p.sendMessage(noperm_arena);
@@ -1571,26 +1571,53 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		if (count > getArenaMinPlayers(arena) - 1) {
-			for (Player p_ : arenap.keySet()) {
-				final Player p__ = p_;
-				if (arenap.get(p_).equalsIgnoreCase(arena)) {
-					Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-						public void run() {
-							p__.teleport(getSpawnForPlayer(arena));
+			//TODO lobbycountdown
+			final int lobby_c = getConfig().getInt("config.lobby_countdown");
+
+			int t = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(m, new Runnable() {
+			public void run() {
+				if (!m.lobby_countdown_count.containsKey(arena)) {
+					m.lobby_countdown_count.put(arena, lobby_c);
+				}
+				int count = m.lobby_countdown_count.get(arena);
+				for (Player p : m.arenap.keySet()) {
+					if (m.arenap.get(p).equalsIgnoreCase(arena)) {
+						p.sendMessage(ChatColor.GRAY + "Teleporting to arena in " + Integer.toString(count) + " seconds.");
+					}
+				}
+				count--;
+				m.lobby_countdown_count.put(arena, count);
+				if (count < 0) {
+					m.lobby_countdown_count.put(arena, lobby_c);
+					
+					for (Player p_ : arenap.keySet()) {
+						final Player p__ = p_;
+						if (arenap.get(p_).equalsIgnoreCase(arena)) {
+							Bukkit.getScheduler().runTaskLater(m, new Runnable() {
+								public void run() {
+									p__.teleport(getSpawnForPlayer(arena));
+								}
+							}, 7);
 						}
-					}, 7);
+					}
+					Bukkit.getScheduler().runTaskLater(m, new Runnable() {
+						public void run() {
+							if (!ingame.containsKey(arena)) {
+								ingame.put(arena, false);
+							}
+							if (!ingame.get(arena)) {
+								start(arena);
+							}
+						}
+					}, 10);
+					
+					
+					Bukkit.getServer().getScheduler().cancelTask(m.lobby_countdown_id.get(arena));
 				}
 			}
-			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-				public void run() {
-					if (!ingame.containsKey(arena)) {
-						ingame.put(arena, false);
-					}
-					if (!ingame.get(arena)) {
-						start(arena);
-					}
-				}
-			}, 10);
+			}, 0, 20).getTaskId();
+			m.lobby_countdown_id.put(arena, t);
+
 		}
 
 		if (!ingame.containsKey(arena)) {
@@ -1620,6 +1647,11 @@ public class Main extends JavaPlugin implements Listener {
 
 	static Random r = new Random();
 
+	
+	final public HashMap<String, Integer> lobby_countdown_count = new HashMap<String, Integer>();
+	final public HashMap<String, Integer> lobby_countdown_id = new HashMap<String, Integer>();
+	
+	
 	final public HashMap<String, BukkitTask> h = new HashMap<String, BukkitTask>();
 	final public HashMap<String, Integer> countdown_count = new HashMap<String, Integer>();
 	final public HashMap<String, Integer> countdown_id = new HashMap<String, Integer>();
