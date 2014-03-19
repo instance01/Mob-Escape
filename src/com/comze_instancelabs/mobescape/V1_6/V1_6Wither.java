@@ -239,13 +239,15 @@ public class V1_6Wither {
 							if (m.arenap.get(p).equalsIgnoreCase(arena)) {
 								m.arenap_.put(p.getName(), arena);
 								
-								Vector vv = wither1_6.get(arena).getCurrentPosition();
-								Vector vv_ = wither1_6.get(arena).getCurrentPositionNext();
-								Location dragon = new Location(p.getWorld(), wither1_6.get(arena).locX, wither1_6.get(arena).locY, wither1_6.get(arena).locZ);
-								Location l = new Location(p.getWorld(), vv.getX(), vv.getY(), vv.getZ());
-								Location l_ = new Location(p.getWorld(), vv_.getX(), vv_.getY(), vv_.getZ());
-								if(p.getLocation().distance(l) - dragon.distance(l) > 10 && p.getLocation().distance(l_) - dragon.distance(l_) > 10){
-									m.simulatePlayerFall(p);
+								if(m.die_behind_mob){
+									Vector vv = wither1_6.get(arena).getCurrentPosition();
+									Vector vv_ = wither1_6.get(arena).getCurrentPositionNext();
+									Location dragon = new Location(p.getWorld(), wither1_6.get(arena).locX, wither1_6.get(arena).locY, wither1_6.get(arena).locZ);
+									Location l = new Location(p.getWorld(), vv.getX(), vv.getY(), vv.getZ());
+									Location l_ = new Location(p.getWorld(), vv_.getX(), vv_.getY(), vv_.getZ());
+									if(p.getLocation().distance(l) - dragon.distance(l) > 10 && p.getLocation().distance(l_) - dragon.distance(l_) > 10){
+										m.simulatePlayerFall(p);
+									}
 								}
 							}
 						}

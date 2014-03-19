@@ -360,13 +360,15 @@ public class V1_7Dragon {
 							if (m.arenap.get(p).equalsIgnoreCase(arena)) {
 								m.arenap_.put(p.getName(), arena);
 								
-								Vector vv = dragons.get(arena).getCurrentPosition();
-								Vector vv_ = dragons.get(arena).getCurrentPositionNext();
-								Location dragon = new Location(p.getWorld(), dragons.get(arena).locX, dragons.get(arena).locY, dragons.get(arena).locZ);
-								Location l = new Location(p.getWorld(), vv.getX(), vv.getY(), vv.getZ());
-								Location l_ = new Location(p.getWorld(), vv_.getX(), vv_.getY(), vv_.getZ());
-								if(p.getLocation().distance(l) - dragon.distance(l) > 10 && p.getLocation().distance(l_) - dragon.distance(l_) > 10){
-									m.simulatePlayerFall(p);
+								if(m.die_behind_mob){
+									Vector vv = dragons.get(arena).getCurrentPosition();
+									Vector vv_ = dragons.get(arena).getCurrentPositionNext();
+									Location dragon = new Location(p.getWorld(), dragons.get(arena).locX, dragons.get(arena).locY, dragons.get(arena).locZ);
+									Location l = new Location(p.getWorld(), vv.getX(), vv.getY(), vv.getZ());
+									Location l_ = new Location(p.getWorld(), vv_.getX(), vv_.getY(), vv_.getZ());
+									if(p.getLocation().distance(l) - dragon.distance(l) > 10 && p.getLocation().distance(l_) - dragon.distance(l_) > 10){
+										m.simulatePlayerFall(p);
+									}
 								}
 							}
 						}

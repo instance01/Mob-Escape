@@ -150,6 +150,7 @@ public class Main extends JavaPlugin implements Listener {
 	public boolean last_man_standing = true;
 	public boolean spawn_winnerfirework = true;
 	public boolean spawn_falling_blocks = true;
+	public boolean die_behind_mob = false;
 	
 	public int start_countdown = 5;
 
@@ -220,6 +221,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.mob_type", "dragon");
 		getConfig().addDefault("config.game_on_join", false);
 		getConfig().addDefault("config.jumper_boost_factor", 1.2D);
+		getConfig().addDefault("config.die_behind_mob", false);
 		
 		getConfig().addDefault("config.sign_top_line", "&6MobEscape");
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
@@ -337,6 +339,7 @@ public class Main extends JavaPlugin implements Listener {
 			type = "dragon";
 		}
 		spawn_falling_blocks = getConfig().getBoolean("config.spawn_falling_blocks");
+		die_behind_mob = getConfig().getBoolean("config.die_behind_mob");
 		
 		saved_arena = getConfig().getString("strings.saved.arena").replaceAll("&", "§");
 		removed_arena = getConfig().getString("strings.removed_arena").replaceAll("&", "§");
