@@ -130,6 +130,12 @@ public class Main extends JavaPlugin implements Listener {
 	 */
 	public static HashMap<String, Boolean> astarted = new HashMap<String, Boolean>();
 
+	/**
+	 * player -> kit
+	 */
+	public static HashMap<Player, Boolean> pkit_use = new HashMap<Player, Boolean>();
+
+	
 	int default_max_players = 4;
 	int default_min_players = 3;
 
@@ -151,6 +157,7 @@ public class Main extends JavaPlugin implements Listener {
 	public boolean spawn_falling_blocks = true;
 	public boolean die_behind_mob = false;
 	public boolean give_jumper_as_default_kit = true;
+	public int kit_delay_in_seconds = 7;
 	
 	public int start_countdown = 5;
 
@@ -175,6 +182,7 @@ public class Main extends JavaPlugin implements Listener {
 	public String saved_finish = "";
 	public String saved_spawn = "";
 	public String noperm_arena = "";
+	public String kit_delay_message = "";
 	
 	public String sign_top = "";
 	public String sign_second_join = "";
@@ -223,6 +231,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.jumper_boost_factor", 1.2D);
 		getConfig().addDefault("config.die_behind_mob", false);
 		getConfig().addDefault("config.give_jumper_as_default_kit", true);
+		getConfig().addDefault("config.kit_delay_in_seconds", 7);
 		
 		getConfig().addDefault("config.sign_top_line", "&6MobEscape");
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
@@ -272,7 +281,8 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("strings.noperm", "&cYou don't have permission.");
 		getConfig().addDefault("strings.nopermkit", "&cYou don't have permission to use this kit.");
 		getConfig().addDefault("strings.noperm_arena", "&cYou don't have permission to join this arena.");
-	
+		getConfig().addDefault("strings.kit_delay_message", "&cYou can use your kit after a delay of <delay> seconds!");
+
 		getConfig().options().copyDefaults(true);
 		if (getConfig().isSet("config.min_players")) {
 			getConfig().set("config.min_players", null);
@@ -342,7 +352,8 @@ public class Main extends JavaPlugin implements Listener {
 		spawn_falling_blocks = getConfig().getBoolean("config.spawn_falling_blocks");
 		die_behind_mob = getConfig().getBoolean("config.die_behind_mob");
 		give_jumper_as_default_kit = getConfig().getBoolean("config.give_jumper_as_default_kit");
-		
+		kit_delay_in_seconds = getConfig().getInt("config.kit_delay_in_seconds");
+
 		saved_arena = getConfig().getString("strings.saved.arena").replaceAll("&", "§");
 		removed_arena = getConfig().getString("strings.removed_arena").replaceAll("&", "§");
 		saved_lobby = getConfig().getString("strings.saved.lobby").replaceAll("&", "§");
@@ -368,6 +379,7 @@ public class Main extends JavaPlugin implements Listener {
 		noperm = getConfig().getString("strings.noperm").replaceAll("&", "§");
 		nopermkit = getConfig().getString("strings.nopermkit").replaceAll("&", "§");
 		noperm_arena = getConfig().getString("strings.noperm_arena").replaceAll("&", "§");
+		kit_delay_message = getConfig().getString("strings.kit_delay_message").replaceAll("&", "§");
 		
 		sign_top = getConfig().getString("config.sign_top_line").replaceAll("&", "§");
 		sign_second_join = getConfig().getString("config.sign_second_line_join").replaceAll("&", "§");
@@ -901,6 +913,7 @@ public class Main extends JavaPlugin implements Listener {
 					sender.sendMessage("");
 					sender.sendMessage("" + ChatColor.DARK_GREEN + "You can join with " + ChatColor.RED + "/etm join [name] " + ChatColor.DARK_GREEN + "and leave with " + ChatColor.RED + "/etm leave" + ChatColor.DARK_GREEN + ".");
 					sender.sendMessage("" + ChatColor.DARK_GREEN + "You can force an arena to start with " + ChatColor.RED + "/etm start [name]" + ChatColor.DARK_GREEN + ".");
+					sender.sendMessage("" + ChatColor.DARK_GREEN + "You can select your kit with " + ChatColor.RED + "/etm kit " + ChatColor.DARK_GREEN + " or " + ChatColor.RED + "/etm kitgui");
 				}
 			} else {
 				sender.sendMessage("" + ChatColor.GOLD + "-= MobEscape " + ChatColor.DARK_GREEN + "help: " + ChatColor.GOLD + "=-");
@@ -1225,6 +1238,19 @@ public class Main extends JavaPlugin implements Listener {
 			if(!arenap.containsKey(p)){
 				return;
 			}
+			if(!pkit_use.containsKey(p)){
+				pkit_use.put(p, true);
+			}
+			if(!pkit_use.get(p)){
+				p.sendMessage(kit_delay_message.replaceAll("<delay>", Integer.toString(kit_delay_in_seconds)));
+				return;
+			}
+			pkit_use.put(p, false);
+			Bukkit.getScheduler().runTaskLater(this, new Runnable(){
+				public void run(){
+					pkit_use.put(p, true);
+				}
+			}, kit_delay_in_seconds * 20);
 			if(event.getItem().getTypeId() == 258){
 				p.getInventory().removeItem(new ItemStack(Material.IRON_AXE, 1));
 				p.updateInventory();
@@ -2362,6 +2388,7 @@ public class Main extends JavaPlugin implements Listener {
 				}else{
 					p.sendMessage(nopermkit);
 				}
+				pkit.put(p, kit);
 				event.setWillClose(true);
 			}
 		}, m)
