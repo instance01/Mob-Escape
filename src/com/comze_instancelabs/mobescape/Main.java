@@ -853,7 +853,7 @@ public class Main extends JavaPlugin implements Listener {
 										final Player p__ = p_;
 										Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 											public void run() {
-												p__.teleport(getSpawnForPlayer(arena));
+												p__.teleport(getSpawnForPlayer(p__, arena));
 											}
 										}, 5);
 									}
@@ -1069,10 +1069,11 @@ public class Main extends JavaPlugin implements Listener {
 			if(ingame.get(arena_)){
 				if (getDragonSpawn(arena_) != null) {
 					final Player p = event.getPlayer();
-					if (p.getLocation().getBlockZ() > getSpawn(arena_).getBlockZ() + 1 || p.getLocation().getBlockZ() < getSpawn(arena_).getBlockZ() - 1 || p.getLocation().getBlockX() > getSpawn(arena_).getBlockX() + 1 || p.getLocation().getBlockX() < getSpawn(arena_).getBlockX() - 1) {
+					final Location temp = getSpawn(arena_, pspawn.get(p));
+					if (p.getLocation().getBlockZ() > temp.getBlockZ() + 1 || p.getLocation().getBlockZ() < temp.getBlockZ() - 1 || p.getLocation().getBlockX() > temp.getBlockX() + 1 || p.getLocation().getBlockX() < temp.getBlockX() - 1) {
 						Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 							public void run() {
-								p.teleport(getSpawn(arena_));
+								p.teleport(temp);
 							}
 						}, 5);
 					}
@@ -1081,7 +1082,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		if (arenap_.containsKey(event.getPlayer().getName())) {
 			if (lost.containsKey(event.getPlayer())) {
-				Location l = getSpawn(lost.get(event.getPlayer()));
+				Location l = getSpawn(lost.get(event.getPlayer()), pspawn.get(event.getPlayer()));
 				final Location spectatorlobby = new Location(l.getWorld(), l.getBlockX(), l.getBlockY() + 30, l.getBlockZ());
 				if (event.getPlayer().getLocation().getBlockY() < spectatorlobby.getBlockY() || event.getPlayer().getLocation().getBlockY() > spectatorlobby.getBlockY()) {
 					final Player p = event.getPlayer();
@@ -1124,7 +1125,7 @@ public class Main extends JavaPlugin implements Listener {
 				Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 					public void run() {
 						try {
-							Location l = getSpawn(arena);
+							Location l = getSpawn(arena, pspawn.get(p__));
 							p__.teleport(new Location(l.getWorld(), l.getBlockX(), l.getBlockY() + 30, l.getBlockZ()));
 							p__.setAllowFlight(true);
 							p__.setFlying(true);
@@ -1374,9 +1375,10 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public HashMap<String, Integer> spawncount = new HashMap<String, Integer>();
+	public HashMap<Player, Integer> pspawn = new HashMap<Player, Integer>();
 	
 	//TODO test
-	public Location getSpawn(String arena) {
+	/*public Location getSpawn(String arena) {
 		if(!spawncount.containsKey(arena)){
 			spawncount.put(arena, 0);
 			return getSpawn(arena, 0);
@@ -1389,6 +1391,30 @@ public class Main extends JavaPlugin implements Listener {
 		}else{
 			spawncount.put(arena, 0);
 		}
+		return getSpawn(arena, 0);
+	}*/
+	
+	public Location getSpawn(String arena) {
+		return getSpawn(arena, 0);
+	}
+	
+	public Location getSpawnForPlayer(Player p, String arena) {
+		if(!spawncount.containsKey(arena)){
+			spawncount.put(arena, 0);
+			pspawn.put(p, 0);
+			spawncount.put(arena, spawncount.get(arena) + 1);
+			return getSpawn(arena, 0);
+		}
+		
+		if(spawncount.get(arena) < this.getCurrentSpawnIndex(arena)){
+			Location ret = getSpawn(arena, spawncount.get(arena));
+			pspawn.put(p, spawncount.get(arena));
+			spawncount.put(arena, spawncount.get(arena) + 1);
+			return ret;
+		}else{
+			spawncount.put(arena, 0);
+		}
+		pspawn.put(p, 0);
 		return getSpawn(arena, 0);
 	}
 
@@ -1408,11 +1434,6 @@ public class Main extends JavaPlugin implements Listener {
 		if (isValidArena(arena)) {
 			ret = new Location(Bukkit.getWorld(getConfig().getString(arena + ".finish.world")), getConfig().getInt(arena + ".finish.loc.x"), getConfig().getInt(arena + ".spawn.loc.y"), getConfig().getInt(arena + ".finish.loc.z"));
 		}
-		return ret;
-	}
-
-	public Location getSpawnForPlayer(String arena) {
-		Location ret = this.getSpawn(arena).add(0D, 3D, 0D);
 		return ret;
 	}
 
@@ -1615,7 +1636,7 @@ public class Main extends JavaPlugin implements Listener {
 								if (arenap.get(p_).equalsIgnoreCase(arena)) {
 									Bukkit.getScheduler().runTaskLater(m, new Runnable() {
 										public void run() {
-											p__.teleport(getSpawnForPlayer(arena));
+											p__.teleport(getSpawnForPlayer(p__, arena));
 										}
 									}, 7);
 								}
@@ -1646,7 +1667,7 @@ public class Main extends JavaPlugin implements Listener {
 		if (ingame.get(arena)) {
 			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 				public void run() {
-					p.teleport(getSpawnForPlayer(arena));
+					p.teleport(getSpawnForPlayer(p, arena));
 				}
 			}, 7);
 		}
@@ -1736,6 +1757,10 @@ public class Main extends JavaPlugin implements Listener {
 				
 			}
 			m.lobby_countdown_id.remove(arena);
+		}
+		
+		if(spawncount.containsKey(arena)){
+			spawncount.remove(arena);
 		}
 	}
 
