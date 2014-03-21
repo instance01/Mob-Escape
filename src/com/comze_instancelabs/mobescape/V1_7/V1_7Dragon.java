@@ -213,119 +213,31 @@ public class V1_7Dragon {
 		}, 0, 20).getTaskId();
 		m.countdown_id.put(arena, t);
 		
-		final String dir = m.getDirection(m.getSpawn(arena).getYaw());
+		Bukkit.getScheduler().runTask(m, new Runnable() {
+			public void run() {
+				try{
+					boolean cont = true;
+					if(m.getDragonSpawn(arena) != null){
+						for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
+							if(e.getType() == EntityType.ENDER_DRAGON){
+								cont = false;
+							}
+						}
+					}
+					if(cont){
+						if(m.getDragonSpawn(arena) != null){
+							dragons.put(arena, spawnEnderdragon(m, arena, m.getDragonSpawn(arena)));
+						}else{
+							dragons.put(arena, spawnEnderdragon(m, arena, m.getSpawn(arena)));
+						}
+					}
+				}catch(Exception e){
+					m.stop(m.h.get(arena), arena);
+					return;
+				}
+			}
+		});
 		
-		// spawn enderdragon
-		if (dir.equalsIgnoreCase("south")) {
-			Bukkit.getScheduler().runTask(m, new Runnable() {
-				public void run() {
-					try{
-						boolean cont = true;
-						if(m.getDragonSpawn(arena) != null){
-							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-								if(e.getType() == EntityType.ENDER_DRAGON){
-									cont = false;
-								}
-							}
-						}
-						if(cont){
-							if(m.getDragonSpawn(arena) != null){
-								dragons.put(arena, spawnEnderdragon(m, arena, m.getDragonSpawn(arena)));
-								m.getLogger().info("DRAGON SPAWN");
-							}else{
-								m.getLogger().info("NORMAL SPAWN");
-								dragons.put(arena, spawnEnderdragon(m, arena, m.getSpawn(arena).add(0.0D, 0.0D, -3.0D)));
-							}	
-						}
-					}catch(Exception e){
-						m.stop(m.h.get(arena), arena);
-						return;
-					}
-				}
-			});
-		} else if (dir.equalsIgnoreCase("north")) {
-			Bukkit.getScheduler().runTask(m, new Runnable() {
-				public void run() {
-					try{
-						boolean cont = true;
-						if(m.getDragonSpawn(arena) != null){
-							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-								if(e.getType() == EntityType.ENDER_DRAGON){
-									cont = false;
-								}
-							}
-						}
-						if(cont){
-							if(m.getDragonSpawn(arena) != null){
-								dragons.put(arena, spawnEnderdragon(m, arena, m.getDragonSpawn(arena)));
-								m.getLogger().info("DRAGON SPAWN");
-							}else{
-								m.getLogger().info("NORMAL SPAWN");
-								dragons.put(arena, spawnEnderdragon(m, arena, m.getSpawn(arena).add(0.0D, 0.0D, +3.0D)));
-							}
-						}
-					}catch(Exception e){
-						m.stop(m.h.get(arena), arena);
-						return;
-					}
-				}
-			});
-		} else if (dir.equalsIgnoreCase("east")) {
-			Bukkit.getScheduler().runTask(m, new Runnable() {
-				public void run() {
-					try{
-						boolean cont = true;
-						if(m.getDragonSpawn(arena) != null){
-							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-								if(e.getType() == EntityType.ENDER_DRAGON){
-									cont = false;
-								}
-							}
-						}
-						if(cont){
-							if(m.getDragonSpawn(arena) != null){
-								dragons.put(arena, spawnEnderdragon(m, arena, m.getDragonSpawn(arena)));
-								m.getLogger().info("DRAGON SPAWN");
-							}else{
-								m.getLogger().info("NORMAL SPAWN");
-								dragons.put(arena, spawnEnderdragon(m, arena, m.getSpawn(arena).add(-3.0D, 0.0D, 0.0D)));	
-							}
-						}
-					}catch(Exception e){
-						m.stop(m.h.get(arena), arena);
-						return;
-					}
-				}
-			});
-		} else if (dir.equalsIgnoreCase("west")) {
-			Bukkit.getScheduler().runTask(m, new Runnable() {
-				public void run() {
-					try{
-						boolean cont = true;
-						if(m.getDragonSpawn(arena) != null){
-							for(Entity e : m.getNearbyEntities(m.getDragonSpawn(arena), 40)){
-								if(e.getType() == EntityType.ENDER_DRAGON){
-									cont = false;
-								}
-							}
-						}
-						if(cont){
-							if(m.getDragonSpawn(arena) != null){
-								dragons.put(arena, spawnEnderdragon(m, arena, m.getDragonSpawn(arena)));
-								m.getLogger().info("DRAGON SPAWN");
-							}else{
-								m.getLogger().info("NORMAL SPAWN");
-								dragons.put(arena, spawnEnderdragon(m, arena, m.getSpawn(arena).add(3.0D, 0.0D, 0.0D)));
-							}
-						}
-					}catch(Exception e){
-						m.stop(m.h.get(arena), arena);
-						return;
-					}
-				}
-			});
-		}
-
 		final int d = 1;
 		
 		BukkitTask id__ = null;
@@ -333,28 +245,6 @@ public class V1_7Dragon {
 			@Override
 			public void run() {
 				try {
-					/*if (dir.equalsIgnoreCase("south")) {
-						if (dragons.get(arena).locZ > getFinish(arena).getBlockZ()) {
-							stop(h.get(arena), arena);
-							return;
-						}
-					} else if (dir.equalsIgnoreCase("north")) {
-						if (dragons.get(arena).locZ < getFinish(arena).getBlockZ()) {
-							stop(h.get(arena), arena);
-							return;
-						}
-					} else if (dir.equalsIgnoreCase("east")) {
-						if (dragons.get(arena).locX > getFinish(arena).getBlockX()) {
-							stop(h.get(arena), arena);
-							return;
-						}
-					} else if (dir.equalsIgnoreCase("west")) {
-						if (dragons.get(arena).locX < getFinish(arena).getBlockX()) {
-							stop(h.get(arena), arena);
-							return;
-						}
-					}*/
-
 					for (final Player p : m.arenap.keySet()) {
 						if (p.isOnline()) {
 							if (m.arenap.get(p).equalsIgnoreCase(arena)) {
@@ -405,62 +295,17 @@ public class V1_7Dragon {
 						return;
 					}
 					
-					String dir_ = m.getDirection(dragons.get(arena).getBukkitEntity().getLocation().getYaw());
-
-					
-					if (dir_.equalsIgnoreCase("south")) {
-						//dragons.get(arena).setPosition(l.getX(), l.getY(), l.getZ() + m.dragon_move_increment.get(arena));
-
-						Vector v = dragons.get(arena).getNextPosition();
-						if(v != null && dragons.get(arena) != null){
-							dragons.get(arena).setPosition(v.getX(), v.getY(), v.getZ());
-						}
-
-						if(dragons.get(arena) == null){
-							return;
-						}
-
-						V1_7Dragon.destroy(m, l1, l2, arena, length2);
-					} else if (dir_.equalsIgnoreCase("north")) {
-						//dragons.get(arena).setPosition(l.getX(), l.getY(), l.getZ() - m.dragon_move_increment.get(arena));
-
-						Vector v = dragons.get(arena).getNextPosition();
-						if(v != null && dragons.get(arena) != null){
-							dragons.get(arena).setPosition(v.getX(), v.getY(), v.getZ());
-						}
-						
-						if(dragons.get(arena) == null){
-							return;
-						}
-
-						V1_7Dragon.destroy(m, l1, l2, arena, length2);
-					} else if (dir_.equalsIgnoreCase("east")) {
-						//dragons.get(arena).setPosition(l.getX() + m.dragon_move_increment.get(arena), l.getY(), l.getZ());
-
-						Vector v = dragons.get(arena).getNextPosition();
-						if(v != null && dragons.get(arena) != null){
-							dragons.get(arena).setPosition(v.getX(), v.getY(), v.getZ());
-						}
-
-						if(dragons.get(arena) == null){
-							return;
-						}
-
-						V1_7Dragon.destroy(m, l1, l2, arena, length2);
-					} else if (dir_.equalsIgnoreCase("west")) {
-						//dragons.get(arena).setPosition(l.getX() - m.dragon_move_increment.get(arena), l.getY(), l.getZ());
-
-						Vector v = dragons.get(arena).getNextPosition();
-						if(v != null && dragons.get(arena) != null){
-							dragons.get(arena).setPosition(v.getX(), v.getY(), v.getZ());
-						}
-						
-						if(dragons.get(arena) == null){
-							return;
-						}
-						
-						V1_7Dragon.destroy(m, l1, l2, arena, length2);
+					Vector v = dragons.get(arena).getNextPosition();
+					if(v != null && dragons.get(arena) != null){
+						dragons.get(arena).setPosition(v.getX(), v.getY(), v.getZ());
 					}
+
+					if(dragons.get(arena) == null){
+						return;
+					}
+
+					V1_7Dragon.destroy(m, l1, l2, arena, length2);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

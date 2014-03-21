@@ -140,70 +140,20 @@ public class V1_6Wither {
 		}, 0, 20).getTaskId();
 		m.countdown_id.put(arena, t);
 
-		final String dir = m.getDirection(m.getSpawn(arena).getYaw());
-		
-		// spawn enderdragon
-		if (dir.equalsIgnoreCase("south")) {
-			Bukkit.getScheduler().runTask(m, new Runnable() {
-				public void run() {
-					try{
-						if(m.getDragonSpawn(arena) != null){
-							wither1_6.put(arena, spawnWither1_6(m, arena, m.getDragonSpawn(arena)));
-						}else{
-							wither1_6.put(arena, spawnWither1_6(m, arena, m.getSpawn(arena).add(0.0D, 0.0D, -3.0D)));
-						}
-					}catch(Exception e){
-						m.stop(m.h.get(arena), arena);
-						return;
+		Bukkit.getScheduler().runTask(m, new Runnable() {
+			public void run() {
+				try{
+					if(m.getDragonSpawn(arena) != null){
+						wither1_6.put(arena, spawnWither1_6(m, arena, m.getDragonSpawn(arena)));
+					}else{
+						wither1_6.put(arena, spawnWither1_6(m, arena, m.getSpawn(arena)));
 					}
+				}catch(Exception e){
+					m.stop(m.h.get(arena), arena);
+					return;
 				}
-			});
-		} else if (dir.equalsIgnoreCase("north")) {
-			Bukkit.getScheduler().runTask(m, new Runnable() {
-				public void run() {
-					try{
-						if(m.getDragonSpawn(arena) != null){
-							wither1_6.put(arena, spawnWither1_6(m, arena, m.getDragonSpawn(arena)));
-						}else{
-							wither1_6.put(arena, spawnWither1_6(m, arena, m.getSpawn(arena).add(0.0D, 0.0D, +3.0D)));
-						}
-					}catch(Exception e){
-						m.stop(m.h.get(arena), arena);
-						return;
-					}
-				}
-			});
-		} else if (dir.equalsIgnoreCase("east")) {
-			Bukkit.getScheduler().runTask(m, new Runnable() {
-				public void run() {
-					try{
-						if(m.getDragonSpawn(arena) != null){
-							wither1_6.put(arena, spawnWither1_6(m, arena, m.getDragonSpawn(arena)));
-						}else{
-							wither1_6.put(arena, spawnWither1_6(m, arena, m.getSpawn(arena).add(-3.0D, 0.0D, 0.0D)));	
-						}
-					}catch(Exception e){
-						m.stop(m.h.get(arena), arena);
-						return;
-					}
-				}
-			});
-		} else if (dir.equalsIgnoreCase("west")) {
-			Bukkit.getScheduler().runTask(m, new Runnable() {
-				public void run() {
-					try{
-						if(m.getDragonSpawn(arena) != null){
-							wither1_6.put(arena, spawnWither1_6(m, arena, m.getDragonSpawn(arena)));
-						}else{
-							wither1_6.put(arena, spawnWither1_6(m, arena, m.getSpawn(arena).add(3.0D, 0.0D, 0.0D)));
-						}
-					}catch(Exception e){
-						m.stop(m.h.get(arena), arena);
-						return;
-					}
-				}
-			});
-		}
+			}
+		});
 
 		final int d = 1;
 		
@@ -284,62 +234,17 @@ public class V1_6Wither {
 						return;
 					}
 					
-					String dir_ = m.getDirection(wither1_6.get(arena).getBukkitEntity().getLocation().getYaw());
-
-					
-					if (dir_.equalsIgnoreCase("south")) {
-						//wither1_6.get(arena).setPosition(l.getX(), l.getY(), l.getZ() + m.dragon_move_increment.get(arena));
-
-						Vector v = wither1_6.get(arena).getNextPosition();
-						if(v != null && wither1_6.get(arena) != null){
-							wither1_6.get(arena).setPosition(v.getX(), v.getY(), v.getZ());
-						}
-
-						if(wither1_6.get(arena) == null){
-							return;
-						}
-
-						V1_6Wither.destroy(m, l1, l2, arena, length2);
-					} else if (dir_.equalsIgnoreCase("north")) {
-						//wither1_6.get(arena).setPosition(l.getX(), l.getY(), l.getZ() - m.dragon_move_increment.get(arena));
-
-						Vector v = wither1_6.get(arena).getNextPosition();
-						if(v != null && wither1_6.get(arena) != null){
-							wither1_6.get(arena).setPosition(v.getX(), v.getY(), v.getZ());
-						}
-						
-						if(wither1_6.get(arena) == null){
-							return;
-						}
-
-						V1_6Wither.destroy(m, l1, l2, arena, length2);
-					} else if (dir_.equalsIgnoreCase("east")) {
-						//wither1_6.get(arena).setPosition(l.getX() + m.dragon_move_increment.get(arena), l.getY(), l.getZ());
-
-						Vector v = wither1_6.get(arena).getNextPosition();
-						if(v != null && wither1_6.get(arena) != null){
-							wither1_6.get(arena).setPosition(v.getX(), v.getY(), v.getZ());
-						}
-						
-						if(wither1_6.get(arena) == null){
-							return;
-						}
-
-						V1_6Wither.destroy(m, l1, l2, arena, length2);
-					} else if (dir_.equalsIgnoreCase("west")) {
-						//wither1_6.get(arena).setPosition(l.getX() - m.dragon_move_increment.get(arena), l.getY(), l.getZ());
-
-						Vector v = wither1_6.get(arena).getNextPosition();
-						if(v != null && wither1_6.get(arena) != null){
-							wither1_6.get(arena).setPosition(v.getX(), v.getY(), v.getZ());
-						}
-						
-						if(wither1_6.get(arena) == null){
-							return;
-						}
-
-						V1_6Wither.destroy(m, l1, l2, arena, length2);
+					Vector v = wither1_6.get(arena).getNextPosition();
+					if(v != null && wither1_6.get(arena) != null){
+						wither1_6.get(arena).setPosition(v.getX(), v.getY(), v.getZ());
 					}
+
+					if(wither1_6.get(arena) == null){
+						return;
+					}
+
+					V1_6Wither.destroy(m, l1, l2, arena, length2);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

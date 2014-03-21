@@ -96,7 +96,7 @@ public class Main extends JavaPlugin implements Listener {
 	public static Economy econ = null;
 
 	/**
-	 * arena -> wether ingame or not
+	 * arena -> whether ingame or not
 	 */
 	public static HashMap<String, Boolean> ingame = new HashMap<String, Boolean>();
 
@@ -117,7 +117,7 @@ public class Main extends JavaPlugin implements Listener {
 	public static HashMap<Player, ItemStack[]> pinv = new HashMap<Player, ItemStack[]>();
 
 	/**
-	 * player -> wether lost or not
+	 * player -> whether lost or not
 	 */
 	public static HashMap<Player, String> lost = new HashMap<Player, String>();
 
@@ -151,6 +151,7 @@ public class Main extends JavaPlugin implements Listener {
 	public boolean spawn_winnerfirework = true;
 	public boolean spawn_falling_blocks = true;
 	public boolean die_behind_mob = false;
+	public boolean give_jumper_as_default_kit = true;
 	
 	public int start_countdown = 5;
 
@@ -222,6 +223,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.game_on_join", false);
 		getConfig().addDefault("config.jumper_boost_factor", 1.2D);
 		getConfig().addDefault("config.die_behind_mob", false);
+		getConfig().addDefault("config.give_jumper_as_default_kit", true);
 		
 		getConfig().addDefault("config.sign_top_line", "&6MobEscape");
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
@@ -340,6 +342,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		spawn_falling_blocks = getConfig().getBoolean("config.spawn_falling_blocks");
 		die_behind_mob = getConfig().getBoolean("config.die_behind_mob");
+		give_jumper_as_default_kit = getConfig().getBoolean("config.give_jumper_as_default_kit");
 		
 		saved_arena = getConfig().getString("strings.saved.arena").replaceAll("&", "§");
 		removed_arena = getConfig().getString("strings.removed_arena").replaceAll("&", "§");
@@ -1089,42 +1092,15 @@ public class Main extends JavaPlugin implements Listener {
 			
 			
 			final String arena_ = arenap_.get(event.getPlayer().getName());
-			String dir = m.getDirection(getSpawn(arena_).getYaw());
 
-
-			if (dir.equalsIgnoreCase("south")) {
-				if (event.getPlayer().getLocation().getBlockZ() > getFinish(arenap_.get(event.getPlayer().getName())).getBlockZ()) {
-					if (ingame.get(arena_)) {
-						stop(h.get(arena_), arena_);
-					}
-					return;
+			if(event.getPlayer().getLocation().distance(getFinish(arena_)) < 2){
+				if (ingame.get(arena_)) {
+					stop(h.get(arena_), arena_);
 				}
-			} else if (dir.equalsIgnoreCase("north")) {
-				if (event.getPlayer().getLocation().getBlockZ() < getFinish(arenap_.get(event.getPlayer().getName())).getBlockZ()) {
-					if (ingame.get(arena_)) {
-						stop(h.get(arena_), arena_);
-					}
-					return;
-				}
-			} else if (dir.equalsIgnoreCase("east")) {
-				if (event.getPlayer().getLocation().getBlockX() > getFinish(arenap_.get(event.getPlayer().getName())).getBlockX()) {
-					if (ingame.get(arena_)) {
-						stop(h.get(arena_), arena_);
-					}
-					return;
-				}
-			} else if (dir.equalsIgnoreCase("west")) {
-				if (event.getPlayer().getLocation().getBlockX() < getFinish(arenap_.get(event.getPlayer().getName())).getBlockX()) {
-					if (ingame.get(arena_)) {
-						stop(h.get(arena_), arena_);
-					}
-					return;
-				}
+				return;
 			}
+			
 
-			// if (event.getPlayer().getLocation().getBlockY() <
-			// getSpawn(arenap_.get(event.getPlayer().getName())).getBlockY() -
-			// 5) {
 			if (event.getPlayer().getLocation().getBlockY() < getLowBoundary(arenap_.get(event.getPlayer().getName())).getBlockY() - 3) {
 				lost.put(event.getPlayer(), arenap.get(event.getPlayer()));
 				final Player p__ = event.getPlayer();
@@ -1551,6 +1527,9 @@ public class Main extends JavaPlugin implements Listener {
 		p.setGameMode(GameMode.SURVIVAL);
 		p.getInventory().clear();
 		p.updateInventory();
+		if(give_jumper_as_default_kit){
+			pkit.put(p, "jumper");
+		}
 		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 			public void run() {
 				p.teleport(getLobby(arena));
@@ -1577,50 +1556,51 @@ public class Main extends JavaPlugin implements Listener {
 		if (count > getArenaMinPlayers(arena) - 1) {
 			final int lobby_c = getConfig().getInt("config.lobby_countdown");
 
-			int t = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(m, new Runnable() {
-			public void run() {
-				if (!m.lobby_countdown_count.containsKey(arena)) {
-					m.lobby_countdown_count.put(arena, lobby_c);
-				}
-				int count = m.lobby_countdown_count.get(arena);
-				for (Player p : m.arenap.keySet()) {
-					if (m.arenap.get(p).equalsIgnoreCase(arena)) {
-						p.sendMessage(ChatColor.GRAY + "Teleporting to arena in " + Integer.toString(count) + " seconds.");
-					}
-				}
-				count--;
-				m.lobby_countdown_count.put(arena, count);
-				if (count < 0) {
-					m.lobby_countdown_count.put(arena, lobby_c);
-					
-					for (Player p_ : arenap.keySet()) {
-						final Player p__ = p_;
-						if (arenap.get(p_).equalsIgnoreCase(arena)) {
+			if(!m.lobby_countdown_id.containsKey(arena)){
+				int t = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(m, new Runnable() {
+					public void run() {
+						if (!m.lobby_countdown_count.containsKey(arena)) {
+							m.lobby_countdown_count.put(arena, lobby_c);
+						}
+						int count = m.lobby_countdown_count.get(arena);
+						for (Player p : m.arenap.keySet()) {
+							if (m.arenap.get(p).equalsIgnoreCase(arena)) {
+								p.sendMessage(ChatColor.GRAY + "Teleporting to arena in " + Integer.toString(count) + " seconds.");
+							}
+						}
+						count--;
+						m.lobby_countdown_count.put(arena, count);
+						if (count < 0) {
+							m.lobby_countdown_count.put(arena, lobby_c);
+							
+							for (Player p_ : arenap.keySet()) {
+								final Player p__ = p_;
+								if (arenap.get(p_).equalsIgnoreCase(arena)) {
+									Bukkit.getScheduler().runTaskLater(m, new Runnable() {
+										public void run() {
+											p__.teleport(getSpawnForPlayer(arena));
+										}
+									}, 7);
+								}
+							}
 							Bukkit.getScheduler().runTaskLater(m, new Runnable() {
 								public void run() {
-									p__.teleport(getSpawnForPlayer(arena));
+									if (!ingame.containsKey(arena)) {
+										ingame.put(arena, false);
+									}
+									if (!ingame.get(arena)) {
+										start(arena);
+									}
 								}
-							}, 7);
+							}, 10);
+							
+							
+							Bukkit.getServer().getScheduler().cancelTask(m.lobby_countdown_id.get(arena));
 						}
 					}
-					Bukkit.getScheduler().runTaskLater(m, new Runnable() {
-						public void run() {
-							if (!ingame.containsKey(arena)) {
-								ingame.put(arena, false);
-							}
-							if (!ingame.get(arena)) {
-								start(arena);
-							}
-						}
-					}, 10);
-					
-					
-					Bukkit.getServer().getScheduler().cancelTask(m.lobby_countdown_id.get(arena));
-				}
+					}, 5, 20).getTaskId();
+					m.lobby_countdown_id.put(arena, t);
 			}
-			}, 0, 20).getTaskId();
-			m.lobby_countdown_id.put(arena, t);
-
 		}
 
 		if (!ingame.containsKey(arena)) {
@@ -1710,6 +1690,15 @@ public class Main extends JavaPlugin implements Listener {
 				V1_7Dragon v = new V1_7Dragon();
 				v.stop(this, t, arena);
 			}
+		}
+		
+		if(m.lobby_countdown_id.containsKey(arena)){
+			try{
+				Bukkit.getServer().getScheduler().cancelTask(m.lobby_countdown_id.get(arena));	
+			}catch(Exception e){
+				
+			}
+			m.lobby_countdown_id.remove(arena);
 		}
 	}
 
@@ -1991,7 +1980,7 @@ public class Main extends JavaPlugin implements Listener {
 		return;
 	}
 
-	public String getDirection(Float yaw) {
+	public String getDirectiontest(Float yaw) {
 		yaw = yaw / 90;
 		yaw = (float) Math.round(yaw);
 
