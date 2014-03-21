@@ -65,7 +65,6 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.Vector;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
-
 import com.comze_instancelabs.mobescape.V1_6.V1_6Dragon;
 import com.comze_instancelabs.mobescape.V1_6.V1_6Wither;
 /*import net.minecraft.server.v1_7_R1.AttributeInstance;
@@ -784,6 +783,16 @@ public class Main extends JavaPlugin implements Listener {
 							sender.sendMessage(nopermkit);
 						}
 					}
+				} else if (action.equalsIgnoreCase("kitgui")) {
+					if(!(sender instanceof Player)){
+						return true;
+					}
+					Player p = (Player)sender;
+					if(!arenap.containsKey(p)){
+						sender.sendMessage(not_in_arena);
+						return true;
+					}
+					openGUI(this, p.getName());
 				} else if (action.equalsIgnoreCase("stop") || action.equalsIgnoreCase("end")) {
 					if (args.length > 1) {
 						if (sender.hasPermission("mobescape.stop")) {
@@ -2235,5 +2244,47 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().set(arena + ".needs_perm", val);
 		this.saveConfig();
 	}
+
 	
+	public void openGUI(final Main m, String p) {
+		IconMenu iconm = new IconMenu("Shop", 18, new IconMenu.OptionClickEventHandler() {
+			@Override
+			public void onOptionClick(IconMenu.OptionClickEvent event) {
+				String d = event.getName();
+				Player p = event.getPlayer();
+				
+				String kit = d.toLowerCase();
+				
+				if(kit.equalsIgnoreCase("jumper")){
+					p.sendMessage(getKitDescription("jumper"));
+				}else if(kit.equalsIgnoreCase("warper")){
+					p.sendMessage(getKitDescription("warper"));
+				}else if(kit.equalsIgnoreCase("tnt")){
+					p.sendMessage(getKitDescription("tnt"));
+				}else{
+					p.sendMessage(ChatColor.RED + "Unknown Kit.");
+					event.setWillClose(true);
+					return;
+				}
+				if(kitPlayerHasPermission(kit, p)){
+					if(kitRequiresMoney(kit)){
+						if(kitTakeMoney(p, kit)){
+							pkit.put(p, kit);
+						}
+					}else{
+						pkit.put(p, kit);
+					}
+				}else{
+					p.sendMessage(nopermkit);
+				}
+				event.setWillClose(true);
+			}
+		}, m)
+		.setOption(3, new ItemStack(Material.IRON_AXE), "Jumper", getKitDescription("jumper"))
+		.setOption(4, new ItemStack(Material.TNT), "Tnt", getKitDescription("tnt"))
+		.setOption(5, new ItemStack(Material.ENDER_PEARL), "Warper", getKitDescription("warper"));
+
+		iconm.open(Bukkit.getPlayerExact(p));
+	}
+
 }

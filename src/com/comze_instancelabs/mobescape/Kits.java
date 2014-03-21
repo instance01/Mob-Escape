@@ -18,14 +18,14 @@ public class Kits {
 	
 	public static void giveTNTKit(Main m, Player p){
 		// right click -> throw tnt, if someone picks up tnt, gets blindness
-		p.getInventory().addItem(new ItemStack(Material.IRON_AXE, 1));
+		//p.getInventory().addItem(new ItemStack(Material.IRON_AXE, 1));
 		p.getInventory().addItem(new ItemStack(Material.TNT, m.getKitUses("tnt")));
 		p.updateInventory();
 	}
 	
 	public static void giveWarperKit(Main m, Player p){
 		// right click -> warp to player
-		p.getInventory().addItem(new ItemStack(Material.IRON_AXE, 1));
+		//p.getInventory().addItem(new ItemStack(Material.IRON_AXE, 1));
 		p.getInventory().addItem(new ItemStack(Material.ENDER_PEARL, m.getKitUses("warper")));
 		p.updateInventory();
 	}
