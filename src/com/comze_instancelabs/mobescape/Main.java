@@ -578,14 +578,17 @@ public class Main extends JavaPlugin implements Listener {
 						if (sender.hasPermission("mobescape.setup")) {
 							Player p = (Player) sender;
 							String arenaname = args[1];
-							getConfig().set(arenaname + ".spawn.world", p.getWorld().getName());
-							getConfig().set(arenaname + ".spawn.loc.x", p.getLocation().getBlockX());
-							getConfig().set(arenaname + ".spawn.loc.y", p.getLocation().getBlockY());
-							getConfig().set(arenaname + ".spawn.loc.z", p.getLocation().getBlockZ());
-							getConfig().set(arenaname + ".spawn.loc.yaw", p.getLocation().getYaw());
-							getConfig().set(arenaname + ".spawn.loc.pitch", p.getLocation().getPitch());
+							
+							String count = Integer.toString(this.getCurrentSpawnIndex(arenaname));
+
+							getConfig().set(arenaname + ".spawn." + count + ".world", p.getWorld().getName());
+							getConfig().set(arenaname + ".spawn." + count + ".loc.x", p.getLocation().getBlockX());
+							getConfig().set(arenaname + ".spawn." + count + ".loc.y", p.getLocation().getBlockY());
+							getConfig().set(arenaname + ".spawn." + count + ".loc.z", p.getLocation().getBlockZ());
+							getConfig().set(arenaname + ".spawn." + count + ".loc.yaw", p.getLocation().getYaw());
+							getConfig().set(arenaname + ".spawn." + count + ".loc.pitch", p.getLocation().getPitch());
 							this.saveConfig();
-							sender.sendMessage(saved_spawn);
+							sender.sendMessage(saved_spawn + " Count: " + count);
 						} else {
 							sender.sendMessage(noperm);
 						}
@@ -837,6 +840,10 @@ public class Main extends JavaPlugin implements Listener {
 							}
 							if (count < 1) {
 								sender.sendMessage("" + ChatColor.RED + "Noone is in this arena.");
+								return true;
+							}
+							if(m.lobby_countdown_id.containsKey(arena)){
+								sender.sendMessage(ChatColor.RED + "This arena is already starting.");
 								return true;
 							}
 							if (!ingame.get(arena)) {
@@ -1353,12 +1360,36 @@ public class Main extends JavaPlugin implements Listener {
 		return ret;
 	}
 
-	public Location getSpawn(String arena) {
+	public Location getSpawn(String arena, int count) {
 		Location ret = null;
 		if (isValidArena(arena)) {
-			ret = new Location(Bukkit.getWorld(getConfig().getString(arena + ".spawn.world")), getConfig().getInt(arena + ".spawn.loc.x"), getConfig().getInt(arena + ".spawn.loc.y"), getConfig().getInt(arena + ".spawn.loc.z"), getConfig().getInt(arena + ".spawn.loc.yaw"), getConfig().getInt(arena + ".spawn.loc.pitch"));
+			String entry = ".spawn." + Integer.toString(count) + ".";
+			//TODO check this; backwards compatibility
+			if(!getConfig().isSet(arena + entry)){
+				entry = ".spawn.";
+			}
+			ret = new Location(Bukkit.getWorld(getConfig().getString(arena + entry + "world")), getConfig().getInt(arena + entry + "loc.x"), getConfig().getInt(arena + entry + "loc.y"), getConfig().getInt(arena + entry + "loc.z"), getConfig().getInt(arena + entry + "loc.yaw"), getConfig().getInt(arena + entry + "loc.pitch"));
 		}
 		return ret;
+	}
+	
+	public HashMap<String, Integer> spawncount = new HashMap<String, Integer>();
+	
+	//TODO test
+	public Location getSpawn(String arena) {
+		if(!spawncount.containsKey(arena)){
+			spawncount.put(arena, 0);
+			return getSpawn(arena, 0);
+		}
+		
+		if(spawncount.get(arena) < this.getCurrentSpawnIndex(arena)){
+			Location ret = getSpawn(arena, spawncount.get(arena));
+			spawncount.put(arena, spawncount.get(arena) + 1);
+			return ret;
+		}else{
+			spawncount.put(arena, 0);
+		}
+		return getSpawn(arena, 0);
 	}
 
 	public Location getDragonSpawn(String arena) {
@@ -1381,10 +1412,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public Location getSpawnForPlayer(String arena) {
-		Location ret = null;
-		if (isValidArena(arena)) {
-			ret = new Location(Bukkit.getWorld(getConfig().getString(arena + ".spawn.world")), getConfig().getInt(arena + ".spawn.loc.x"), getConfig().getInt(arena + ".spawn.loc.y") + 2, getConfig().getInt(arena + ".spawn.loc.z"), getConfig().getInt(arena + ".spawn.loc.yaw"), getConfig().getInt(arena + ".spawn.loc.pitch"));
-		}
+		Location ret = this.getSpawn(arena).add(0D, 3D, 0D);
 		return ret;
 	}
 
@@ -2015,10 +2043,42 @@ public class Main extends JavaPlugin implements Listener {
 		} else {
 			Set<String> f = getConfig().getConfigurationSection(arena + ".flypoint").getKeys(false);
 			for (String key : f) {
-
 				ret.add(new Vector(getConfig().getDouble(arena + ".flypoint." + key + ".x"), getConfig().getDouble(arena + ".flypoint." + key + ".y"), getConfig().getDouble(arena + ".flypoint." + key + ".z")));
 			}
 			return ret;
+		}
+	}
+	
+	//TODO t
+	public ArrayList<Location> getSpawns(String arena) {
+		ArrayList<Location> ret = new ArrayList<Location>();
+		if (!getConfig().isSet(arena + ".spawn.")) {
+			return null;
+		} else {
+			int count = 0;
+			Set<String> f = getConfig().getConfigurationSection(arena + ".spawn").getKeys(false);
+			for (String key : f) {
+				if(!key.equalsIgnoreCase("world") && !key.equalsIgnoreCase("loc")){
+					ret.add(getSpawn(arena, count));
+					count++;
+				}
+			}
+			return ret;
+		}
+	}
+	
+	public int getCurrentSpawnIndex(String arena) {
+		if (!getConfig().isSet(arena + ".spawn.")) {
+			return 0;
+		} else {
+			int count = 0;
+			Set<String> f = getConfig().getConfigurationSection(arena + ".spawn").getKeys(false);
+			for (String key : f) {
+				if(!key.equalsIgnoreCase("world") && !key.equalsIgnoreCase("loc")){
+					count++;
+				}
+			}
+			return count;
 		}
 	}
 
