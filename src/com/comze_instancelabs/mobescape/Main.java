@@ -669,7 +669,11 @@ public class Main extends JavaPlugin implements Listener {
 							setArenaReward(arena, "item_reward_amount", Integer.parseInt(amount));
 						}else if(type.equalsIgnoreCase("command")){
 							setArenaDefaultRewards(arena);
-							setArenaCommandReward(arena, amount);
+							String newcmd = "";
+							for(int i = 0; i < args.length - 3; i++){
+								newcmd += args[3 + i] + " ";
+							}
+							setArenaCommandReward(arena, newcmd);
 						}else{
 							sender.sendMessage(ChatColor.RED + "Usage: /etm setreward [arena] [type] [amount]. [type] can be 'money', 'itemid', 'itemamount' or 'command'.");
 							return true;
