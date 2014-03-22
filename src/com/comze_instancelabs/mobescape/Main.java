@@ -217,7 +217,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.itemid", 264); // diamond
 		getConfig().addDefault("config.itemamount", 1);
 		getConfig().addDefault("config.use_command_reward", false);
-		getConfig().addDefault("config.command_reward", "pex user <player> group set DragonPro");
+		getConfig().addDefault("config.command_reward", "pex user <player> group set DragonPro;msg <player> Nice, dude.");
 		getConfig().addDefault("config.join_announcement", false);
 		getConfig().addDefault("config.start_announcement", false);
 		getConfig().addDefault("config.winner_announcement", false);
@@ -594,9 +594,9 @@ public class Main extends JavaPlugin implements Listener {
 							String count = Integer.toString(this.getCurrentSpawnIndex(arenaname));
 
 							getConfig().set(arenaname + ".spawn." + count + ".world", p.getWorld().getName());
-							getConfig().set(arenaname + ".spawn." + count + ".loc.x", p.getLocation().getBlockX());
-							getConfig().set(arenaname + ".spawn." + count + ".loc.y", p.getLocation().getBlockY());
-							getConfig().set(arenaname + ".spawn." + count + ".loc.z", p.getLocation().getBlockZ());
+							getConfig().set(arenaname + ".spawn." + count + ".loc.x", p.getLocation().getX());
+							getConfig().set(arenaname + ".spawn." + count + ".loc.y", p.getLocation().getY());
+							getConfig().set(arenaname + ".spawn." + count + ".loc.z", p.getLocation().getZ());
 							getConfig().set(arenaname + ".spawn." + count + ".loc.yaw", p.getLocation().getYaw());
 							getConfig().set(arenaname + ".spawn." + count + ".loc.pitch", p.getLocation().getPitch());
 							this.saveConfig();
@@ -1550,9 +1550,11 @@ public class Main extends JavaPlugin implements Listener {
 
 				// command reward
 				if (command_reward) {
-					String t = cmd.replaceAll("<player>", p.getName());
-					getLogger().info(t);
-					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), t);
+					String[] t = cmd.replaceAll("<player>", p.getName()).split(";");
+					System.out.println(t);
+					for(String t_ : t){
+						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), t_);
+					}
 				}
 				
 				if(spawn_winnerfirework){
