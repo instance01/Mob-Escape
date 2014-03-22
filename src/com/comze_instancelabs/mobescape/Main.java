@@ -135,6 +135,11 @@ public class Main extends JavaPlugin implements Listener {
 	 */
 	public static HashMap<Player, Boolean> pkit_use = new HashMap<Player, Boolean>();
 
+	/**
+	 * player -> place
+	 */
+	public static HashMap<Player, Integer> pplace = new HashMap<Player, Integer>();
+
 	
 	int default_max_players = 4;
 	int default_min_players = 3;
@@ -183,6 +188,7 @@ public class Main extends JavaPlugin implements Listener {
 	public String saved_spawn = "";
 	public String noperm_arena = "";
 	public String kit_delay_message = "";
+	public String your_place = "";
 	
 	public String sign_top = "";
 	public String sign_second_join = "";
@@ -282,6 +288,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("strings.nopermkit", "&cYou don't have permission to use this kit.");
 		getConfig().addDefault("strings.noperm_arena", "&cYou don't have permission to join this arena.");
 		getConfig().addDefault("strings.kit_delay_message", "&cYou can use your kit after a delay of <delay> seconds!");
+		getConfig().addDefault("strings.your_place", "&eYou came in <place>!");
 
 		getConfig().options().copyDefaults(true);
 		if (getConfig().isSet("config.min_players")) {
@@ -380,6 +387,7 @@ public class Main extends JavaPlugin implements Listener {
 		nopermkit = getConfig().getString("strings.nopermkit").replaceAll("&", "§");
 		noperm_arena = getConfig().getString("strings.noperm_arena").replaceAll("&", "§");
 		kit_delay_message = getConfig().getString("strings.kit_delay_message").replaceAll("&", "§");
+		your_place = getConfig().getString("strings.your_place").replaceAll("&", "§");
 		
 		sign_top = getConfig().getString("config.sign_top_line").replaceAll("&", "§");
 		sign_second_join = getConfig().getString("config.sign_second_line_join").replaceAll("&", "§");
@@ -1132,42 +1140,7 @@ public class Main extends JavaPlugin implements Listener {
 			
 
 			if (event.getPlayer().getLocation().getBlockY() < getLowBoundary(arenap_.get(event.getPlayer().getName())).getBlockY() - 3) {
-				lost.put(event.getPlayer(), arenap.get(event.getPlayer()));
-				final Player p__ = event.getPlayer();
-				final String arena = arenap.get(event.getPlayer());
-				Bukkit.getScheduler().runTaskLater(this, new Runnable() {
-					public void run() {
-						try {
-							Location l = getSpawn(arena, pspawn.get(p__));
-							p__.teleport(new Location(l.getWorld(), l.getBlockX(), l.getBlockY() + 30, l.getBlockZ()));
-							p__.setAllowFlight(true);
-							p__.setFlying(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}, 5);
-
-				int count = 0;
-
-				for (Player p : arenap.keySet()) {
-					if (arenap.get(p).equalsIgnoreCase(arena)) {
-						if (!lost.containsKey(p)) {
-							count++;
-						}
-					}
-				}
-
-				if (last_man_standing) {
-					if (count < 2) {
-						stop(h.get(arena), arena);
-					}
-				} else {
-					if (count < 1) {
-						stop(h.get(arena), arena);
-					}
-				}
-
+				this.simulatePlayerFall(event.getPlayer());
 				return;
 			}
 		}
@@ -2102,7 +2075,6 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
-	//TODO t
 	public ArrayList<Location> getSpawns(String arena) {
 		ArrayList<Location> ret = new ArrayList<Location>();
 		if (!getConfig().isSet(arena + ".spawn.")) {
@@ -2332,7 +2304,18 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}
-
+		
+		pplace.put(p, count + 1);
+		String place = Integer.toString(count + 1) + "th";
+		if(count == 0){
+			place = "1st";
+		}else if(count == 1){
+			place = "2nd";
+		}else if(count == 2){
+			place = "3rd";
+		}
+		p.sendMessage(your_place.replaceAll("<place>", place));
+		
 		if (last_man_standing) {
 			if (count < 2) {
 				stop(h.get(arena), arena);
