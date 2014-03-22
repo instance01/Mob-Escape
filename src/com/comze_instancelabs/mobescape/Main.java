@@ -649,6 +649,35 @@ public class Main extends JavaPlugin implements Listener {
 					} else {
 						p.sendMessage(not_in_arena);
 					}
+				} else if (action.equalsIgnoreCase("setreward")) {
+					if(args.length > 3){
+						String arena = args[1];
+						String type = args[2];
+						String amount = args[3];
+						if(!type.equalsIgnoreCase("command") && !isNumeric(amount)){
+							sender.sendMessage(ChatColor.RED + "Amount has to be a number.");
+							return true;
+						}
+						if(type.equalsIgnoreCase("money")){
+							setArenaDefaultRewards(arena);
+							setArenaReward(arena, "money_reward_per_game", Integer.parseInt(amount));
+						}else if(type.equalsIgnoreCase("itemid")){
+							setArenaDefaultRewards(arena);
+							setArenaReward(arena, "item_reward_id", Integer.parseInt(amount));
+						}else if(type.equalsIgnoreCase("itemamount")){
+							setArenaDefaultRewards(arena);
+							setArenaReward(arena, "item_reward_amount", Integer.parseInt(amount));
+						}else if(type.equalsIgnoreCase("command")){
+							setArenaDefaultRewards(arena);
+							setArenaCommandReward(arena, amount);
+						}else{
+							sender.sendMessage(ChatColor.RED + "Usage: /etm setreward [arena] [type] [amount]. [type] can be 'money', 'itemid', 'itemamount' or 'command'.");
+							return true;
+						}
+						sender.sendMessage(ChatColor.GREEN + "Successfully saved arena reward for type " + type + " .");
+					}else{
+						sender.sendMessage(ChatColor.RED + "Usage: /etm setreward [arena] [type] [amount]. [type] can be 'money', 'itemid', 'itemamount' or 'command'.");
+					}
 				} else if (action.equalsIgnoreCase("endall")) {
 					if (sender.hasPermission("mobescape.end")) {
 						for (String arena : tasks.keySet()) {
@@ -1364,7 +1393,6 @@ public class Main extends JavaPlugin implements Listener {
 		Location ret = null;
 		if (isValidArena(arena)) {
 			String entry = ".spawn." + Integer.toString(count) + ".";
-			//TODO check this; backwards compatibility
 			if(!getConfig().isSet(arena + entry)){
 				entry = ".spawn.";
 			}
@@ -1375,24 +1403,7 @@ public class Main extends JavaPlugin implements Listener {
 	
 	public HashMap<String, Integer> spawncount = new HashMap<String, Integer>();
 	public HashMap<Player, Integer> pspawn = new HashMap<Player, Integer>();
-	
-	//TODO test
-	/*public Location getSpawn(String arena) {
-		if(!spawncount.containsKey(arena)){
-			spawncount.put(arena, 0);
-			return getSpawn(arena, 0);
-		}
-		
-		if(spawncount.get(arena) < this.getCurrentSpawnIndex(arena)){
-			Location ret = getSpawn(arena, spawncount.get(arena));
-			spawncount.put(arena, spawncount.get(arena) + 1);
-			return ret;
-		}else{
-			spawncount.put(arena, 0);
-		}
-		return getSpawn(arena, 0);
-	}*/
-	
+
 	public Location getSpawn(String arena) {
 		return getSpawn(arena, 0);
 	}
@@ -1511,24 +1522,8 @@ public class Main extends JavaPlugin implements Listener {
 			}
 
 			if (winner.containsKey(p)) {
-				if (economy) {
-					EconomyResponse r = econ.depositPlayer(p.getName(), getConfig().getDouble("config.money_reward_per_game"));
-					if (!r.transactionSuccess()) {
-						getServer().getPlayer(p.getName()).sendMessage(String.format("An error occured: %s", r.errorMessage));
-					}
-				} else {
-					p.getInventory().addItem(new ItemStack(Material.getMaterial(itemid), itemamount));
-					p.updateInventory();
-				}
-
-				// command reward
-				if (command_reward) {
-					String[] t = cmd.replaceAll("<player>", p.getName()).split(";");
-					System.out.println(t);
-					for(String t_ : t){
-						Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), t_);
-					}
-				}
+				
+				this.getArenaReward(arena, p);
 				
 				if(spawn_winnerfirework){
 					spawnFirework(p);
@@ -2383,5 +2378,78 @@ public class Main extends JavaPlugin implements Listener {
 
 		iconm.open(Bukkit.getPlayerExact(p));
 	}
+	
+	
+	public void getArenaReward(String arena, Player p){
+		if(!getConfig().isSet(arena + ".reward.use")){
+			getConfig().set(arena + ".reward.use", false);
+			this.saveConfig();
+		}
+		if(!getConfig().getBoolean(arena + ".reward.use")){
+			if (economy) {
+				EconomyResponse r = econ.depositPlayer(p.getName(), getConfig().getDouble("config.money_reward_per_game"));
+				if (!r.transactionSuccess()) {
+					getServer().getPlayer(p.getName()).sendMessage(String.format("An error occured: %s", r.errorMessage));
+				}
+			} else {
+				p.getInventory().addItem(new ItemStack(Material.getMaterial(itemid), itemamount));
+				p.updateInventory();
+			}
 
+			// command reward
+			if (command_reward) {
+				String[] t = cmd.replaceAll("<player>", p.getName()).split(";");
+				System.out.println(t);
+				for(String t_ : t){
+					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), t_);
+				}
+			}
+			return;
+		}
+		if (economy) {
+			EconomyResponse r = econ.depositPlayer(p.getName(), getConfig().getDouble(arena + ".reward.money_reward_per_game"));
+			if (!r.transactionSuccess()) {
+				getServer().getPlayer(p.getName()).sendMessage(String.format("An error occured: %s", r.errorMessage));
+			}
+		} else {
+			p.getInventory().addItem(new ItemStack(Material.getMaterial(getConfig().getInt(arena + ".reward.item_reward_id")), getConfig().getInt(arena + ".reward.item_reward_amount")));
+			p.updateInventory();
+		}
+
+		// command reward
+		if (command_reward) {
+			String cmd = getConfig().getString(arena + ".reward.commandreward");
+			String[] t = cmd.replaceAll("<player>", p.getName()).split(";");
+			System.out.println(t);
+			for(String t_ : t){
+				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), t_);
+			}
+		}
+	}
+	
+	public void setArenaReward(String arena, String component, Integer amount){
+		getConfig().set(arena + ".reward." + component, amount);
+		this.saveConfig();
+	}
+	
+	public void setArenaCommandReward(String arena, String cmd){
+		getConfig().set(arena + ".reward.commandreward", cmd);
+		this.saveConfig();
+	}
+	
+	public void setArenaDefaultRewards(String arena){
+		if(!getConfig().isSet(arena + ".reward.use")){
+			getConfig().set(arena + ".reward.use", true);
+			this.saveConfig();
+		}
+		if(getConfig().getBoolean(arena + ".reward.use")){
+			return;
+		}
+		setArenaReward(arena, "money_reward_per_game", (int)getConfig().getDouble("config.money_reward_per_game"));
+		setArenaReward(arena, "item_reward_id", itemid);
+		setArenaReward(arena, "item_reward_amount", itemamount);
+		setArenaCommandReward(arena, cmd);
+		getConfig().set(arena + ".reward.use", true);
+		this.saveConfig();
+	}
 }
