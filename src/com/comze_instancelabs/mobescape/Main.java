@@ -651,34 +651,36 @@ public class Main extends JavaPlugin implements Listener {
 					}
 				} else if (action.equalsIgnoreCase("setreward")) {
 					if(args.length > 3){
-						String arena = args[1];
-						String type = args[2];
-						String amount = args[3];
-						if(!type.equalsIgnoreCase("command") && !isNumeric(amount)){
-							sender.sendMessage(ChatColor.RED + "Amount has to be a number.");
-							return true;
-						}
-						if(type.equalsIgnoreCase("money")){
-							setArenaDefaultRewards(arena);
-							setArenaReward(arena, "money_reward_per_game", Integer.parseInt(amount));
-						}else if(type.equalsIgnoreCase("itemid")){
-							setArenaDefaultRewards(arena);
-							setArenaReward(arena, "item_reward_id", Integer.parseInt(amount));
-						}else if(type.equalsIgnoreCase("itemamount")){
-							setArenaDefaultRewards(arena);
-							setArenaReward(arena, "item_reward_amount", Integer.parseInt(amount));
-						}else if(type.equalsIgnoreCase("command")){
-							setArenaDefaultRewards(arena);
-							String newcmd = "";
-							for(int i = 0; i < args.length - 3; i++){
-								newcmd += args[3 + i] + " ";
+						if (sender.hasPermission("mobescape.setup")) {
+							String arena = args[1];
+							String type = args[2];
+							String amount = args[3];
+							if(!type.equalsIgnoreCase("command") && !isNumeric(amount)){
+								sender.sendMessage(ChatColor.RED + "Amount has to be a number.");
+								return true;
 							}
-							setArenaCommandReward(arena, newcmd);
-						}else{
-							sender.sendMessage(ChatColor.RED + "Usage: /etm setreward [arena] [type] [amount]. [type] can be 'money', 'itemid', 'itemamount' or 'command'.");
-							return true;
+							if(type.equalsIgnoreCase("money")){
+								setArenaDefaultRewards(arena);
+								setArenaReward(arena, "money_reward_per_game", Integer.parseInt(amount));
+							}else if(type.equalsIgnoreCase("itemid")){
+								setArenaDefaultRewards(arena);
+								setArenaReward(arena, "item_reward_id", Integer.parseInt(amount));
+							}else if(type.equalsIgnoreCase("itemamount")){
+								setArenaDefaultRewards(arena);
+								setArenaReward(arena, "item_reward_amount", Integer.parseInt(amount));
+							}else if(type.equalsIgnoreCase("command")){
+								setArenaDefaultRewards(arena);
+								String newcmd = "";
+								for(int i = 0; i < args.length - 3; i++){
+									newcmd += args[3 + i] + " ";
+								}
+								setArenaCommandReward(arena, newcmd);
+							}else{
+								sender.sendMessage(ChatColor.RED + "Usage: /etm setreward [arena] [type] [amount]. [type] can be 'money', 'itemid', 'itemamount' or 'command'.");
+								return true;
+							}
+							sender.sendMessage(ChatColor.GREEN + "Successfully saved arena reward for type " + type + " .");
 						}
-						sender.sendMessage(ChatColor.GREEN + "Successfully saved arena reward for type " + type + " .");
 					}else{
 						sender.sendMessage(ChatColor.RED + "Usage: /etm setreward [arena] [type] [amount]. [type] can be 'money', 'itemid', 'itemamount' or 'command'.");
 					}
