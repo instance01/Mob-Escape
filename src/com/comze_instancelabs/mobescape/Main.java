@@ -2305,7 +2305,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		
 		pplace.put(p, count + 1);
-		String place = Integer.toString(count + 1) + "th";
+		/*String place = Integer.toString(count + 1) + "th";
 		if(count == 0){
 			place = "1st";
 		}else if(count == 1){
@@ -2313,7 +2313,7 @@ public class Main extends JavaPlugin implements Listener {
 		}else if(count == 2){
 			place = "3rd";
 		}
-		p.sendMessage(your_place.replaceAll("<place>", place));
+		p.sendMessage(your_place.replaceAll("<place>", place));*/
 		
 		if (last_man_standing) {
 			if (count < 2) {
