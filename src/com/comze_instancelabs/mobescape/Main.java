@@ -41,6 +41,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -1365,24 +1366,36 @@ public class Main extends JavaPlugin implements Listener {
 		if (event.getEntity() instanceof Player) {
 			Player p = (Player) event.getEntity();
 			if (arenap_.containsKey(p.getName())) {
-				if(event.getCause() == DamageCause.LAVA){
-					return;
+				if(event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK){
+					p.damage(event.getDamage());
+				}else{
+					p.setHealth(20D);
+					event.setCancelled(true);
 				}
-				p.setHealth(20D);
-				event.setCancelled(true);
+				
 			}
 		}
 	}
 	
-	@EventHandler
+	/*@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent event){
 		if(arenap_.containsKey(event.getPlayer().getName())){
 			final Player p = event.getPlayer();
 			Bukkit.getScheduler().runTaskLater(this, new Runnable(){
 				public void run(){
-					leaveArena(p, true, false);
+					m.simulatePlayerFall(p);
 				}
 			}, 10L);
+		}
+	}*/
+	
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event){
+		if(arenap_.containsKey(event.getEntity().getName())){
+			event.getEntity().setHealth(20D);
+			Player p = event.getEntity();
+
+			m.simulatePlayerFall(p);
 		}
 	}
 
