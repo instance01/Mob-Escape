@@ -166,6 +166,7 @@ public class Main extends JavaPlugin implements Listener {
 	public boolean die_behind_mob = false;
 	public boolean give_jumper_as_default_kit = true;
 	public int kit_delay_in_seconds = 7;
+	public boolean remove_scoreboard = false;
 	
 	public int start_countdown = 5;
 
@@ -241,6 +242,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.die_behind_mob", false);
 		getConfig().addDefault("config.give_jumper_as_default_kit", true);
 		getConfig().addDefault("config.kit_delay_in_seconds", 7);
+		getConfig().addDefault("config.remove_scoreboard", false);
 		
 		getConfig().addDefault("config.sign_top_line", "&6MobEscape");
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
@@ -363,7 +365,8 @@ public class Main extends JavaPlugin implements Listener {
 		die_behind_mob = getConfig().getBoolean("config.die_behind_mob");
 		give_jumper_as_default_kit = getConfig().getBoolean("config.give_jumper_as_default_kit");
 		kit_delay_in_seconds = getConfig().getInt("config.kit_delay_in_seconds");
-
+		remove_scoreboard = getConfig().getBoolean("config.remove_scoreboard");
+		
 		saved_arena = getConfig().getString("strings.saved.arena").replaceAll("&", "§");
 		removed_arena = getConfig().getString("strings.removed_arena").replaceAll("&", "§");
 		saved_lobby = getConfig().getString("strings.saved.lobby").replaceAll("&", "§");
@@ -1527,6 +1530,20 @@ public class Main extends JavaPlugin implements Listener {
 						p.setAllowFlight(false);
 						p.setFlying(false);
 						removeScoreboard(arena, p);
+						
+						if (p.isOnline()) {
+							p.getInventory().setContents(pinv.get(p));
+							p.updateInventory();
+						}
+
+						if (winner.containsKey(p)) {
+							
+							m.getArenaReward(arena, p);
+							
+							if(spawn_winnerfirework){
+								spawnFirework(p);
+							}
+						}
 					}
 				}
 			}, 16);
@@ -1538,20 +1555,6 @@ public class Main extends JavaPlugin implements Listener {
 			}
 			if (arenap_.containsKey(p.getName())) {
 				arenap_.remove(p.getName());
-			}
-
-			if (p.isOnline()) {
-				p.getInventory().setContents(pinv.get(p));
-				p.updateInventory();
-			}
-
-			if (winner.containsKey(p)) {
-				
-				this.getArenaReward(arena, p);
-				
-				if(spawn_winnerfirework){
-					spawnFirework(p);
-				}
 			}
 
 			int count = 0;
@@ -2156,6 +2159,10 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void updateScoreboard() {
 
+		if(remove_scoreboard){
+			return;
+		}
+		
 		for (Player pl : arenap.keySet()) {
 			Player p = pl;
 			if (board == null) {
