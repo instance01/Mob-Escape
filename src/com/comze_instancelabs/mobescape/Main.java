@@ -168,6 +168,8 @@ public class Main extends JavaPlugin implements Listener {
 	public boolean give_jumper_as_default_kit = true;
 	public int kit_delay_in_seconds = 7;
 	public boolean remove_scoreboard = false;
+	public boolean give_kit_tool_at_join = true;
+	public int kit_tool_id = 399;
 	
 	public int start_countdown = 5;
 
@@ -244,6 +246,8 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.give_jumper_as_default_kit", true);
 		getConfig().addDefault("config.kit_delay_in_seconds", 7);
 		getConfig().addDefault("config.remove_scoreboard", false);
+		getConfig().addDefault("config.give_kit_tool_at_join", true);
+		getConfig().addDefault("config.kit_tool_id", 399);
 		
 		getConfig().addDefault("config.sign_top_line", "&6MobEscape");
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
@@ -367,6 +371,9 @@ public class Main extends JavaPlugin implements Listener {
 		give_jumper_as_default_kit = getConfig().getBoolean("config.give_jumper_as_default_kit");
 		kit_delay_in_seconds = getConfig().getInt("config.kit_delay_in_seconds");
 		remove_scoreboard = getConfig().getBoolean("config.remove_scoreboard");
+		give_kit_tool_at_join = getConfig().getBoolean("config.give_kit_tool_at_join");
+		kit_tool_id = getConfig().getInt("config.kit_tool_id");
+		
 		
 		saved_arena = getConfig().getString("strings.saved.arena").replaceAll("&", "§");
 		removed_arena = getConfig().getString("strings.removed_arena").replaceAll("&", "§");
@@ -992,39 +999,6 @@ public class Main extends JavaPlugin implements Listener {
 		return V1_7Dragon.registerEntities();
 	}
 
-	/*
-	 * public Test spawnEnderdragon(String arena, Location t) { /*Object w =
-	 * ((CraftWorld) t.getWorld()).getHandle();
-	 * if(this.getDragonWayPoints(arena) == null){ getLogger().severe(
-	 * "You forgot to set any FlyPoints! You need to have min. 2 and one of them has to be at finish."
-	 * ); return null; } Test t_ = new Test(this, arena, t,
-	 * (net.minecraft.server.v1_7_R1.World) ((CraftWorld)
-	 * t.getWorld()).getHandle(), this.getDragonWayPoints(arena));
-	 * ((net.minecraft.server.v1_7_R1.World) w).addEntity(t_,
-	 * CreatureSpawnEvent.SpawnReason.CUSTOM); t_.setCustomName(dragon_name);
-	 */
-	// TODO: send entity invisibility packet
-	// TODO: might get possible though with HoloAPI when MC 1.8 is released
-	/*
-	 * Slimey b = new Slimey(this, t, (net.minecraft.server.v1_7_R1.World)
-	 * ((CraftWorld) t.getWorld()).getHandle());
-	 * ((net.minecraft.server.v1_7_R1.World) w).addEntity(b,
-	 * CreatureSpawnEvent.SpawnReason.CUSTOM); b.setCustomName(dragon_name);
-	 * b.setInvisible(true); V1_7 v = new V1_7(); return v.spawnEnderdragon(m,
-	 * arena, t); }
-	 */
-
-	/*
-	 * public Test1_6 spawnEnderdragon1_6(String arena, Location t) { V1_6 v =
-	 * new V1_6(); return v.spawnEnderdragon(m, arena, t); }
-	 */
-
-	/*
-	 * public void setDragonSpeed(EnderDragon s, double speed) {
-	 * AttributeInstance attributes = ((EntityInsentient) ((CraftLivingEntity)
-	 * s).getHandle()).getAttributeInstance(GenericAttributes.d);
-	 * attributes.setValue(speed); }
-	 */
 
 	public ArrayList<String> left_players = new ArrayList<String>();
 
@@ -1170,7 +1144,6 @@ public class Main extends JavaPlugin implements Listener {
 			}
 
 			
-			
 			final String arena_ = arenap_.get(event.getPlayer().getName());
 
 			if(event.getPlayer().getLocation().distance(getFinish(arena_)) < 3){
@@ -1251,6 +1224,10 @@ public class Main extends JavaPlugin implements Listener {
 		if (event.hasItem()) {
 			final Player p = event.getPlayer();
 			if(!arenap.containsKey(p)){
+				return;
+			}
+			if(event.getItem().getTypeId() == kit_tool_id){
+				m.openGUI(m, p.getName());
 				return;
 			}
 			if(!pkit_use.containsKey(p)){
@@ -1624,10 +1601,15 @@ public class Main extends JavaPlugin implements Listener {
 		if(give_jumper_as_default_kit){
 			pkit.put(p, "jumper");
 		}
+		
 		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 			public void run() {
 				p.teleport(getLobby(arena));
 				p.setFoodLevel(20);
+				if(m.give_kit_tool_at_join){
+					p.getInventory().addItem(new ItemStack(Material.getMaterial(kit_tool_id)));
+					p.updateInventory();	
+				}
 			}
 		}, 4);
 
