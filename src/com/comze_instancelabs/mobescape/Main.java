@@ -1173,7 +1173,7 @@ public class Main extends JavaPlugin implements Listener {
 			
 			final String arena_ = arenap_.get(event.getPlayer().getName());
 
-			if(event.getPlayer().getLocation().distance(getFinish(arena_)) < 2){
+			if(event.getPlayer().getLocation().distance(getFinish(arena_)) < 3){
 				if (ingame.get(arena_)) {
 					stop(h.get(arena_), arena_);
 				}
@@ -1482,7 +1482,7 @@ public class Main extends JavaPlugin implements Listener {
 	public Location getFinish(String arena) {
 		Location ret = null;
 		if (isValidArena(arena)) {
-			ret = new Location(Bukkit.getWorld(getConfig().getString(arena + ".finish.world")), getConfig().getInt(arena + ".finish.loc.x"), getConfig().getInt(arena + ".spawn.loc.y"), getConfig().getInt(arena + ".finish.loc.z"));
+			ret = new Location(Bukkit.getWorld(getConfig().getString(arena + ".finish.world")), getConfig().getInt(arena + ".finish.loc.x"), getConfig().getInt(arena + ".finish.loc.y"), getConfig().getInt(arena + ".finish.loc.z"));
 		}
 		return ret;
 	}
@@ -2054,7 +2054,7 @@ public class Main extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 
-		getLogger().info("Failed to update " + Integer.toString(failcount) + " blocks due to spigots async exception.");
+		//getLogger().info("Failed to update " + Integer.toString(failcount) + " blocks due to spigots async exception.");
 		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 			public void run() {
 				// restore spigot blocks!
