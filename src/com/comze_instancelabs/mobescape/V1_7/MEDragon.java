@@ -137,14 +137,14 @@ public class MEDragon extends EntityEnderDragon {
 			this.Y = (Math.abs(disY) / tick_);
 			this.Z = (Math.abs(disZ) / tick_);
 			
-			if (this.locX < points.get(currentid).getX()) {
-				if (this.locZ > points.get(currentid).getZ()) {
+			if (this.locX <= points.get(currentid).getX()) {
+				if (this.locZ >= points.get(currentid).getZ()) {
 					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 180F;
 				} else {
 					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
 				}
 			} else { // (this.locX > points.get(currentid).getX())
-				if (this.locZ > points.get(currentid).getZ()) {
+				if (this.locZ >= points.get(currentid).getZ()) {
 					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 90F;
 				} else {
 					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
@@ -153,14 +153,14 @@ public class MEDragon extends EntityEnderDragon {
 
 		}
 
-		if (this.locX < points.get(currentid).getX()) {
-			if (this.locZ > points.get(currentid).getZ()) {
+		if (this.locX <= points.get(currentid).getX()) {
+			if (this.locZ >= points.get(currentid).getZ()) {
 				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 180F;
 			} else {
 				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
 			}
 		} else { // (this.locX > points.get(currentid).getX())
-			if (this.locZ > points.get(currentid).getZ()) {
+			if (this.locZ >= points.get(currentid).getZ()) {
 				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 90F;
 			} else {
 				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));

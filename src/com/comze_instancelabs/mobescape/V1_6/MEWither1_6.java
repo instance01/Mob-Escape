@@ -131,14 +131,14 @@ public class MEWither1_6 extends EntityWither {
 			this.Y = (Math.abs(disY) / tick_);
 			this.Z = (Math.abs(disZ) / tick_);
 			
-			if (this.locX < points.get(currentid).getX()) {
-				if (this.locZ > points.get(currentid).getZ()) {
+			if (this.locX <= points.get(currentid).getX()) {
+				if (this.locZ >= points.get(currentid).getZ()) {
 					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
 				} else {
 					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 270F;
 				}
 			} else { // (this.locX > points.get(currentid).getX())
-				if (this.locZ > points.get(currentid).getZ()) {
+				if (this.locZ >= points.get(currentid).getZ()) {
 					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
 				} else {
 					this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 180F;
@@ -147,14 +147,14 @@ public class MEWither1_6 extends EntityWither {
 
 		}
 
-		if (this.locX < points.get(currentid).getX()) {
-			if (this.locZ > points.get(currentid).getZ()) {
+		if (this.locX <= points.get(currentid).getX()) {
+			if (this.locZ >= points.get(currentid).getZ()) {
 				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z));
 			} else {
 				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) + 90F;
 			}
 		} else { // (this.locX > points.get(currentid).getX())
-			if (this.locZ > points.get(currentid).getZ()) {
+			if (this.locZ >= points.get(currentid).getZ()) {
 				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 90F;
 			} else {
 				this.yaw = getLookAtYaw(new Vector(this.X, this.Y, this.Z)) - 180F;
