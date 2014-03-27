@@ -41,6 +41,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -49,6 +50,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -65,8 +67,11 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.Vector;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+
 import com.comze_instancelabs.mobescape.V1_6.V1_6Dragon;
 import com.comze_instancelabs.mobescape.V1_6.V1_6Wither;
+import com.comze_instancelabs.mobescape.V1_7.V1_7Dragon;
+import com.comze_instancelabs.mobescape.V1_7.V1_7Wither;
 /*import net.minecraft.server.v1_7_R1.AttributeInstance;
  import net.minecraft.server.v1_7_R1.EntityInsentient;
  import net.minecraft.server.v1_7_R1.EntityTypes;
@@ -74,8 +79,6 @@ import com.comze_instancelabs.mobescape.V1_6.V1_6Wither;
 /*import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
  import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
  import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;*/
-import com.comze_instancelabs.mobescape.V1_7.V1_7Dragon;
-import com.comze_instancelabs.mobescape.V1_7.V1_7Wither;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -1359,9 +1362,24 @@ public class Main extends JavaPlugin implements Listener {
 		if (event.getEntity() instanceof Player) {
 			Player p = (Player) event.getEntity();
 			if (arenap_.containsKey(p.getName())) {
+				if(event.getCause() == DamageCause.LAVA){
+					return;
+				}
 				p.setHealth(20D);
 				event.setCancelled(true);
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerRespawn(PlayerRespawnEvent event){
+		if(arenap_.containsKey(event.getPlayer().getName())){
+			final Player p = event.getPlayer();
+			Bukkit.getScheduler().runTaskLater(this, new Runnable(){
+				public void run(){
+					leaveArena(p, true, false);
+				}
+			}, 10L);
 		}
 	}
 
