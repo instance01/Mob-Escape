@@ -110,11 +110,11 @@ public class Tools {
 	public static void destroy(final Main m, final Location l, final Location l2, String arena, int length2, String type, boolean mode1_6, boolean mode1_7_5){
 		// south
 		for (int i = 0; i < m.destroy_radius; i++) { // length1
-			for (int j = 0; j < length2; j++) {
+			for (int j = 0; j < m.destroy_radius; j++) {
 				if(type.equalsIgnoreCase("dragon")){
 					if(mode1_6){
 						final V1_6Dragon v = new V1_6Dragon();
-						for(final Block b : v.getLoc(m, l, arena, i, j, l2)){
+						for(final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)){
 							Bukkit.getScheduler().runTask(m, new Runnable() {
 								public void run() {
 									if (b.getType() != Material.AIR) {
@@ -131,7 +131,7 @@ public class Tools {
 						}
 					}else if(mode1_7_5){
 						final V1_7_5Dragon v = new V1_7_5Dragon();
-						for(final Block b : v.getLoc(m, l, arena, i, j, l2)){
+						for(final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3),l2)){
 							Bukkit.getScheduler().runTask(m, new Runnable() {
 								public void run() {
 									if (b.getType() != Material.AIR) {
@@ -148,7 +148,7 @@ public class Tools {
 						}
 					}else{
 						final V1_7Dragon v = new V1_7Dragon();
-						for(final Block b : v.getLoc(m, l, arena, i, j, l2)){
+						for(final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3),l2)){
 							Bukkit.getScheduler().runTask(m, new Runnable() {
 								public void run() {
 									if (b.getType() != Material.AIR) {
@@ -167,7 +167,7 @@ public class Tools {
 				}else if(type.equalsIgnoreCase("wither")){
 					if(mode1_6){
 						final V1_6Wither v = new V1_6Wither();
-						for(final Block b : v.getLoc(m, l, arena, i, j, l2)){
+						for(final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3),l2)){
 							Bukkit.getScheduler().runTask(m, new Runnable() {
 								public void run() {
 									if (b.getType() != Material.AIR) {
@@ -184,7 +184,7 @@ public class Tools {
 						}
 					}else if(mode1_7_5){
 						final V1_7_5Wither v = new V1_7_5Wither();
-						for(final Block b : v.getLoc(m, l, arena, i, j, l2)){
+						for(final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3),l2)){
 							Bukkit.getScheduler().runTask(m, new Runnable() {
 								public void run() {
 									if (b.getType() != Material.AIR) {
@@ -201,7 +201,7 @@ public class Tools {
 						}
 					}else{
 						final V1_7Wither v = new V1_7Wither();
-						for(final Block b : v.getLoc(m, l, arena, i, j, l2)){
+						for(final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3),l2)){
 							Bukkit.getScheduler().runTask(m, new Runnable() {
 								public void run() {
 									if (b.getType() != Material.AIR) {
