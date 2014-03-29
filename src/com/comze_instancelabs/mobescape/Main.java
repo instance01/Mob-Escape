@@ -41,9 +41,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -51,7 +51,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -73,13 +72,9 @@ import com.comze_instancelabs.mobescape.V1_6.V1_6Dragon;
 import com.comze_instancelabs.mobescape.V1_6.V1_6Wither;
 import com.comze_instancelabs.mobescape.V1_7.V1_7Dragon;
 import com.comze_instancelabs.mobescape.V1_7.V1_7Wither;
-/*import net.minecraft.server.v1_7_R1.AttributeInstance;
- import net.minecraft.server.v1_7_R1.EntityInsentient;
- import net.minecraft.server.v1_7_R1.EntityTypes;
- import net.minecraft.server.v1_7_R1.GenericAttributes;*/
-/*import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
- import org.bukkit.craftbukkit.v1_7_R1.entity.CraftLivingEntity;
- import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;*/
+import com.comze_instancelabs.mobescape.V1_7._5.V1_7_5Dragon;
+import com.comze_instancelabs.mobescape.V1_7._5.V1_7_5Wither;
+
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -88,13 +83,8 @@ public class Main extends JavaPlugin implements Listener {
 	 * This is based off the ColorMatch arena system
 	 *
 	 */
-
-	/*
-	 * de setmainlobby
-	 * 
-	 * de createarena [name] de setlobby [name] de setfinish [name] de setbounds
-	 * [name] [low/high] de savearena [name]
-	 */
+	
+	//TODO: CODE CLEANUP (MEDragon, MEWither, V1_*Dragon, V1_*Wither have much duplicate code)
 
 	public static Economy econ = null;
 
@@ -160,6 +150,7 @@ public class Main extends JavaPlugin implements Listener {
 	public String dragon_name = "Ender Dragon";
 	public double mob_speed = 1.0;
 	public static boolean mode1_6 = false;
+	public static boolean mode1_7_5 = false;
 	public int destroy_radius = 10;
 	public boolean last_man_standing = true;
 	public boolean spawn_winnerfirework = true;
@@ -216,6 +207,9 @@ public class Main extends JavaPlugin implements Listener {
 		if (Bukkit.getVersion().contains("1.6.4") || Bukkit.getVersion().contains("1.6.2")) {
 			mode1_6 = true;
 			getLogger().info("Turned on 1.6.4 mode.");
+		}else if(Bukkit.getVersion().contains("MC: 1.7.5")){
+			mode1_7_5 = true;
+			getLogger().info("Turned on 1.7.5 mode.");
 		}
 		registerEntities();
 
@@ -995,6 +989,8 @@ public class Main extends JavaPlugin implements Listener {
 	private boolean registerEntities() {
 		if (mode1_6) {
 			return V1_6Dragon.registerEntities();
+		}else if(mode1_7_5){
+			return V1_7_5Dragon.registerEntities();
 		}
 		return V1_7Dragon.registerEntities();
 	}
@@ -1728,6 +1724,17 @@ public class Main extends JavaPlugin implements Listener {
 				V1_6Dragon v = new V1_6Dragon();
 				return v.start(this, arena);
 			}
+		}else if(mode1_7_5){
+			if(type.equalsIgnoreCase("dragon")){
+				V1_7_5Dragon v = new V1_7_5Dragon();
+				return v.start(this, arena);
+			}else if(type.equalsIgnoreCase("wither")){
+				V1_7_5Wither v = new V1_7_5Wither();
+				return v.start(this, arena);
+			}else{
+				V1_7_5Dragon v = new V1_7_5Dragon();
+				return v.start(this, arena);
+			}
 		}
 		if(type.equalsIgnoreCase("dragon")){
 			V1_7Dragon v_ = new V1_7Dragon();
@@ -1753,8 +1760,27 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void stop(BukkitTask t, final String arena) {
 		if (mode1_6) {
-			V1_6Dragon v = new V1_6Dragon();
-			v.stop(this, t, arena);
+			if(type.equalsIgnoreCase("dragon")){
+				V1_6Dragon v = new V1_6Dragon();
+				v.stop(this, t, arena);
+			}else if(type.equalsIgnoreCase("wither")){
+				V1_6Wither v = new V1_6Wither();
+				v.stop(this, t, arena);
+			}else{
+				V1_6Dragon v = new V1_6Dragon();
+				v.stop(this, t, arena);
+			}
+		} else if (mode1_7_5) {
+			if(type.equalsIgnoreCase("dragon")){
+				V1_7_5Dragon v = new V1_7_5Dragon();
+				v.stop(this, t, arena);
+			}else if(type.equalsIgnoreCase("wither")){
+				V1_7_5Wither v = new V1_7_5Wither();
+				v.stop(this, t, arena);
+			}else{
+				V1_7_5Dragon v = new V1_7_5Dragon();
+				v.stop(this, t, arena);
+			}
 		} else {
 			if(type.equalsIgnoreCase("dragon")){
 				V1_7Dragon v = new V1_7Dragon();
@@ -2144,6 +2170,8 @@ public class Main extends JavaPlugin implements Listener {
 	public static final void playBlockBreakParticles(final Location loc, final Material m, final Player... players) {
 		if (mode1_6) {
 			V1_6Dragon.playBlockBreakParticles(loc, m, players);
+		}else if(mode1_7_5){
+			V1_7_5Dragon.playBlockBreakParticles(loc, m, players);
 		}
 		V1_7Dragon.playBlockBreakParticles(loc, m, players);
 	}
