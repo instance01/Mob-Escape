@@ -7,9 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import com.comze_instancelabs.mobescape.Main;
 import com.comze_instancelabs.mobescape.V1_6.V1_6Dragon;
@@ -118,7 +120,9 @@ public class Tools {
 									if (b.getType() != Material.AIR) {
 										v.playBlockBreakParticles(b.getLocation(), b.getType());
 										if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
-											l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));	
+											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
+											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
+											fb.setVelocity(new Vector(0, 0.4, 0));
 										}
 										b.setType(Material.AIR);
 									}
@@ -133,7 +137,9 @@ public class Tools {
 									if (b.getType() != Material.AIR) {
 										v.playBlockBreakParticles(b.getLocation(), b.getType());
 										if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
-											l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));	
+											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
+											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
+											fb.setVelocity(new Vector(0, 0.4, 0));
 										}
 										b.setType(Material.AIR);
 									}
@@ -148,7 +154,9 @@ public class Tools {
 									if (b.getType() != Material.AIR) {
 										v.playBlockBreakParticles(b.getLocation(), b.getType());
 										if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
-											l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));	
+											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
+											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
+											fb.setVelocity(new Vector(0, 0.4, 0));
 										}
 										b.setType(Material.AIR);
 									}
@@ -165,7 +173,9 @@ public class Tools {
 									if (b.getType() != Material.AIR) {
 										v.playBlockBreakParticles(b.getLocation(), b.getType());
 										if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
-											l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));	
+											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
+											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
+											fb.setVelocity(new Vector(0, 0.4, 0));
 										}
 										b.setType(Material.AIR);
 									}
@@ -180,7 +190,9 @@ public class Tools {
 									if (b.getType() != Material.AIR) {
 										v.playBlockBreakParticles(b.getLocation(), b.getType());
 										if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
-											l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));	
+											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
+											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
+											fb.setVelocity(new Vector(0, 0.4, 0));
 										}
 										b.setType(Material.AIR);
 									}
@@ -195,7 +207,9 @@ public class Tools {
 									if (b.getType() != Material.AIR) {
 										v.playBlockBreakParticles(b.getLocation(), b.getType());
 										if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
-											l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData()).setMetadata("vortex", new FixedMetadataValue(m, "protected"));	
+											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
+											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
+											fb.setVelocity(new Vector(0, 0.4, 0));
 										}
 										b.setType(Material.AIR);
 									}
