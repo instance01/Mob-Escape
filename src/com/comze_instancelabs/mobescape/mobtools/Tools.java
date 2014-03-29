@@ -68,6 +68,9 @@ public class Tools {
 				}
 
 				ArrayList<Player> torem = new ArrayList<Player>();
+				if(!m.astarted.containsKey(arena)){
+					m.astarted.put(arena, false);
+				}
 				if(m.astarted.get(arena)){
 					m.determineWinners(arena);
 				}

@@ -1487,6 +1487,9 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void leaveArena(final Player p, boolean flag, boolean hmmthisbug) {
 		try {
+			p.getInventory().clear();
+			p.updateInventory();
+			
 			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 				public void run() {
 					if (p.isOnline()) {
