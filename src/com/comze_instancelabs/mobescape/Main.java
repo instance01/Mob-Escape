@@ -204,7 +204,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
 
-		if (Bukkit.getVersion().contains("1.6.4") || Bukkit.getVersion().contains("1.6.2")) {
+		if (Bukkit.getVersion().contains("MC: 1.6.4") || Bukkit.getVersion().contains("1.6.2")) {
 			mode1_6 = true;
 			getLogger().info("Turned on 1.6.4 mode.");
 		}else if(Bukkit.getVersion().contains("MC: 1.7.5")){
