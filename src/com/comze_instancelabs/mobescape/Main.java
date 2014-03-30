@@ -2183,13 +2183,16 @@ public class Main extends JavaPlugin implements Listener {
 	Objective objective;
 	public HashMap<String, Integer> currentscore = new HashMap<String, Integer>();
 
-	public void updateScoreboard() {
+	public void updateScoreboard(String arena) {
 
 		if(remove_scoreboard){
 			return;
 		}
 		
 		for (Player pl : arenap.keySet()) {
+			if(!arenap.get(pl).equalsIgnoreCase(arena)){
+				return;
+			}
 			Player p = pl;
 			if (board == null) {
 				board = Bukkit.getScoreboardManager().getNewScoreboard();

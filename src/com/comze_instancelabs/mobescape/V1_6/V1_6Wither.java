@@ -248,7 +248,7 @@ public class V1_6Wither {
 				Bukkit.getScheduler().runTask(m, new Runnable(){
 					public void run(){
 						//TODO reminder
-						m.updateScoreboard();
+						m.updateScoreboard(arena);
 					}
 				});
 
