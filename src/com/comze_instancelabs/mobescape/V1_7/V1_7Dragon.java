@@ -348,10 +348,10 @@ public class V1_7Dragon {
 	
 	public static Block[] getLoc(Main m, final Location l, String arena, int i, int j, Location l2){
 		Block[] b = new Block[4];
-		b[0] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons.get(arena).locX + (m.destroy_radius / 2) - i, l2.getBlockY() + j - 1, dragons.get(arena).locZ + 3));
-		b[1] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons.get(arena).locX + (m.destroy_radius / 2) - i, l2.getBlockY() + j - 1, dragons.get(arena).locZ - 3));
-		b[2] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons.get(arena).locX + 3, l2.getBlockY() + j - 1, dragons.get(arena).locZ + (m.destroy_radius / 2) - i));
-		b[3] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons.get(arena).locX - 3, l2.getBlockY() + j - 1, dragons.get(arena).locZ + (m.destroy_radius / 2) - i));
+		b[0] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons.get(arena).locX + (m.destroy_radius / 2) - i, dragons.get(arena).locY + j - 1, dragons.get(arena).locZ + 3));
+		b[1] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons.get(arena).locX + (m.destroy_radius / 2) - i, dragons.get(arena).locY + j - 1, dragons.get(arena).locZ - 3));
+		b[2] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons.get(arena).locX + 3, dragons.get(arena).locY + j - 1, dragons.get(arena).locZ + (m.destroy_radius / 2) - i));
+		b[3] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons.get(arena).locX - 3, dragons.get(arena).locY + j - 1, dragons.get(arena).locZ + (m.destroy_radius / 2) - i));
 
 		return b;
 	}
