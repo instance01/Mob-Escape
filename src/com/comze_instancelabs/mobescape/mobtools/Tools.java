@@ -137,6 +137,7 @@ public class Tools {
 						for(final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3),l2)){
 							Bukkit.getScheduler().runTask(m, new Runnable() {
 								public void run() {
+									System.out.println(b.getLocation().getY());
 									if (b.getType() != Material.AIR) {
 										v.playBlockBreakParticles(b.getLocation(), b.getType());
 										if(b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks){
