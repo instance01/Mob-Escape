@@ -2441,11 +2441,14 @@ public class Main extends JavaPlugin implements Listener {
 	
 	
 	public void getArenaReward(String arena, Player p){
+		System.out.println("D");
 		if(!getConfig().isSet(arena + ".reward.use")){
 			getConfig().set(arena + ".reward.use", false);
 			this.saveConfig();
 		}
+		System.out.println("C");
 		if(!getConfig().getBoolean(arena + ".reward.use")){
+			System.out.println("A");
 			if (economy) {
 				EconomyResponse r = econ.depositPlayer(p.getName(), getConfig().getDouble("config.money_reward_per_game"));
 				if (!r.transactionSuccess()) {
@@ -2466,6 +2469,7 @@ public class Main extends JavaPlugin implements Listener {
 			}
 			return;
 		}
+		System.out.println("B");
 		if (economy) {
 			EconomyResponse r = econ.depositPlayer(p.getName(), getConfig().getDouble(arena + ".reward.money_reward_per_game"));
 			if (!r.transactionSuccess()) {
