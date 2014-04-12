@@ -136,6 +136,11 @@ public class Main extends JavaPlugin implements Listener {
 	 */
 	public static HashMap<Player, Integer> pplace = new HashMap<Player, Integer>();
 
+	/**
+	 * Player -> seen fall message or not
+	 */
+	public static HashMap<String, Boolean> pseenfall = new HashMap<String, Boolean>();
+
 	
 	int default_max_players = 4;
 	int default_min_players = 3;
@@ -1142,7 +1147,13 @@ public class Main extends JavaPlugin implements Listener {
 							}
 						}
 					}, 5);
-					p.sendMessage(you_fell);
+					if(!pseenfall.containsKey(p.getName())){
+						pseenfall.put(p.getName(), false);
+					}
+					if(!pseenfall.get(p.getName())){
+						p.sendMessage(you_fell);
+						pseenfall.put(p.getName(), true);
+					}
 					return;
 				}
 			}
@@ -1519,6 +1530,10 @@ public class Main extends JavaPlugin implements Listener {
 				lost.remove(p);
 			}
 
+			if(pseenfall.containsKey(p.getName())){
+				pseenfall.remove(p.getName());
+			}
+			
 			final String arena = arenap.get(p);
 
 			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
