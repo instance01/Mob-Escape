@@ -74,6 +74,8 @@ import com.comze_instancelabs.mobescape.V1_7.V1_7Dragon;
 import com.comze_instancelabs.mobescape.V1_7.V1_7Wither;
 import com.comze_instancelabs.mobescape.V1_7._5.V1_7_5Dragon;
 import com.comze_instancelabs.mobescape.V1_7._5.V1_7_5Wither;
+import com.comze_instancelabs.mobescape.V1_7._8.V1_7_8Dragon;
+import com.comze_instancelabs.mobescape.V1_7._8.V1_7_8Wither;
 
 
 public class Main extends JavaPlugin implements Listener {
@@ -151,6 +153,7 @@ public class Main extends JavaPlugin implements Listener {
 	public double mob_speed = 1.0;
 	public static boolean mode1_6 = false;
 	public static boolean mode1_7_5 = false;
+	public static boolean mode1_7_8 = false;
 	public int destroy_radius = 10;
 	public boolean last_man_standing = true;
 	public boolean spawn_winnerfirework = true;
@@ -210,6 +213,9 @@ public class Main extends JavaPlugin implements Listener {
 		}else if(Bukkit.getVersion().contains("MC: 1.7.5")){
 			mode1_7_5 = true;
 			getLogger().info("Turned on 1.7.5 mode.");
+		}else if(Bukkit.getVersion().contains("MC: 1.7.8")){
+			mode1_7_8 = true;
+			getLogger().info("Turned on 1.7.8 mode.");
 		}
 		registerEntities();
 
@@ -991,6 +997,8 @@ public class Main extends JavaPlugin implements Listener {
 			return V1_6Dragon.registerEntities();
 		}else if(mode1_7_5){
 			return V1_7_5Dragon.registerEntities();
+		}else if(mode1_7_8){
+			return V1_7_8Dragon.registerEntities();
 		}
 		return V1_7Dragon.registerEntities();
 	}
@@ -1738,6 +1746,17 @@ public class Main extends JavaPlugin implements Listener {
 				V1_7_5Dragon v = new V1_7_5Dragon();
 				return v.start(this, arena);
 			}
+		}else if(mode1_7_8){
+			if(type.equalsIgnoreCase("dragon")){
+				V1_7_8Dragon v = new V1_7_8Dragon();
+				return v.start(this, arena);
+			}else if(type.equalsIgnoreCase("wither")){
+				V1_7_8Wither v = new V1_7_8Wither();
+				return v.start(this, arena);
+			}else{
+				V1_7_8Dragon v = new V1_7_8Dragon();
+				return v.start(this, arena);
+			}
 		}
 		if(type.equalsIgnoreCase("dragon")){
 			V1_7Dragon v_ = new V1_7Dragon();
@@ -1784,7 +1803,18 @@ public class Main extends JavaPlugin implements Listener {
 				V1_7_5Dragon v = new V1_7_5Dragon();
 				v.stop(this, t, arena);
 			}
-		} else {
+		} else if (mode1_7_8) {
+			if(type.equalsIgnoreCase("dragon")){
+				V1_7_8Dragon v = new V1_7_8Dragon();
+				v.stop(this, t, arena);
+			}else if(type.equalsIgnoreCase("wither")){
+				V1_7_8Wither v = new V1_7_8Wither();
+				v.stop(this, t, arena);
+			}else{
+				V1_7_8Dragon v = new V1_7_8Dragon();
+				v.stop(this, t, arena);
+			}
+		}  else {
 			if(type.equalsIgnoreCase("dragon")){
 				V1_7Dragon v = new V1_7Dragon();
 				v.stop(this, t, arena);
@@ -2175,6 +2205,8 @@ public class Main extends JavaPlugin implements Listener {
 			V1_6Dragon.playBlockBreakParticles(loc, m, players);
 		}else if(mode1_7_5){
 			V1_7_5Dragon.playBlockBreakParticles(loc, m, players);
+		}else if(mode1_7_8){
+			V1_7_8Dragon.playBlockBreakParticles(loc, m, players);
 		}
 		V1_7Dragon.playBlockBreakParticles(loc, m, players);
 	}
@@ -2441,14 +2473,11 @@ public class Main extends JavaPlugin implements Listener {
 	
 	
 	public void getArenaReward(String arena, Player p){
-		System.out.println("D");
 		if(!getConfig().isSet(arena + ".reward.use")){
 			getConfig().set(arena + ".reward.use", false);
 			this.saveConfig();
 		}
-		System.out.println("C");
 		if(!getConfig().getBoolean(arena + ".reward.use")){
-			System.out.println("A");
 			if (economy) {
 				EconomyResponse r = econ.depositPlayer(p.getName(), getConfig().getDouble("config.money_reward_per_game"));
 				if (!r.transactionSuccess()) {
@@ -2462,14 +2491,13 @@ public class Main extends JavaPlugin implements Listener {
 			// command reward
 			if (command_reward) {
 				String[] t = cmd.replaceAll("<player>", p.getName()).split(";");
-				System.out.println(t);
+				//System.out.println(t);
 				for(String t_ : t){
 					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), t_);
 				}
 			}
 			return;
 		}
-		System.out.println("B");
 		if (economy) {
 			EconomyResponse r = econ.depositPlayer(p.getName(), getConfig().getDouble(arena + ".reward.money_reward_per_game"));
 			if (!r.transactionSuccess()) {
