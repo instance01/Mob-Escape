@@ -1663,7 +1663,9 @@ public class Main extends JavaPlugin implements Listener {
 						int count = m.lobby_countdown_count.get(arena);
 						for (Player p : m.arenap.keySet()) {
 							if (m.arenap.get(p).equalsIgnoreCase(arena)) {
-								p.sendMessage(ChatColor.GRAY + "Teleporting to arena in " + Integer.toString(count) + " seconds.");
+								if(count == 120 || count == 60 || count == 30 || count == 15 || count < 11){
+									p.sendMessage(ChatColor.GRAY + "Teleporting to arena in " + Integer.toString(count) + " seconds.");
+								}
 							}
 						}
 						count--;
@@ -2475,7 +2477,6 @@ public class Main extends JavaPlugin implements Listener {
 				}else{
 					p.sendMessage(nopermkit);
 				}
-				pkit.put(p, kit);
 				event.setWillClose(true);
 			}
 		}, m)
