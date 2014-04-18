@@ -211,14 +211,18 @@ public class Main extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
+		String version = Bukkit.getServer().getClass().getPackage().getName().substring(Bukkit.getServer().getClass().getPackage().getName().lastIndexOf(".") + 1);
 
-		if (Bukkit.getVersion().contains("MC: 1.6.4") || Bukkit.getVersion().contains("1.6.2")) {
+		if (version.contains("1_6_R3")) {
 			mode1_6 = true;
 			getLogger().info("Turned on 1.6.4 mode.");
-		}else if(Bukkit.getVersion().contains("MC: 1.7.5")){
+		}else if(version.contains("1_7_R1")){
+			// default
+			getLogger().info("Turned on 1.7.2 mode.");
+		}else if(version.contains("1_7_R2")){
 			mode1_7_5 = true;
 			getLogger().info("Turned on 1.7.5 mode.");
-		}else if(Bukkit.getVersion().contains("MC: 1.7.8")){
+		}else if(version.contains("1_7_R3")){
 			mode1_7_8 = true;
 			getLogger().info("Turned on 1.7.8 mode.");
 		}
