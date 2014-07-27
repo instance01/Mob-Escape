@@ -16,20 +16,20 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
+import com.comze_instancelabs.mobescape.AbstractWither;
 import com.comze_instancelabs.mobescape.Kits;
 import com.comze_instancelabs.mobescape.Main;
 import com.comze_instancelabs.mobescape.mobtools.Tools;
 
-public class V1_7_5Wither {
+public class V1_7_5Wither implements AbstractWither {
 
 	public static HashMap<String, MEWither> wither = new HashMap<String, MEWither>();
 
 	
-	public static final void playBlockBreakParticles(final Location loc, final Material m, final Player... players) {
+	public void playBlockBreakParticles(final Location loc, final Material m, final Player... players) {
 		@SuppressWarnings("deprecation")
 		PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), m.getId(), false);
 		for (final Player p : players) {
@@ -229,7 +229,7 @@ public class V1_7_5Wither {
 						return;
 					}
 					
-					V1_7_5Wither.destroy(m, l1, l2, arena, length2);
+					V1_7_5Wither.destroyStatic(m, l1, l2, arena, length2);
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -261,7 +261,7 @@ public class V1_7_5Wither {
 	}
 	
 	
-	public static Block[] getLoc(Main m, final Location l, String arena, int i, int j, Location l2){
+	public Block[] getLoc(Main m, final Location l, String arena, int i, int j, Location l2){
 		Block[] b = new Block[4];
 		b[0] = l.getWorld().getBlockAt(new Location(l.getWorld(), wither.get(arena).locX + (m.destroy_radius / 2) - i, wither.get(arena).locY + j - 1, wither.get(arena).locZ + 3));
 		b[1] = l.getWorld().getBlockAt(new Location(l.getWorld(), wither.get(arena).locX + (m.destroy_radius / 2) - i, wither.get(arena).locY + j - 1, wither.get(arena).locZ - 3));
@@ -285,7 +285,11 @@ public class V1_7_5Wither {
 	}
 	
 	
-	public static void destroy(final Main m, final Location l, final Location l2, String arena, int length2){
+	public static void destroyStatic(final Main m, final Location l, final Location l2, String arena, int length2){
+		Tools.destroy(m, l, l2, arena, length2, "wither", false, true);
+	}
+	
+	public void destroy(final Main m, final Location l, final Location l2, String arena, int length2){
 		Tools.destroy(m, l, l2, arena, length2, "wither", false, true);
 	}
 

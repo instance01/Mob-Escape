@@ -2235,15 +2235,15 @@ public class Main extends JavaPlugin implements Listener {
 
 	public static final void playBlockBreakParticles(final Location loc, final Material m, final Player... players) {
 		if (mode1_6) {
-			V1_6Dragon.playBlockBreakParticles(loc, m, players);
+			(new V1_6Dragon()).playBlockBreakParticles(loc, m, players);
 		} else if (mode1_7_5) {
-			V1_7_5Dragon.playBlockBreakParticles(loc, m, players);
+			(new V1_7_5Dragon()).playBlockBreakParticles(loc, m, players);
 		} else if (mode1_7_8) {
-			V1_7_8Dragon.playBlockBreakParticles(loc, m, players);
+			(new V1_7_8Dragon()).playBlockBreakParticles(loc, m, players);
 		} else if (mode1_7_10) {
-			V1_7_10Dragon.playBlockBreakParticles(loc, m, players);
+			(new V1_7_10Dragon()).playBlockBreakParticles(loc, m, players);
 		}
-		V1_7Dragon.playBlockBreakParticles(loc, m, players);
+		(new V1_7Dragon()).playBlockBreakParticles(loc, m, players);
 	}
 
 	Scoreboard board;

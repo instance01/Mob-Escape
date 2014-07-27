@@ -1,6 +1,7 @@
 package com.comze_instancelabs.mobescape.mobtools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,6 +15,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import com.comze_instancelabs.mobescape.AbstractDragon;
+import com.comze_instancelabs.mobescape.AbstractWither;
 import com.comze_instancelabs.mobescape.Main;
 import com.comze_instancelabs.mobescape.V1_6.V1_6Dragon;
 import com.comze_instancelabs.mobescape.V1_6.V1_6Wither;
@@ -50,7 +52,7 @@ public class Tools {
 			} else if (m.mode1_7_10) {
 				V1_7_10Dragon v = new V1_7_10Dragon();
 				v.removeEnderdragon(arena);
-			}  else {
+			} else {
 				V1_7Dragon v = new V1_7Dragon();
 				v.removeEnderdragon(arena);
 			}
@@ -67,7 +69,7 @@ public class Tools {
 			} else if (m.mode1_7_10) {
 				V1_7_10Wither v = new V1_7_10Wither();
 				v.removeWither(arena);
-			}  else {
+			} else {
 				V1_7Wither v = new V1_7Wither();
 				v.removeWither(arena);
 			}
@@ -130,186 +132,88 @@ public class Tools {
 		}, 20); // 1 second
 	}
 
-
 	// the boolean parameters in this function are not used anymore
 	public static void destroy(final Main m, final Location l, final Location l2, String arena, int length2, String type, boolean mode1_6, boolean mode1_7_5) {
 		// south
 		for (int i = 0; i < m.destroy_radius; i++) { // length1
 			for (int j = 0; j < m.destroy_radius; j++) {
 				if (type.equalsIgnoreCase("dragon")) {
+
+					AbstractDragon ad_ = null;
+
 					if (m.mode1_6) {
 						final V1_6Dragon v = new V1_6Dragon();
-						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
-							Bukkit.getScheduler().runTask(m, new Runnable() {
-								public void run() {
-									if (b.getType() != Material.AIR) {
-										v.playBlockBreakParticles(b.getLocation(), b.getType());
-										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
-											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
-											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											fb.setVelocity(new Vector(0, 0.4, 0));
-										}
-										b.setType(Material.AIR);
-									}
-								}
-							});
-						}
+						ad_ = v;
 					} else if (m.mode1_7_5) {
 						final V1_7_5Dragon v = new V1_7_5Dragon();
-						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
-							Bukkit.getScheduler().runTask(m, new Runnable() {
-								public void run() {
-									if (b.getType() != Material.AIR) {
-										v.playBlockBreakParticles(b.getLocation(), b.getType());
-										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
-											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
-											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											fb.setVelocity(new Vector(0, 0.4, 0));
-										}
-										b.setType(Material.AIR);
-									}
-								}
-							});
-						}
+						ad_ = v;
 					} else if (m.mode1_7_8) {
 						final V1_7_8Dragon v = new V1_7_8Dragon();
-						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
-							Bukkit.getScheduler().runTask(m, new Runnable() {
-								public void run() {
-									if (b.getType() != Material.AIR) {
-										v.playBlockBreakParticles(b.getLocation(), b.getType());
-										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
-											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
-											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											fb.setVelocity(new Vector(0, 0.4, 0));
-										}
-										b.setType(Material.AIR);
-									}
-								}
-							});
-						}
+						ad_ = v;
 					} else if (m.mode1_7_10) {
 						final V1_7_10Dragon v = new V1_7_10Dragon();
-						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
-							Bukkit.getScheduler().runTask(m, new Runnable() {
-								public void run() {
-									if (b.getType() != Material.AIR) {
-										v.playBlockBreakParticles(b.getLocation(), b.getType());
-										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
-											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
-											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											fb.setVelocity(new Vector(0, 0.4, 0));
-										}
-										b.setType(Material.AIR);
-									}
-								}
-							});
-						}
-					}  else {
+						ad_ = v;
+					} else {
 						final V1_7Dragon v = new V1_7Dragon();
-						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
-							Bukkit.getScheduler().runTask(m, new Runnable() {
-								public void run() {
-									if (b.getType() != Material.AIR) {
-										v.playBlockBreakParticles(b.getLocation(), b.getType());
-										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
-											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
-											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											fb.setVelocity(new Vector(0, 0.4, 0));
-										}
-										b.setType(Material.AIR);
+						ad_ = v;
+					}
+
+					final AbstractDragon ad = ad_;
+
+					for (final Block b : ad.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
+						Bukkit.getScheduler().runTask(m, new Runnable() {
+							public void run() {
+								if (b.getType() != Material.AIR) {
+									ad.playBlockBreakParticles(b.getLocation(), b.getType());
+									if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
+										FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
+										fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
+										fb.setVelocity(new Vector(0, 0.4, 0));
 									}
+									b.setType(Material.AIR);
 								}
-							});
-						}
+							}
+						});
 					}
 				} else if (type.equalsIgnoreCase("wither")) {
+
+					AbstractWither aw_ = null;
+
 					if (m.mode1_6) {
 						final V1_6Wither v = new V1_6Wither();
-						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
-							Bukkit.getScheduler().runTask(m, new Runnable() {
-								public void run() {
-									if (b.getType() != Material.AIR) {
-										v.playBlockBreakParticles(b.getLocation(), b.getType());
-										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
-											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
-											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											fb.setVelocity(new Vector(0, 0.4, 0));
-										}
-										b.setType(Material.AIR);
-									}
-								}
-							});
-						}
+						aw_ = v;
 					} else if (m.mode1_7_5) {
 						final V1_7_5Wither v = new V1_7_5Wither();
-						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
-							Bukkit.getScheduler().runTask(m, new Runnable() {
-								public void run() {
-									if (b.getType() != Material.AIR) {
-										v.playBlockBreakParticles(b.getLocation(), b.getType());
-										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
-											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
-											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											fb.setVelocity(new Vector(0, 0.4, 0));
-										}
-										b.setType(Material.AIR);
-									}
-								}
-							});
-						}
+						aw_ = v;
 					} else if (m.mode1_7_8) {
 						final V1_7_8Wither v = new V1_7_8Wither();
-						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
-							Bukkit.getScheduler().runTask(m, new Runnable() {
-								public void run() {
-									if (b.getType() != Material.AIR) {
-										v.playBlockBreakParticles(b.getLocation(), b.getType());
-										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
-											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
-											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											fb.setVelocity(new Vector(0, 0.4, 0));
-										}
-										b.setType(Material.AIR);
-									}
-								}
-							});
-						}
+						aw_ = v;
 					} else if (m.mode1_7_10) {
 						final V1_7_10Wither v = new V1_7_10Wither();
-						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
-							Bukkit.getScheduler().runTask(m, new Runnable() {
-								public void run() {
-									if (b.getType() != Material.AIR) {
-										v.playBlockBreakParticles(b.getLocation(), b.getType());
-										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
-											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
-											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											fb.setVelocity(new Vector(0, 0.4, 0));
-										}
-										b.setType(Material.AIR);
-									}
-								}
-							});
-						}
-					}  else {
+						aw_ = v;
+					} else {
 						final V1_7Wither v = new V1_7Wither();
-						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
-							Bukkit.getScheduler().runTask(m, new Runnable() {
-								public void run() {
-									if (b.getType() != Material.AIR) {
-										v.playBlockBreakParticles(b.getLocation(), b.getType());
-										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
-											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
-											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
-											fb.setVelocity(new Vector(0, 0.4, 0));
-										}
-										b.setType(Material.AIR);
-									}
-								}
-							});
-						}
+						aw_ = v;
 					}
+
+					final AbstractWither aw = aw_;
+
+					for (final Block b : aw.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
+						Bukkit.getScheduler().runTask(m, new Runnable() {
+							public void run() {
+								if (b.getType() != Material.AIR) {
+									aw.playBlockBreakParticles(b.getLocation(), b.getType());
+									if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
+										FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
+										fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
+										fb.setVelocity(new Vector(0, 0.4, 0));
+									}
+									b.setType(Material.AIR);
+								}
+							}
+						});
+					}
+
 				}
 			}
 		}

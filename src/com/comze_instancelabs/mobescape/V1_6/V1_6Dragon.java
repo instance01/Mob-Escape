@@ -21,11 +21,12 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
+import com.comze_instancelabs.mobescape.AbstractDragon;
 import com.comze_instancelabs.mobescape.Kits;
 import com.comze_instancelabs.mobescape.Main;
 import com.comze_instancelabs.mobescape.mobtools.Tools;
 
-public class V1_6Dragon {
+public class V1_6Dragon implements AbstractDragon {
 
 	public static HashMap<String, MEDragon1_6> dragons1_6 = new HashMap<String, MEDragon1_6>();
 
@@ -61,7 +62,7 @@ public class V1_6Dragon {
 	}
 	
 	
-	public static final void playBlockBreakParticles(final Location loc, final Material m, final Player... players) {
+	public final void playBlockBreakParticles(final Location loc, final Material m, final Player... players) {
 		@SuppressWarnings("deprecation")
 		Packet61WorldEvent packet = new Packet61WorldEvent(2001, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), m.getId(), false);
 		for (final Player p : players) {
@@ -248,7 +249,7 @@ public class V1_6Dragon {
 						return;
 					}
 
-					V1_6Dragon.destroy(m, l1, l2, arena, length2);
+					V1_6Dragon.destroyStatic(m, l1, l2, arena, length2);
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -290,7 +291,7 @@ public class V1_6Dragon {
 		}
 	}
 	
-	public static Block[] getLoc(Main m, final Location l, String arena, int i, int j, Location l2){
+	public Block[] getLoc(Main m, final Location l, String arena, int i, int j, Location l2){
 		Block[] b = new Block[4];
 		b[0] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons1_6.get(arena).locX + (m.destroy_radius / 2) - i, dragons1_6.get(arena).locY + j - 1, dragons1_6.get(arena).locZ + 3));
 		b[1] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons1_6.get(arena).locX + (m.destroy_radius / 2) - i, dragons1_6.get(arena).locY + j - 1, dragons1_6.get(arena).locZ - 3));
@@ -300,7 +301,11 @@ public class V1_6Dragon {
 		return b;
 	}
 	
-	public static void destroy(final Main m, final Location l, final Location l2, String arena, int length2){
+	public static void destroyStatic(final Main m, final Location l, final Location l2, String arena, int length2){
+		Tools.destroy(m, l, l2, arena, length2, "dragon", true, false);
+	}
+	
+	public void destroy(final Main m, final Location l, final Location l2, String arena, int length2){
 		Tools.destroy(m, l, l2, arena, length2, "dragon", true, false);
 	}
 

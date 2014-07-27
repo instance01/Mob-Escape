@@ -1,7 +1,6 @@
 package com.comze_instancelabs.mobescape.V1_7._5;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minecraft.server.v1_7_R2.EntityTypes;
@@ -19,15 +18,15 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
+import com.comze_instancelabs.mobescape.AbstractDragon;
 import com.comze_instancelabs.mobescape.Kits;
 import com.comze_instancelabs.mobescape.Main;
 import com.comze_instancelabs.mobescape.mobtools.Tools;
 
-public class V1_7_5Dragon {
+public class V1_7_5Dragon implements AbstractDragon {
 
 	public static HashMap<String, MEDragon> dragons = new HashMap<String, MEDragon>();
 
@@ -101,7 +100,7 @@ public class V1_7_5Dragon {
 		}
 	}
 	
-	public static final void playBlockBreakParticles(final Location loc, final Material m, final Player... players) {
+	public void playBlockBreakParticles(final Location loc, final Material m, final Player... players) {
 		@SuppressWarnings("deprecation")
 		PacketPlayOutWorldEvent packet = new PacketPlayOutWorldEvent(2001, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), m.getId(), false);
 		for (final Player p : players) {
@@ -303,7 +302,7 @@ public class V1_7_5Dragon {
 						return;
 					}
 
-					V1_7_5Dragon.destroy(m, l1, l2, arena, length2);
+					V1_7_5Dragon.destroyStatic(m, l1, l2, arena, length2);
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -346,7 +345,7 @@ public class V1_7_5Dragon {
 		}
 	}
 	
-	public static Block[] getLoc(Main m, final Location l, String arena, int i, int j, Location l2){
+	public Block[] getLoc(Main m, final Location l, String arena, int i, int j, Location l2){
 		Block[] b = new Block[4];
 		b[0] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons.get(arena).locX + (m.destroy_radius / 2) - i, dragons.get(arena).locY + j - 1, dragons.get(arena).locZ + 3));
 		b[1] = l.getWorld().getBlockAt(new Location(l.getWorld(), dragons.get(arena).locX + (m.destroy_radius / 2) - i, dragons.get(arena).locY + j - 1, dragons.get(arena).locZ - 3));
@@ -356,7 +355,11 @@ public class V1_7_5Dragon {
 		return b;
 	}
 	
-	public static void destroy(final Main m, final Location l, final Location l2, String arena, int length2){
+	public static void destroyStatic(final Main m, final Location l, final Location l2, String arena, int length2){
+		Tools.destroy(m, l, l2, arena, length2, "dragon", false, true);
+	}
+	
+	public void destroy(final Main m, final Location l, final Location l2, String arena, int length2){
 		Tools.destroy(m, l, l2, arena, length2, "dragon", false, true);
 	}
 
