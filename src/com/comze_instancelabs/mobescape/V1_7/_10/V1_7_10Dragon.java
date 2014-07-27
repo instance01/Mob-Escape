@@ -1,10 +1,11 @@
-package com.comze_instancelabs.mobescape.V1_7;
+package com.comze_instancelabs.mobescape.V1_7._10;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.minecraft.server.v1_7_R1.EntityTypes;
-import net.minecraft.server.v1_7_R1.PacketPlayOutWorldEvent;
+import net.minecraft.server.v1_7_R4.EntityTypes;
+import net.minecraft.server.v1_7_R4.PacketPlayOutWorldEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,21 +13,21 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
 import com.comze_instancelabs.mobescape.Kits;
 import com.comze_instancelabs.mobescape.Main;
 import com.comze_instancelabs.mobescape.mobtools.Tools;
-import com.comze_instancelabs.mobescape.AbstractDragon;
 
-public class V1_7Dragon {
+public class V1_7_10Dragon {
 
 	public static HashMap<String, MEDragon> dragons = new HashMap<String, MEDragon>();
 
@@ -119,8 +120,8 @@ public class V1_7Dragon {
 			m.getLogger().severe("You forgot to set any FlyPoints! You need to have min. 2 and one of them has to be at finish.");
 			return null;
 		}
-		MEDragon t_ = new MEDragon(m, arena, t, (net.minecraft.server.v1_7_R1.World) ((CraftWorld) t.getWorld()).getHandle(), m.getDragonWayPoints(arena));
-		((net.minecraft.server.v1_7_R1.World) w).addEntity(t_, CreatureSpawnEvent.SpawnReason.CUSTOM);
+		MEDragon t_ = new MEDragon(m, arena, t, (net.minecraft.server.v1_7_R4.World) ((CraftWorld) t.getWorld()).getHandle(), m.getDragonWayPoints(arena));
+		((net.minecraft.server.v1_7_R4.World) w).addEntity(t_, CreatureSpawnEvent.SpawnReason.CUSTOM);
 		t_.setCustomName(m.dragon_name);
 
 		return t_;
@@ -302,7 +303,7 @@ public class V1_7Dragon {
 						return;
 					}
 
-					V1_7Dragon.destroy(m, l1, l2, arena, length2);
+					V1_7_10Dragon.destroy(m, l1, l2, arena, length2);
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -323,7 +324,6 @@ public class V1_7Dragon {
 		return id__;
 	}
 	
-	
 	public void removeEnderdragon(String arena){
 		try {
 			removeEnderdragon(dragons.get(arena));
@@ -336,7 +336,7 @@ public class V1_7Dragon {
 	
 	public void stop(final Main m, BukkitTask t, final String arena) {
 		Tools t_ = new Tools();
-		t_.stop(m, t, arena, false, false, "dragon");
+		t_.stop(m, t, arena, false, true, "dragon");
 	}
 	
 	
@@ -345,7 +345,6 @@ public class V1_7Dragon {
 			t.getBukkitEntity().remove();
 		}
 	}
-	
 	
 	public static Block[] getLoc(Main m, final Location l, String arena, int i, int j, Location l2){
 		Block[] b = new Block[4];
@@ -357,9 +356,8 @@ public class V1_7Dragon {
 		return b;
 	}
 	
-	
 	public static void destroy(final Main m, final Location l, final Location l2, String arena, int length2){
-		Tools.destroy(m, l, l2, arena, length2, "dragon", false, false);
+		Tools.destroy(m, l, l2, arena, length2, "dragon", false, true);
 	}
 
 }

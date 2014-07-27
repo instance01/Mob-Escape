@@ -13,11 +13,14 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
+import com.comze_instancelabs.mobescape.AbstractDragon;
 import com.comze_instancelabs.mobescape.Main;
 import com.comze_instancelabs.mobescape.V1_6.V1_6Dragon;
 import com.comze_instancelabs.mobescape.V1_6.V1_6Wither;
 import com.comze_instancelabs.mobescape.V1_7.V1_7Dragon;
 import com.comze_instancelabs.mobescape.V1_7.V1_7Wither;
+import com.comze_instancelabs.mobescape.V1_7._10.V1_7_10Dragon;
+import com.comze_instancelabs.mobescape.V1_7._10.V1_7_10Wither;
 import com.comze_instancelabs.mobescape.V1_7._5.V1_7_5Dragon;
 import com.comze_instancelabs.mobescape.V1_7._5.V1_7_5Wither;
 import com.comze_instancelabs.mobescape.V1_7._8.V1_7_8Dragon;
@@ -44,7 +47,10 @@ public class Tools {
 			} else if (m.mode1_7_8) {
 				V1_7_8Dragon v = new V1_7_8Dragon();
 				v.removeEnderdragon(arena);
-			} else {
+			} else if (m.mode1_7_10) {
+				V1_7_10Dragon v = new V1_7_10Dragon();
+				v.removeEnderdragon(arena);
+			}  else {
 				V1_7Dragon v = new V1_7Dragon();
 				v.removeEnderdragon(arena);
 			}
@@ -58,7 +64,10 @@ public class Tools {
 			} else if (m.mode1_7_8) {
 				V1_7_8Wither v = new V1_7_8Wither();
 				v.removeWither(arena);
-			} else {
+			} else if (m.mode1_7_10) {
+				V1_7_10Wither v = new V1_7_10Wither();
+				v.removeWither(arena);
+			}  else {
 				V1_7Wither v = new V1_7Wither();
 				v.removeWither(arena);
 			}
@@ -179,7 +188,24 @@ public class Tools {
 								}
 							});
 						}
-					} else {
+					} else if (m.mode1_7_10) {
+						final V1_7_10Dragon v = new V1_7_10Dragon();
+						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
+							Bukkit.getScheduler().runTask(m, new Runnable() {
+								public void run() {
+									if (b.getType() != Material.AIR) {
+										v.playBlockBreakParticles(b.getLocation(), b.getType());
+										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
+											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
+											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
+											fb.setVelocity(new Vector(0, 0.4, 0));
+										}
+										b.setType(Material.AIR);
+									}
+								}
+							});
+						}
+					}  else {
 						final V1_7Dragon v = new V1_7Dragon();
 						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
 							Bukkit.getScheduler().runTask(m, new Runnable() {
@@ -249,7 +275,24 @@ public class Tools {
 								}
 							});
 						}
-					} else {
+					} else if (m.mode1_7_10) {
+						final V1_7_10Wither v = new V1_7_10Wither();
+						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
+							Bukkit.getScheduler().runTask(m, new Runnable() {
+								public void run() {
+									if (b.getType() != Material.AIR) {
+										v.playBlockBreakParticles(b.getLocation(), b.getType());
+										if (b.getType() != Material.WATER && b.getType() != Material.LAVA && m.spawn_falling_blocks) {
+											FallingBlock fb = l.getWorld().spawnFallingBlock(b.getLocation(), b.getType(), b.getData());
+											fb.setMetadata("vortex", new FixedMetadataValue(m, "protected"));
+											fb.setVelocity(new Vector(0, 0.4, 0));
+										}
+										b.setType(Material.AIR);
+									}
+								}
+							});
+						}
+					}  else {
 						final V1_7Wither v = new V1_7Wither();
 						for (final Block b : v.getLoc(m, l, arena, i, j - (m.destroy_radius / 3), l2)) {
 							Bukkit.getScheduler().runTask(m, new Runnable() {

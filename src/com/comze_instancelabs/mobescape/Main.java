@@ -72,21 +72,21 @@ import com.comze_instancelabs.mobescape.V1_6.V1_6Dragon;
 import com.comze_instancelabs.mobescape.V1_6.V1_6Wither;
 import com.comze_instancelabs.mobescape.V1_7.V1_7Dragon;
 import com.comze_instancelabs.mobescape.V1_7.V1_7Wither;
+import com.comze_instancelabs.mobescape.V1_7._10.V1_7_10Dragon;
+import com.comze_instancelabs.mobescape.V1_7._10.V1_7_10Wither;
 import com.comze_instancelabs.mobescape.V1_7._5.V1_7_5Dragon;
 import com.comze_instancelabs.mobescape.V1_7._5.V1_7_5Wither;
 import com.comze_instancelabs.mobescape.V1_7._8.V1_7_8Dragon;
 import com.comze_instancelabs.mobescape.V1_7._8.V1_7_8Wither;
-
 
 public class Main extends JavaPlugin implements Listener {
 
 	/*
 	 * 
 	 * This is based off the ColorMatch arena system
-	 *
 	 */
-	
-	//TODO: CODE CLEANUP (MEDragon, MEWither, V1_*Dragon, V1_*Wither have much duplicate code)
+
+	// TODO: CODE CLEANUP (MEDragon, MEWither, V1_*Dragon, V1_*Wither have much duplicate code)
 
 	public static Economy econ = null;
 
@@ -141,7 +141,6 @@ public class Main extends JavaPlugin implements Listener {
 	 */
 	public static HashMap<String, Boolean> pseenfall = new HashMap<String, Boolean>();
 
-	
 	int default_max_players = 4;
 	int default_min_players = 3;
 
@@ -159,6 +158,7 @@ public class Main extends JavaPlugin implements Listener {
 	public static boolean mode1_6 = false;
 	public static boolean mode1_7_5 = false;
 	public static boolean mode1_7_8 = false;
+	public static boolean mode1_7_10 = false;
 	public int destroy_radius = 10;
 	public boolean last_man_standing = true;
 	public boolean spawn_winnerfirework = true;
@@ -169,7 +169,7 @@ public class Main extends JavaPlugin implements Listener {
 	public boolean remove_scoreboard = false;
 	public boolean give_kit_tool_at_join = true;
 	public int kit_tool_id = 399;
-	
+
 	public int start_countdown = 5;
 
 	public String saved_arena = "";
@@ -195,7 +195,7 @@ public class Main extends JavaPlugin implements Listener {
 	public String noperm_arena = "";
 	public String kit_delay_message = "";
 	public String your_place = "";
-	
+
 	public String sign_top = "";
 	public String sign_second_join = "";
 	public String sign_second_ingame = "";
@@ -206,8 +206,8 @@ public class Main extends JavaPlugin implements Listener {
 	public String started = "";
 	public String join_announcement_ = "";
 
-	public String type = "dragon"; 
-	
+	public String type = "dragon";
+
 	@Override
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents(this, this);
@@ -216,15 +216,18 @@ public class Main extends JavaPlugin implements Listener {
 		if (version.contains("1_6_R3")) {
 			mode1_6 = true;
 			getLogger().info("Turned on 1.6.4 mode.");
-		}else if(version.contains("1_7_R1")){
+		} else if (version.contains("1_7_R1")) {
 			// default
 			getLogger().info("Turned on 1.7.2 mode.");
-		}else if(version.contains("1_7_R2")){
+		} else if (version.contains("1_7_R2")) {
 			mode1_7_5 = true;
 			getLogger().info("Turned on 1.7.5 mode.");
-		}else if(version.contains("1_7_R3")){
+		} else if (version.contains("1_7_R3")) {
 			mode1_7_8 = true;
 			getLogger().info("Turned on 1.7.8 mode.");
+		} else if (version.contains("1_7_R4")) {
+			mode1_7_10 = true;
+			getLogger().info("Turned on 1.7.10 mode.");
 		}
 		registerEntities();
 
@@ -257,7 +260,7 @@ public class Main extends JavaPlugin implements Listener {
 		getConfig().addDefault("config.remove_scoreboard", false);
 		getConfig().addDefault("config.give_kit_tool_at_join", true);
 		getConfig().addDefault("config.kit_tool_id", 399);
-		
+
 		getConfig().addDefault("config.sign_top_line", "&6MobEscape");
 		getConfig().addDefault("config.sign_second_line_join", "&a[Join]");
 		getConfig().addDefault("config.sign_second_line_ingame", "&c[Ingame]");
@@ -327,7 +330,6 @@ public class Main extends JavaPlugin implements Listener {
 			Updater updater = new Updater(this, 75590, this.getFile(), Updater.UpdateType.DEFAULT, false);
 		}
 
-
 		if (economy) {
 			if (!setupEconomy()) {
 				getLogger().severe(String.format("[%s] - No iConomy dependency found! Disabling Economy.", getDescription().getName()));
@@ -370,9 +372,9 @@ public class Main extends JavaPlugin implements Listener {
 		dragon_name = getConfig().getString("config.mob_healthbar_name").replaceAll("&", "§");
 		last_man_standing = getConfig().getBoolean("config.last_man_standing");
 		spawn_winnerfirework = getConfig().getBoolean("config.spawn_winnerfirework");
-		
+
 		type = getConfig().getString("config.mob_type");
-		if(!type.equalsIgnoreCase("dragon") && !type.equalsIgnoreCase("wither")){
+		if (!type.equalsIgnoreCase("dragon") && !type.equalsIgnoreCase("wither")) {
 			type = "dragon";
 		}
 		spawn_falling_blocks = getConfig().getBoolean("config.spawn_falling_blocks");
@@ -382,8 +384,7 @@ public class Main extends JavaPlugin implements Listener {
 		remove_scoreboard = getConfig().getBoolean("config.remove_scoreboard");
 		give_kit_tool_at_join = getConfig().getBoolean("config.give_kit_tool_at_join");
 		kit_tool_id = getConfig().getInt("config.kit_tool_id");
-		
-		
+
 		saved_arena = getConfig().getString("strings.saved.arena").replaceAll("&", "§");
 		removed_arena = getConfig().getString("strings.removed_arena").replaceAll("&", "§");
 		saved_lobby = getConfig().getString("strings.saved.lobby").replaceAll("&", "§");
@@ -411,7 +412,7 @@ public class Main extends JavaPlugin implements Listener {
 		noperm_arena = getConfig().getString("strings.noperm_arena").replaceAll("&", "§");
 		kit_delay_message = getConfig().getString("strings.kit_delay_message").replaceAll("&", "§");
 		your_place = getConfig().getString("strings.your_place").replaceAll("&", "§");
-		
+
 		sign_top = getConfig().getString("config.sign_top_line").replaceAll("&", "§");
 		sign_second_join = getConfig().getString("config.sign_second_line_join").replaceAll("&", "§");
 		sign_second_ingame = getConfig().getString("config.sign_second_line_ingame").replaceAll("&", "§");
@@ -621,7 +622,7 @@ public class Main extends JavaPlugin implements Listener {
 						if (sender.hasPermission("mobescape.setup")) {
 							Player p = (Player) sender;
 							String arenaname = args[1];
-							
+
 							String count = Integer.toString(this.getCurrentSpawnIndex(arenaname));
 
 							getConfig().set(arenaname + ".spawn." + count + ".world", p.getWorld().getName());
@@ -673,38 +674,38 @@ public class Main extends JavaPlugin implements Listener {
 						p.sendMessage(not_in_arena);
 					}
 				} else if (action.equalsIgnoreCase("setreward")) {
-					if(args.length > 3){
+					if (args.length > 3) {
 						if (sender.hasPermission("mobescape.setup")) {
 							String arena = args[1];
 							String type = args[2];
 							String amount = args[3];
-							if(!type.equalsIgnoreCase("command") && !isNumeric(amount)){
+							if (!type.equalsIgnoreCase("command") && !isNumeric(amount)) {
 								sender.sendMessage(ChatColor.RED + "Amount has to be a number.");
 								return true;
 							}
-							if(type.equalsIgnoreCase("money")){
+							if (type.equalsIgnoreCase("money")) {
 								setArenaDefaultRewards(arena);
 								setArenaReward(arena, "money_reward_per_game", Integer.parseInt(amount));
-							}else if(type.equalsIgnoreCase("itemid")){
+							} else if (type.equalsIgnoreCase("itemid")) {
 								setArenaDefaultRewards(arena);
 								setArenaReward(arena, "item_reward_id", Integer.parseInt(amount));
-							}else if(type.equalsIgnoreCase("itemamount")){
+							} else if (type.equalsIgnoreCase("itemamount")) {
 								setArenaDefaultRewards(arena);
 								setArenaReward(arena, "item_reward_amount", Integer.parseInt(amount));
-							}else if(type.equalsIgnoreCase("command")){
+							} else if (type.equalsIgnoreCase("command")) {
 								setArenaDefaultRewards(arena);
 								String newcmd = "";
-								for(int i = 0; i < args.length - 3; i++){
+								for (int i = 0; i < args.length - 3; i++) {
 									newcmd += args[3 + i] + " ";
 								}
 								setArenaCommandReward(arena, newcmd);
-							}else{
+							} else {
 								sender.sendMessage(ChatColor.RED + "Usage: /etm setreward [arena] [type] [amount]. [type] can be 'money', 'itemid', 'itemamount' or 'command'.");
 								return true;
 							}
 							sender.sendMessage(ChatColor.GREEN + "Successfully saved arena reward for type " + type + " .");
 						}
-					}else{
+					} else {
 						sender.sendMessage(ChatColor.RED + "Usage: /etm setreward [arena] [type] [amount]. [type] can be 'money', 'itemid', 'itemamount' or 'command'.");
 					}
 				} else if (action.equalsIgnoreCase("endall")) {
@@ -783,12 +784,12 @@ public class Main extends JavaPlugin implements Listener {
 					if (sender.hasPermission("mobescape.setmobtype")) {
 						if (args.length > 1) {
 							String mobtype = args[1];
-							if(mobtype.equalsIgnoreCase("wither") || mobtype.equalsIgnoreCase("dragon")){
+							if (mobtype.equalsIgnoreCase("wither") || mobtype.equalsIgnoreCase("dragon")) {
 								type = mobtype;
 								getConfig().set("config.mob_type", mobtype);
 								this.saveConfig();
 								sender.sendMessage("" + ChatColor.YELLOW + "Successfully set!");
-							}else{
+							} else {
 								sender.sendMessage("" + ChatColor.RED + "Unknown mob. Possible ones: dragon, wither");
 							}
 						} else {
@@ -798,10 +799,10 @@ public class Main extends JavaPlugin implements Listener {
 				} else if (action.equalsIgnoreCase("setarenavip")) {
 					if (sender.hasPermission("mobescape.setup")) {
 						if (args.length > 2) {
-							if(args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")){
+							if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")) {
 								this.setArenaNeedsPerm(args[1], Boolean.parseBoolean(args[2]));
 								sender.sendMessage(ChatColor.GREEN + "Successfully set.");
-							}else{
+							} else {
 								sender.sendMessage(ChatColor.RED + "Usage: /etm setarenavip [arena] [true/false]");
 							}
 						} else {
@@ -833,43 +834,43 @@ public class Main extends JavaPlugin implements Listener {
 				} else if (action.equalsIgnoreCase("kit")) {
 					if (args.length > 1) {
 						String kit = args[1];
-						if(!(sender instanceof Player)){
+						if (!(sender instanceof Player)) {
 							return true;
 						}
-						Player p = (Player)sender;
-						if(!arenap.containsKey(p)){
+						Player p = (Player) sender;
+						if (!arenap.containsKey(p)) {
 							sender.sendMessage(not_in_arena);
 							return true;
 						}
-						
-						if(kit.equalsIgnoreCase("jumper")){
+
+						if (kit.equalsIgnoreCase("jumper")) {
 							sender.sendMessage(getKitDescription("jumper"));
-						}else if(kit.equalsIgnoreCase("warper")){
+						} else if (kit.equalsIgnoreCase("warper")) {
 							sender.sendMessage(getKitDescription("warper"));
-						}else if(kit.equalsIgnoreCase("tnt")){
+						} else if (kit.equalsIgnoreCase("tnt")) {
 							sender.sendMessage(getKitDescription("tnt"));
-						}else{
+						} else {
 							sender.sendMessage(ChatColor.RED + "Unknown Kit.");
 							return true;
 						}
-						if(this.kitPlayerHasPermission(args[1], p)){
-							if(this.kitRequiresMoney(args[1])){
-								if(this.kitTakeMoney(p, args[1])){
+						if (this.kitPlayerHasPermission(args[1], p)) {
+							if (this.kitRequiresMoney(args[1])) {
+								if (this.kitTakeMoney(p, args[1])) {
 									pkit.put(p, args[1]);
 								}
-							}else{
+							} else {
 								pkit.put(p, args[1]);
 							}
-						}else{
+						} else {
 							sender.sendMessage(nopermkit);
 						}
 					}
 				} else if (action.equalsIgnoreCase("kitgui")) {
-					if(!(sender instanceof Player)){
+					if (!(sender instanceof Player)) {
 						return true;
 					}
-					Player p = (Player)sender;
-					if(!arenap.containsKey(p)){
+					Player p = (Player) sender;
+					if (!arenap.containsKey(p)) {
 						sender.sendMessage(not_in_arena);
 						return true;
 					}
@@ -920,7 +921,7 @@ public class Main extends JavaPlugin implements Listener {
 								sender.sendMessage("" + ChatColor.RED + "Noone is in this arena.");
 								return true;
 							}
-							if(m.lobby_countdown_id.containsKey(arena)){
+							if (m.lobby_countdown_id.containsKey(arena)) {
 								sender.sendMessage(ChatColor.RED + "This arena is already starting.");
 								return true;
 							}
@@ -1004,14 +1005,15 @@ public class Main extends JavaPlugin implements Listener {
 	private boolean registerEntities() {
 		if (mode1_6) {
 			return V1_6Dragon.registerEntities();
-		}else if(mode1_7_5){
+		} else if (mode1_7_5) {
 			return V1_7_5Dragon.registerEntities();
-		}else if(mode1_7_8){
+		} else if (mode1_7_8) {
 			return V1_7_8Dragon.registerEntities();
+		} else if (mode1_7_10) {
+			return V1_7_10Dragon.registerEntities();
 		}
 		return V1_7Dragon.registerEntities();
 	}
-
 
 	public ArrayList<String> left_players = new ArrayList<String>();
 
@@ -1055,8 +1057,8 @@ public class Main extends JavaPlugin implements Listener {
 			}, 5);
 			left_players.remove(event.getPlayer().getName());
 		}
-		
-		if(getConfig().getBoolean("config.game_on_join")){
+
+		if (getConfig().getBoolean("config.game_on_join")) {
 			int c = 0;
 			final List<String> arenas = new ArrayList<String>();
 			for (String arena : getConfig().getKeys(false)) {
@@ -1065,13 +1067,13 @@ public class Main extends JavaPlugin implements Listener {
 					arenas.add(arena);
 				}
 			}
-			if(c < 1){
+			if (c < 1) {
 				getLogger().severe("Couldn't find any arena even though game_on_join was turned on. Please setup an arena to fix this!");
 				return;
 			}
-			
-			Bukkit.getScheduler().runTaskLater(this, new Runnable(){
-				public void run(){
+
+			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+				public void run() {
 					joinLobby(p, arenas.get(0));
 				}
 			}, 30L);
@@ -1113,10 +1115,10 @@ public class Main extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event) {
-		if(arenap.containsKey(event.getPlayer()) && !arenap_.containsKey(event.getPlayer().getName())){
+		if (arenap.containsKey(event.getPlayer()) && !arenap_.containsKey(event.getPlayer().getName())) {
 			final String arena_ = arenap.get(event.getPlayer());
-			//getLogger().info(astarted.get(arena_).toString());
-			if(ingame.get(arena_)){
+			// getLogger().info(astarted.get(arena_).toString());
+			if (ingame.get(arena_)) {
 				if (getDragonSpawn(arena_) != null) {
 					final Player p = event.getPlayer();
 					final Location temp = getSpawn(arena_, pspawn.get(p));
@@ -1151,10 +1153,10 @@ public class Main extends JavaPlugin implements Listener {
 							}
 						}
 					}, 5);
-					if(!pseenfall.containsKey(p.getName())){
+					if (!pseenfall.containsKey(p.getName())) {
 						pseenfall.put(p.getName(), false);
 					}
-					if(!pseenfall.get(p.getName())){
+					if (!pseenfall.get(p.getName())) {
 						p.sendMessage(you_fell);
 						pseenfall.put(p.getName(), true);
 					}
@@ -1162,16 +1164,14 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 
-			
 			final String arena_ = arenap_.get(event.getPlayer().getName());
 
-			if(event.getPlayer().getLocation().distance(getFinish(arena_)) < 3){
+			if (event.getPlayer().getLocation().distance(getFinish(arena_)) < 3) {
 				if (ingame.get(arena_)) {
 					stop(h.get(arena_), arena_);
 				}
 				return;
 			}
-			
 
 			if (event.getPlayer().getLocation().getBlockY() < getLowBoundary(arenap_.get(event.getPlayer().getName())).getBlockY() - 3) {
 				this.simulatePlayerFall(event.getPlayer());
@@ -1179,7 +1179,7 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onSignUse(PlayerInteractEvent event) {
 		if (event.hasBlock()) {
@@ -1239,50 +1239,50 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}
-		
+
 		if (event.hasItem()) {
 			final Player p = event.getPlayer();
-			if(!arenap.containsKey(p)){
+			if (!arenap.containsKey(p)) {
 				return;
 			}
-			if(event.getItem().getTypeId() == kit_tool_id){
+			if (event.getItem().getTypeId() == kit_tool_id) {
 				m.openGUI(m, p.getName());
 				return;
 			}
-			if(!pkit_use.containsKey(p)){
+			if (!pkit_use.containsKey(p)) {
 				pkit_use.put(p, true);
 			}
-			if(!pkit_use.get(p)){
+			if (!pkit_use.get(p)) {
 				p.sendMessage(kit_delay_message.replaceAll("<delay>", Integer.toString(kit_delay_in_seconds)));
 				return;
 			}
 			pkit_use.put(p, false);
-			Bukkit.getScheduler().runTaskLater(this, new Runnable(){
-				public void run(){
+			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+				public void run() {
 					pkit_use.put(p, true);
 				}
 			}, kit_delay_in_seconds * 20);
-			if(event.getItem().getTypeId() == 258){
+			if (event.getItem().getTypeId() == 258) {
 				p.getInventory().removeItem(new ItemStack(Material.IRON_AXE, 1));
 				p.updateInventory();
 				Vector direction = p.getLocation().getDirection().multiply(getConfig().getDouble("config.jumper_boost_factor"));
 				direction.setY(direction.getY() + 1.5);
 				p.setVelocity(direction);
-				//p.setVelocity(p.getVelocity().multiply(2D));
-			}else if(event.getItem().getTypeId() == 368){
+				// p.setVelocity(p.getVelocity().multiply(2D));
+			} else if (event.getItem().getTypeId() == 368) {
 				p.getInventory().removeItem(new ItemStack(Material.ENDER_PEARL, 1));
 				p.updateInventory();
-				for(final Entity t : p.getNearbyEntities(40, 40, 40)){
-					if(t instanceof Player){
-						Bukkit.getScheduler().runTaskLater(this, new Runnable(){
-							public void run(){
+				for (final Entity t : p.getNearbyEntities(40, 40, 40)) {
+					if (t instanceof Player) {
+						Bukkit.getScheduler().runTaskLater(this, new Runnable() {
+							public void run() {
 								p.teleport(t);
 							}
 						}, 5L);
 					}
 				}
 				event.setCancelled(true);
-			}else if(event.getItem().getTypeId() == 46){
+			} else if (event.getItem().getTypeId() == 46) {
 				p.getInventory().removeItem(new ItemStack(Material.TNT, 1));
 				p.updateInventory();
 				p.getLocation().getWorld().dropItemNaturally(p.getLocation().add(1, 3, 1), new ItemStack(Material.TNT));
@@ -1291,16 +1291,16 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerPickup(PlayerPickupItemEvent event){
-		if(arenap.containsKey(event.getPlayer())){
-			if(event.getItem().getItemStack().getType() == Material.TNT){
+	public void onPlayerPickup(PlayerPickupItemEvent event) {
+		if (arenap.containsKey(event.getPlayer())) {
+			if (event.getItem().getItemStack().getType() == Material.TNT) {
 				event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 120, 1));
 				event.getItem().remove();
 				event.setCancelled(true);
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onSignChange(SignChangeEvent event) {
 		Player p = event.getPlayer();
@@ -1345,10 +1345,10 @@ public class Main extends JavaPlugin implements Listener {
 	public void EntityChangeBlockEvent(org.bukkit.event.entity.EntityChangeBlockEvent event) {
 		if (event.getEntityType() == EntityType.FALLING_BLOCK) {
 			for (String arena : getConfig().getKeys(false)) {
-				if (!arena.equalsIgnoreCase("mainlobby") && !arena.equalsIgnoreCase("strings") && !arena.equalsIgnoreCase("config")){
-					if(isValidArena(arena)){
+				if (!arena.equalsIgnoreCase("mainlobby") && !arena.equalsIgnoreCase("strings") && !arena.equalsIgnoreCase("config")) {
+					if (isValidArena(arena)) {
 						Cuboid c = new Cuboid(getLowBoundary(arena), getHighBoundary(arena));
-						if(c.containsLocWithoutY(event.getBlock().getLocation())){
+						if (c.containsLocWithoutY(event.getBlock().getLocation())) {
 							event.setCancelled(true);
 						}
 					}
@@ -1362,32 +1362,25 @@ public class Main extends JavaPlugin implements Listener {
 		if (event.getEntity() instanceof Player) {
 			Player p = (Player) event.getEntity();
 			if (arenap_.containsKey(p.getName())) {
-				if(event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK){
+				if (event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK) {
 					p.damage(event.getDamage());
-				}else{
+				} else {
 					p.setHealth(20D);
 					event.setCancelled(true);
 				}
-				
+
 			}
 		}
 	}
-	
-	/*@EventHandler
-	public void onPlayerRespawn(PlayerRespawnEvent event){
-		if(arenap_.containsKey(event.getPlayer().getName())){
-			final Player p = event.getPlayer();
-			Bukkit.getScheduler().runTaskLater(this, new Runnable(){
-				public void run(){
-					m.simulatePlayerFall(p);
-				}
-			}, 10L);
-		}
-	}*/
-	
+
+	/*
+	 * @EventHandler public void onPlayerRespawn(PlayerRespawnEvent event){ if(arenap_.containsKey(event.getPlayer().getName())){ final Player p =
+	 * event.getPlayer(); Bukkit.getScheduler().runTaskLater(this, new Runnable(){ public void run(){ m.simulatePlayerFall(p); } }, 10L); } }
+	 */
+
 	@EventHandler
-	public void onPlayerDeath(PlayerDeathEvent event){
-		if(arenap_.containsKey(event.getEntity().getName())){
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		if (arenap_.containsKey(event.getEntity().getName())) {
 			event.getEntity().setHealth(20D);
 			Player p = event.getEntity();
 
@@ -1429,35 +1422,35 @@ public class Main extends JavaPlugin implements Listener {
 		Location ret = null;
 		if (isValidArena(arena)) {
 			String entry = ".spawn." + Integer.toString(count) + ".";
-			if(!getConfig().isSet(arena + entry)){
+			if (!getConfig().isSet(arena + entry)) {
 				entry = ".spawn.";
 			}
 			ret = new Location(Bukkit.getWorld(getConfig().getString(arena + entry + "world")), getConfig().getInt(arena + entry + "loc.x"), getConfig().getInt(arena + entry + "loc.y"), getConfig().getInt(arena + entry + "loc.z"), getConfig().getInt(arena + entry + "loc.yaw"), getConfig().getInt(arena + entry + "loc.pitch"));
 		}
 		return ret;
 	}
-	
+
 	public HashMap<String, Integer> spawncount = new HashMap<String, Integer>();
 	public HashMap<Player, Integer> pspawn = new HashMap<Player, Integer>();
 
 	public Location getSpawn(String arena) {
 		return getSpawn(arena, 0);
 	}
-	
+
 	public Location getSpawnForPlayer(Player p, String arena) {
-		if(!spawncount.containsKey(arena)){
+		if (!spawncount.containsKey(arena)) {
 			spawncount.put(arena, 0);
 			pspawn.put(p, 0);
 			spawncount.put(arena, spawncount.get(arena) + 1);
 			return getSpawn(arena, 0);
 		}
-		
-		if(spawncount.get(arena) < this.getCurrentSpawnIndex(arena)){
+
+		if (spawncount.get(arena) < this.getCurrentSpawnIndex(arena)) {
 			Location ret = getSpawn(arena, spawncount.get(arena));
 			pspawn.put(p, spawncount.get(arena));
 			spawncount.put(arena, spawncount.get(arena) + 1);
 			return ret;
-		}else{
+		} else {
 			spawncount.put(arena, 0);
 		}
 		pspawn.put(p, 0);
@@ -1512,7 +1505,7 @@ public class Main extends JavaPlugin implements Listener {
 		try {
 			p.getInventory().clear();
 			p.updateInventory();
-			
+
 			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 				public void run() {
 					if (p.isOnline()) {
@@ -1523,7 +1516,7 @@ public class Main extends JavaPlugin implements Listener {
 							e.printStackTrace();
 							Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), "mvtp e:" + getMainLobby().getWorld() + ":" + getMainLobby().getX() + "," + getMainLobby().getY() + "," + getMainLobby().getZ() + ":0:0");
 						}
-						if(spawn_winnerfirework){
+						if (spawn_winnerfirework) {
 							spawnFirework(p);
 						}
 					}
@@ -1534,10 +1527,10 @@ public class Main extends JavaPlugin implements Listener {
 				lost.remove(p);
 			}
 
-			if(pseenfall.containsKey(p.getName())){
+			if (pseenfall.containsKey(p.getName())) {
 				pseenfall.remove(p.getName());
 			}
-			
+
 			final String arena = arenap.get(p);
 
 			Bukkit.getScheduler().runTaskLater(this, new Runnable() {
@@ -1546,17 +1539,17 @@ public class Main extends JavaPlugin implements Listener {
 						p.setAllowFlight(false);
 						p.setFlying(false);
 						removeScoreboard(arena, p);
-						
+
 						if (p.isOnline()) {
 							p.getInventory().setContents(pinv.get(p));
 							p.updateInventory();
 						}
 
 						if (winner.containsKey(p)) {
-							
+
 							m.getArenaReward(arena, p);
-							
-							if(spawn_winnerfirework){
+
+							if (spawn_winnerfirework) {
 								spawnFirework(p);
 							}
 						}
@@ -1597,15 +1590,15 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	public void joinLobby(final Player p, final String arena) {
-		
+
 		// very first check if arena needs perms and player has perm to join.
-		if(this.arenaNeedsPerm(arena)){
-			if(!p.hasPermission("mobescape.joinarena." + arena)){
+		if (this.arenaNeedsPerm(arena)) {
+			if (!p.hasPermission("mobescape.joinarena." + arena)) {
 				p.sendMessage(noperm_arena);
 				return;
 			}
 		}
-		
+
 		// check first if max players are reached.
 		int count_ = 0;
 		for (Player p_ : arenap.keySet()) {
@@ -1624,17 +1617,17 @@ public class Main extends JavaPlugin implements Listener {
 		p.setGameMode(GameMode.SURVIVAL);
 		p.getInventory().clear();
 		p.updateInventory();
-		if(give_jumper_as_default_kit){
+		if (give_jumper_as_default_kit) {
 			pkit.put(p, "jumper");
 		}
-		
+
 		Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 			public void run() {
 				p.teleport(getLobby(arena));
 				p.setFoodLevel(20);
-				if(m.give_kit_tool_at_join){
+				if (m.give_kit_tool_at_join) {
 					p.getInventory().addItem(new ItemStack(Material.getMaterial(kit_tool_id)));
-					p.updateInventory();	
+					p.updateInventory();
 				}
 			}
 		}, 4);
@@ -1643,22 +1636,22 @@ public class Main extends JavaPlugin implements Listener {
 		for (Player p_ : arenap.keySet()) {
 			if (arenap.get(p_).equalsIgnoreCase(arena)) {
 				count++;
-				
+
 			}
 		}
-		
+
 		for (Player p_ : arenap.keySet()) {
 			if (arenap.get(p_).equalsIgnoreCase(arena)) {
-				if(join_announcement){
+				if (join_announcement) {
 					p_.sendMessage(join_announcement_.replace("<player>", p.getName()).replace("<count>", Integer.toString(count) + "/" + Integer.toString(getArenaMaxPlayers(arena))));
 				}
 			}
 		}
-		
+
 		if (count > getArenaMinPlayers(arena) - 1) {
 			final int lobby_c = getConfig().getInt("config.lobby_countdown");
 
-			if(!m.lobby_countdown_id.containsKey(arena)){
+			if (!m.lobby_countdown_id.containsKey(arena)) {
 				int t = Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(m, new Runnable() {
 					public void run() {
 						if (!m.lobby_countdown_count.containsKey(arena)) {
@@ -1667,7 +1660,7 @@ public class Main extends JavaPlugin implements Listener {
 						int count = m.lobby_countdown_count.get(arena);
 						for (Player p : m.arenap.keySet()) {
 							if (m.arenap.get(p).equalsIgnoreCase(arena)) {
-								if(count == 120 || count == 60 || count == 30 || count == 15 || count < 11){
+								if (count == 120 || count == 60 || count == 30 || count == 15 || count < 11) {
 									p.sendMessage(ChatColor.GRAY + "Teleporting to arena in " + Integer.toString(count) + " seconds.");
 								}
 							}
@@ -1676,7 +1669,7 @@ public class Main extends JavaPlugin implements Listener {
 						m.lobby_countdown_count.put(arena, count);
 						if (count < 0) {
 							m.lobby_countdown_count.put(arena, lobby_c);
-							
+
 							for (Player p_ : arenap.keySet()) {
 								final Player p__ = p_;
 								if (arenap.get(p_).equalsIgnoreCase(arena)) {
@@ -1697,13 +1690,12 @@ public class Main extends JavaPlugin implements Listener {
 									}
 								}
 							}, 10);
-							
-							
+
 							Bukkit.getServer().getScheduler().cancelTask(m.lobby_countdown_id.get(arena));
 						}
 					}
-					}, 5, 20).getTaskId();
-					m.lobby_countdown_id.put(arena, t);
+				}, 5, 20).getTaskId();
+				m.lobby_countdown_id.put(arena, t);
 			}
 		}
 
@@ -1734,11 +1726,9 @@ public class Main extends JavaPlugin implements Listener {
 
 	static Random r = new Random();
 
-	
 	final public HashMap<String, Integer> lobby_countdown_count = new HashMap<String, Integer>();
 	final public HashMap<String, Integer> lobby_countdown_id = new HashMap<String, Integer>();
-	
-	
+
 	final public HashMap<String, BukkitTask> h = new HashMap<String, BukkitTask>();
 	final public HashMap<String, Integer> countdown_count = new HashMap<String, Integer>();
 	final public HashMap<String, Integer> countdown_id = new HashMap<String, Integer>();
@@ -1746,50 +1736,61 @@ public class Main extends JavaPlugin implements Listener {
 
 	public BukkitTask start(final String arena) {
 		if (mode1_6) {
-			if(type.equalsIgnoreCase("dragon")){
+			if (type.equalsIgnoreCase("dragon")) {
 				V1_6Dragon v = new V1_6Dragon();
 				return v.start(this, arena);
-			}else if(type.equalsIgnoreCase("wither")){
+			} else if (type.equalsIgnoreCase("wither")) {
 				V1_6Wither v = new V1_6Wither();
 				return v.start(this, arena);
-			}else{
+			} else {
 				V1_6Dragon v = new V1_6Dragon();
 				return v.start(this, arena);
 			}
-		}else if(mode1_7_5){
-			if(type.equalsIgnoreCase("dragon")){
+		} else if (mode1_7_5) {
+			if (type.equalsIgnoreCase("dragon")) {
 				V1_7_5Dragon v = new V1_7_5Dragon();
 				return v.start(this, arena);
-			}else if(type.equalsIgnoreCase("wither")){
+			} else if (type.equalsIgnoreCase("wither")) {
 				V1_7_5Wither v = new V1_7_5Wither();
 				return v.start(this, arena);
-			}else{
+			} else {
 				V1_7_5Dragon v = new V1_7_5Dragon();
 				return v.start(this, arena);
 			}
-		}else if(mode1_7_8){
-			if(type.equalsIgnoreCase("dragon")){
+		} else if (mode1_7_8) {
+			if (type.equalsIgnoreCase("dragon")) {
 				V1_7_8Dragon v = new V1_7_8Dragon();
 				return v.start(this, arena);
-			}else if(type.equalsIgnoreCase("wither")){
+			} else if (type.equalsIgnoreCase("wither")) {
 				V1_7_8Wither v = new V1_7_8Wither();
 				return v.start(this, arena);
-			}else{
+			} else {
 				V1_7_8Dragon v = new V1_7_8Dragon();
 				return v.start(this, arena);
 			}
+		} else if (mode1_7_10) {
+			if (type.equalsIgnoreCase("dragon")) {
+				V1_7_10Dragon v = new V1_7_10Dragon();
+				return v.start(this, arena);
+			} else if (type.equalsIgnoreCase("wither")) {
+				V1_7_10Wither v = new V1_7_10Wither();
+				return v.start(this, arena);
+			} else {
+				V1_7_10Dragon v = new V1_7_10Dragon();
+				return v.start(this, arena);
+			}
 		}
-		if(type.equalsIgnoreCase("dragon")){
+		if (type.equalsIgnoreCase("dragon")) {
 			V1_7Dragon v_ = new V1_7Dragon();
 			return v_.start(this, arena);
-		}else if(type.equalsIgnoreCase("wither")){
+		} else if (type.equalsIgnoreCase("wither")) {
 			V1_7Wither v_ = new V1_7Wither();
 			return v_.start(this, arena);
-		}else{
+		} else {
 			V1_7Dragon v_ = new V1_7Dragon();
 			return v_.start(this, arena);
 		}
-		
+
 	}
 
 	public void reset(final String arena) {
@@ -1803,61 +1804,72 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void stop(BukkitTask t, final String arena) {
 		if (mode1_6) {
-			if(type.equalsIgnoreCase("dragon")){
+			if (type.equalsIgnoreCase("dragon")) {
 				V1_6Dragon v = new V1_6Dragon();
 				v.stop(this, t, arena);
-			}else if(type.equalsIgnoreCase("wither")){
+			} else if (type.equalsIgnoreCase("wither")) {
 				V1_6Wither v = new V1_6Wither();
 				v.stop(this, t, arena);
-			}else{
+			} else {
 				V1_6Dragon v = new V1_6Dragon();
 				v.stop(this, t, arena);
 			}
 		} else if (mode1_7_5) {
-			if(type.equalsIgnoreCase("dragon")){
+			if (type.equalsIgnoreCase("dragon")) {
 				V1_7_5Dragon v = new V1_7_5Dragon();
 				v.stop(this, t, arena);
-			}else if(type.equalsIgnoreCase("wither")){
+			} else if (type.equalsIgnoreCase("wither")) {
 				V1_7_5Wither v = new V1_7_5Wither();
 				v.stop(this, t, arena);
-			}else{
+			} else {
 				V1_7_5Dragon v = new V1_7_5Dragon();
 				v.stop(this, t, arena);
 			}
 		} else if (mode1_7_8) {
-			if(type.equalsIgnoreCase("dragon")){
+			if (type.equalsIgnoreCase("dragon")) {
 				V1_7_8Dragon v = new V1_7_8Dragon();
 				v.stop(this, t, arena);
-			}else if(type.equalsIgnoreCase("wither")){
+			} else if (type.equalsIgnoreCase("wither")) {
 				V1_7_8Wither v = new V1_7_8Wither();
 				v.stop(this, t, arena);
-			}else{
+			} else {
 				V1_7_8Dragon v = new V1_7_8Dragon();
+				v.stop(this, t, arena);
+			}
+		} else if (mode1_7_10) {
+			if (type.equalsIgnoreCase("dragon")) {
+				V1_7_10Dragon v = new V1_7_10Dragon();
+				v.stop(this, t, arena);
+			} else if (type.equalsIgnoreCase("wither")) {
+				V1_7_10Wither v = new V1_7_10Wither();
+				v.stop(this, t, arena);
+			} else {
+				V1_7_10Dragon v = new V1_7_10Dragon();
 				v.stop(this, t, arena);
 			}
 		}  else {
-			if(type.equalsIgnoreCase("dragon")){
+			if (type.equalsIgnoreCase("dragon")) {
 				V1_7Dragon v = new V1_7Dragon();
 				v.stop(this, t, arena);
-			}else if(type.equalsIgnoreCase("wither")){
+			} else if (type.equalsIgnoreCase("wither")) {
 				V1_7Wither v = new V1_7Wither();
 				v.stop(this, t, arena);
-			}else{
+			} else {
 				V1_7Dragon v = new V1_7Dragon();
 				v.stop(this, t, arena);
 			}
 		}
-		
-		if(m.lobby_countdown_id.containsKey(arena)){
-			try{
-				Bukkit.getServer().getScheduler().cancelTask(m.lobby_countdown_id.get(arena));	
-			}catch(Exception e){
-				
+
+		if (m.lobby_countdown_id.containsKey(arena)) {
+			try {
+				Bukkit.getServer().getScheduler().cancelTask(m.lobby_countdown_id.get(arena));
+			} catch (Exception e) {
+
 			}
 			m.lobby_countdown_id.remove(arena);
 		}
-		
-		if(spawncount.containsKey(arena)){
+
+		if (spawncount.containsKey(arena)) {
 			spawncount.remove(arena);
 		}
 	}
@@ -2116,11 +2128,11 @@ public class Main extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 
-		//getLogger().info("Failed to update " + Integer.toString(failcount) + " blocks due to spigots async exception.");
+		// getLogger().info("Failed to update " + Integer.toString(failcount) + " blocks due to spigots async exception.");
 		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 			public void run() {
 				// restore spigot blocks!
-				//getLogger().info("Trying to restore blocks affected by spigot exception..");
+				// getLogger().info("Trying to restore blocks affected by spigot exception..");
 				for (ArenaBlock ablock : failedblocks) {
 					getServer().getWorld(ablock.world).getBlockAt(new Location(getServer().getWorld(ablock.world), ablock.x, ablock.y, ablock.z)).setType(Material.WOOL);
 					getServer().getWorld(ablock.world).getBlockAt(new Location(getServer().getWorld(ablock.world), ablock.x, ablock.y, ablock.z)).getTypeId();
@@ -2171,7 +2183,7 @@ public class Main extends JavaPlugin implements Listener {
 			return ret;
 		}
 	}
-	
+
 	public ArrayList<Location> getSpawns(String arena) {
 		ArrayList<Location> ret = new ArrayList<Location>();
 		if (!getConfig().isSet(arena + ".spawn.")) {
@@ -2180,7 +2192,7 @@ public class Main extends JavaPlugin implements Listener {
 			int count = 0;
 			Set<String> f = getConfig().getConfigurationSection(arena + ".spawn").getKeys(false);
 			for (String key : f) {
-				if(!key.equalsIgnoreCase("world") && !key.equalsIgnoreCase("loc")){
+				if (!key.equalsIgnoreCase("world") && !key.equalsIgnoreCase("loc")) {
 					ret.add(getSpawn(arena, count));
 					count++;
 				}
@@ -2188,7 +2200,7 @@ public class Main extends JavaPlugin implements Listener {
 			return ret;
 		}
 	}
-	
+
 	public int getCurrentSpawnIndex(String arena) {
 		if (!getConfig().isSet(arena + ".spawn.")) {
 			return 0;
@@ -2196,7 +2208,7 @@ public class Main extends JavaPlugin implements Listener {
 			int count = 0;
 			Set<String> f = getConfig().getConfigurationSection(arena + ".spawn").getKeys(false);
 			for (String key : f) {
-				if(!key.equalsIgnoreCase("world") && !key.equalsIgnoreCase("loc")){
+				if (!key.equalsIgnoreCase("world") && !key.equalsIgnoreCase("loc")) {
 					count++;
 				}
 			}
@@ -2224,10 +2236,12 @@ public class Main extends JavaPlugin implements Listener {
 	public static final void playBlockBreakParticles(final Location loc, final Material m, final Player... players) {
 		if (mode1_6) {
 			V1_6Dragon.playBlockBreakParticles(loc, m, players);
-		}else if(mode1_7_5){
+		} else if (mode1_7_5) {
 			V1_7_5Dragon.playBlockBreakParticles(loc, m, players);
-		}else if(mode1_7_8){
+		} else if (mode1_7_8) {
 			V1_7_8Dragon.playBlockBreakParticles(loc, m, players);
+		} else if (mode1_7_10) {
+			V1_7_10Dragon.playBlockBreakParticles(loc, m, players);
 		}
 		V1_7Dragon.playBlockBreakParticles(loc, m, players);
 	}
@@ -2238,12 +2252,12 @@ public class Main extends JavaPlugin implements Listener {
 
 	public void updateScoreboard(String arena) {
 
-		if(remove_scoreboard){
+		if (remove_scoreboard) {
 			return;
 		}
-		
+
 		for (Player pl : arenap.keySet()) {
-			if(!arenap.get(pl).equalsIgnoreCase(arena)){
+			if (!arenap.get(pl).equalsIgnoreCase(arena)) {
 				return;
 			}
 			Player p = pl;
@@ -2272,26 +2286,26 @@ public class Main extends JavaPlugin implements Listener {
 					} else {
 						currentscore.put(pl_.getName(), score);
 					}
-					try{
-						if(p_.getName().length() < 15){
+					try {
+						if (p_.getName().length() < 15) {
 							objective.getScore(Bukkit.getOfflinePlayer("§a" + p_.getName())).setScore(score);
-						}else{
+						} else {
 							objective.getScore(Bukkit.getOfflinePlayer("§a" + p_.getName().substring(0, p_.getName().length() - 3))).setScore(score);
 						}
-					}catch(Exception e){
+					} catch (Exception e) {
 					}
-				} else if (lost.containsKey(pl_)){
+				} else if (lost.containsKey(pl_)) {
 					if (currentscore.containsKey(pl_.getName())) {
 						int score = currentscore.get(pl_.getName());
-						try{
-							if(p_.getName().length() < 15){
+						try {
+							if (p_.getName().length() < 15) {
 								board.resetScores(Bukkit.getOfflinePlayer("§a" + p_.getName()));
 								objective.getScore(Bukkit.getOfflinePlayer("§c" + p_.getName())).setScore(score);
-							}else{
+							} else {
 								board.resetScores(Bukkit.getOfflinePlayer("§a" + p_.getName().substring(0, p_.getName().length() - 3)));
 								objective.getScore(Bukkit.getOfflinePlayer("§c" + p_.getName().substring(0, p_.getName().length() - 3))).setScore(score);
 							}
-						}catch(Exception e){
+						} catch (Exception e) {
 						}
 					}
 				}
@@ -2305,16 +2319,17 @@ public class Main extends JavaPlugin implements Listener {
 		try {
 			ScoreboardManager manager = Bukkit.getScoreboardManager();
 			Scoreboard sc = manager.getNewScoreboard();
-			try{
-				if(p.getName().length() < 15){
+			try {
+				if (p.getName().length() < 15) {
 					board.resetScores(Bukkit.getOfflinePlayer("§c" + p.getName()));
 					board.resetScores(Bukkit.getOfflinePlayer("§a" + p.getName()));
-				}else{
+				} else {
 					board.resetScores(Bukkit.getOfflinePlayer("§c" + p.getName().substring(0, p.getName().length() - 3)));
 					board.resetScores(Bukkit.getOfflinePlayer("§a" + p.getName().substring(0, p.getName().length() - 3)));
 				}
-				
-			}catch(Exception e){}
+
+			} catch (Exception e) {
+			}
 
 			sc.clearSlot(DisplaySlot.SIDEBAR);
 			p.setScoreboard(sc);
@@ -2332,35 +2347,34 @@ public class Main extends JavaPlugin implements Listener {
 		fwm.setPower(rp);
 		fw.setFireworkMeta(fwm);
 	}
-	
-	
-	public static Entity[]  getNearbyEntities(Location l, int radius){
-        int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16))/16;
-        HashSet<Entity> radiusEntities = new HashSet<Entity>();
-            for (int chX = 0 -chunkRadius; chX <= chunkRadius; chX ++){
-                for (int chZ = 0 -chunkRadius; chZ <= chunkRadius; chZ++){
-                    int x=(int) l.getX(),y=(int) l.getY(),z=(int) l.getZ();
-                    for (Entity e : new Location(l.getWorld(),x+(chX*16),y,z+(chZ*16)).getChunk().getEntities()){
-                        if (e.getLocation().distance(l) <= radius && e.getLocation().getBlock() != l.getBlock()) radiusEntities.add(e);
-                    }
-                }
-            }
-        return radiusEntities.toArray(new Entity[radiusEntities.size()]);
-    }
-	
-	
-	public String getKitDescription(String kit){
+
+	public static Entity[] getNearbyEntities(Location l, int radius) {
+		int chunkRadius = radius < 16 ? 1 : (radius - (radius % 16)) / 16;
+		HashSet<Entity> radiusEntities = new HashSet<Entity>();
+		for (int chX = 0 - chunkRadius; chX <= chunkRadius; chX++) {
+			for (int chZ = 0 - chunkRadius; chZ <= chunkRadius; chZ++) {
+				int x = (int) l.getX(), y = (int) l.getY(), z = (int) l.getZ();
+				for (Entity e : new Location(l.getWorld(), x + (chX * 16), y, z + (chZ * 16)).getChunk().getEntities()) {
+					if (e.getLocation().distance(l) <= radius && e.getLocation().getBlock() != l.getBlock())
+						radiusEntities.add(e);
+				}
+			}
+		}
+		return radiusEntities.toArray(new Entity[radiusEntities.size()]);
+	}
+
+	public String getKitDescription(String kit) {
 		return getConfig().getString("config.kits." + kit + ".description").replaceAll("&", "§");
 	}
-	
-	public int getKitUses(String kit){
+
+	public int getKitUses(String kit) {
 		return getConfig().getInt("config.kits." + kit + ".uses");
 	}
-	
-	public boolean kitRequiresMoney(String kit){
+
+	public boolean kitRequiresMoney(String kit) {
 		return getConfig().getBoolean("config.kits." + kit + ".requires_money");
 	}
-	
+
 	public boolean kitTakeMoney(Player p, String kit) {
 		if (econ.getBalance(p.getName()) >= getConfig().getInt("config.kits." + kit + ".money_amount")) {
 			EconomyResponse r = econ.withdrawPlayer(p.getName(), getConfig().getInt("config.kits." + kit + ".money_amount"));
@@ -2373,20 +2387,20 @@ public class Main extends JavaPlugin implements Listener {
 			return false;
 		}
 	}
-	
-	public boolean kitPlayerHasPermission(String kit, Player p){
-		if(!getConfig().getBoolean("config.kits." + kit + ".requires_permission")){
+
+	public boolean kitPlayerHasPermission(String kit, Player p) {
+		if (!getConfig().getBoolean("config.kits." + kit + ".requires_permission")) {
 			return true;
-		}else{
-			if(p.hasPermission(getConfig().getString("config.kits." + kit + ".permission_node"))){
+		} else {
+			if (p.hasPermission(getConfig().getString("config.kits." + kit + ".permission_node"))) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
 		}
 	}
 
-	public void simulatePlayerFall(Player p){
+	public void simulatePlayerFall(Player p) {
 		lost.put(p, arenap.get(p));
 		final Player p__ = p;
 		final String arena = arenap.get(p);
@@ -2412,18 +2426,13 @@ public class Main extends JavaPlugin implements Listener {
 				}
 			}
 		}
-		
+
 		pplace.put(p, count + 1);
-		/*String place = Integer.toString(count + 1) + "th";
-		if(count == 0){
-			place = "1st";
-		}else if(count == 1){
-			place = "2nd";
-		}else if(count == 2){
-			place = "3rd";
-		}
-		p.sendMessage(your_place.replaceAll("<place>", place));*/
-		
+		/*
+		 * String place = Integer.toString(count + 1) + "th"; if(count == 0){ place = "1st"; }else if(count == 1){ place = "2nd"; }else if(count ==
+		 * 2){ place = "3rd"; } p.sendMessage(your_place.replaceAll("<place>", place));
+		 */
+
 		if (last_man_standing) {
 			if (count < 2) {
 				stop(h.get(arena), arena);
@@ -2434,70 +2443,64 @@ public class Main extends JavaPlugin implements Listener {
 			}
 		}
 	}
-	
-	
-	public boolean arenaNeedsPerm(String arena){
-		if(!(getConfig().isSet(arena + ".needs_perm"))){
+
+	public boolean arenaNeedsPerm(String arena) {
+		if (!(getConfig().isSet(arena + ".needs_perm"))) {
 			setArenaNeedsPerm(arena, false);
 			return false;
 		}
 		return getConfig().getBoolean(arena + ".needs_perm");
 	}
-	
-	public void setArenaNeedsPerm(String arena, boolean val){
+
+	public void setArenaNeedsPerm(String arena, boolean val) {
 		getConfig().set(arena + ".needs_perm", val);
 		this.saveConfig();
 	}
 
-	
 	public void openGUI(final Main m, String p) {
 		IconMenu iconm = new IconMenu("Shop", 18, new IconMenu.OptionClickEventHandler() {
 			@Override
 			public void onOptionClick(IconMenu.OptionClickEvent event) {
 				String d = event.getName();
 				Player p = event.getPlayer();
-				
+
 				String kit = d.toLowerCase();
-				
-				if(kit.equalsIgnoreCase("jumper")){
+
+				if (kit.equalsIgnoreCase("jumper")) {
 					p.sendMessage(getKitDescription("jumper"));
-				}else if(kit.equalsIgnoreCase("warper")){
+				} else if (kit.equalsIgnoreCase("warper")) {
 					p.sendMessage(getKitDescription("warper"));
-				}else if(kit.equalsIgnoreCase("tnt")){
+				} else if (kit.equalsIgnoreCase("tnt")) {
 					p.sendMessage(getKitDescription("tnt"));
-				}else{
+				} else {
 					p.sendMessage(ChatColor.RED + "Unknown Kit.");
 					event.setWillClose(true);
 					return;
 				}
-				if(kitPlayerHasPermission(kit, p)){
-					if(kitRequiresMoney(kit)){
-						if(kitTakeMoney(p, kit)){
+				if (kitPlayerHasPermission(kit, p)) {
+					if (kitRequiresMoney(kit)) {
+						if (kitTakeMoney(p, kit)) {
 							pkit.put(p, kit);
 						}
-					}else{
+					} else {
 						pkit.put(p, kit);
 					}
-				}else{
+				} else {
 					p.sendMessage(nopermkit);
 				}
 				event.setWillClose(true);
 			}
-		}, m)
-		.setOption(3, new ItemStack(Material.IRON_AXE), "Jumper", getKitDescription("jumper"))
-		.setOption(4, new ItemStack(Material.TNT), "Tnt", getKitDescription("tnt"))
-		.setOption(5, new ItemStack(Material.ENDER_PEARL), "Warper", getKitDescription("warper"));
+		}, m).setOption(3, new ItemStack(Material.IRON_AXE), "Jumper", getKitDescription("jumper")).setOption(4, new ItemStack(Material.TNT), "Tnt", getKitDescription("tnt")).setOption(5, new ItemStack(Material.ENDER_PEARL), "Warper", getKitDescription("warper"));
 
 		iconm.open(Bukkit.getPlayerExact(p));
 	}
-	
-	
-	public void getArenaReward(String arena, Player p){
-		if(!getConfig().isSet(arena + ".reward.use")){
+
+	public void getArenaReward(String arena, Player p) {
+		if (!getConfig().isSet(arena + ".reward.use")) {
 			getConfig().set(arena + ".reward.use", false);
 			this.saveConfig();
 		}
-		if(!getConfig().getBoolean(arena + ".reward.use")){
+		if (!getConfig().getBoolean(arena + ".reward.use")) {
 			if (economy) {
 				EconomyResponse r = econ.depositPlayer(p.getName(), getConfig().getDouble("config.money_reward_per_game"));
 				if (!r.transactionSuccess()) {
@@ -2511,8 +2514,8 @@ public class Main extends JavaPlugin implements Listener {
 			// command reward
 			if (command_reward) {
 				String[] t = cmd.replaceAll("<player>", p.getName()).split(";");
-				//System.out.println(t);
-				for(String t_ : t){
+				// System.out.println(t);
+				for (String t_ : t) {
 					Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), t_);
 				}
 			}
@@ -2533,31 +2536,31 @@ public class Main extends JavaPlugin implements Listener {
 			String cmd = getConfig().getString(arena + ".reward.commandreward");
 			String[] t = cmd.replaceAll("<player>", p.getName()).split(";");
 			System.out.println(t);
-			for(String t_ : t){
+			for (String t_ : t) {
 				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), t_);
 			}
 		}
 	}
-	
-	public void setArenaReward(String arena, String component, Integer amount){
+
+	public void setArenaReward(String arena, String component, Integer amount) {
 		getConfig().set(arena + ".reward." + component, amount);
 		this.saveConfig();
 	}
-	
-	public void setArenaCommandReward(String arena, String cmd){
+
+	public void setArenaCommandReward(String arena, String cmd) {
 		getConfig().set(arena + ".reward.commandreward", cmd);
 		this.saveConfig();
 	}
-	
-	public void setArenaDefaultRewards(String arena){
-		if(!getConfig().isSet(arena + ".reward.use")){
+
+	public void setArenaDefaultRewards(String arena) {
+		if (!getConfig().isSet(arena + ".reward.use")) {
 			getConfig().set(arena + ".reward.use", true);
 			this.saveConfig();
 		}
-		if(getConfig().getBoolean(arena + ".reward.use")){
+		if (getConfig().getBoolean(arena + ".reward.use")) {
 			return;
 		}
-		setArenaReward(arena, "money_reward_per_game", (int)getConfig().getDouble("config.money_reward_per_game"));
+		setArenaReward(arena, "money_reward_per_game", (int) getConfig().getDouble("config.money_reward_per_game"));
 		setArenaReward(arena, "item_reward_id", itemid);
 		setArenaReward(arena, "item_reward_amount", itemamount);
 		setArenaCommandReward(arena, cmd);
